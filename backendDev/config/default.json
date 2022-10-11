@@ -1,0 +1,19 @@
+{
+    "API_AUTH_KEY" : "2f8603aeec2f808a4c80c4b465f187b1",
+
+    "update_on_startup" : false,
+
+    "futebol_league_id": 
+    {
+        "WORLD_CUP_FUT" : 1,
+        "UEFA_CHAMPIONS_FUT": 2,
+        "EUROPA_LEAGUE_FUT": 3,
+        "PREMIER_LEAGUE_FUT": 39,
+        "LIGUE_1_FUT": 61,
+        "PRIMEIRA_LIGA_FUT": 94,
+        "LA_LIGA_FUTEBOL_FUT": 140
+    },
+
+    "nba_league_id": 12
+    
+}
