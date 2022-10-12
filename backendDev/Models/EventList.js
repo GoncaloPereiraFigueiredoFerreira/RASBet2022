@@ -5,7 +5,9 @@ let instance = undefined
 
 class EventList{
 
-    constructor(){}
+    constructor(){
+        this.eventList = [];
+    }
 
     static getInstance(){
         if (instance == undefined){
@@ -13,6 +15,16 @@ class EventList{
         }
         return instance;
     }
+
+    addEvent(event){
+        this.eventList.push(event);
+        console.log("Event added! ")
+    }
+
+    printList(){
+        console.log(this.eventList)
+    }
+
 }
 
 module.exports = EventList;

@@ -12,6 +12,9 @@ class Server{
         app.use(bodyParser.json())
         app.use(bodyParser.urlencoded({extended:false}));
 
+        /// Init the event list
+        reqHandler.initEventLst();
+        
         ///Routing
         // POST Methods
         let api = "/api/";
