@@ -13,9 +13,24 @@ import Edit,{action as editAction} from './routes/edit.jsx'
 import Destroy,{action as destroyAction} from './routes/destroy.jsx'
 import Index from './routes/index.jsx'
 
+import Root_login from './routes/root_login.jsx'
+import Login from './routes/login.jsx'
+import Register from './routes/register.jsx'
+
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Root_login />,
+    children: [
+      {index: true, element: <Login />},
+      {
+        path: "/register",
+        element: <Register />,
+      }
+    ]
+  },
+  {
+    path: "/home",
     element: <Root />,
     loader: rootLoader,
     action: rootAction,
