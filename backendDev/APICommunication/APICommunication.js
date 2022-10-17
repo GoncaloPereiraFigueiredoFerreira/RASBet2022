@@ -46,4 +46,4 @@ function initEventLst(){
     }
 }
 
-module.exports = initEventLst();
+module.exports = {initEventLst};

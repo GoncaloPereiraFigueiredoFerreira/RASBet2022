@@ -74,10 +74,15 @@ function registerOnDb(apostador){
 }
 
 function registerBetOnDb(aposta,aposta_evento){
-    let sql= 'INSERT INTO Aposta SET ?;INSERT INTO Aposta_Evento SET ?'
-    let query= db.query(sql,[aposta,aposta_evento],(err,result)=>{
+    let sql= 'INSERT INTO Aposta SET ?'
+    let query= db.query(sql,aposta,(err,result)=>{
         if(err) throw err;
-        console.log("Aposta_Evento adicionada")
+        sql= 'INSERT INTO Aposta_Evento SET ?'
+        db.query(sql,aposta_evento,(err,result)=>{
+            if(err) throw err;
+            console.log("Aposta_Evento adicionada")
+        })
+        
     })
 }
 
