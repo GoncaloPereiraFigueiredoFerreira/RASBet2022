@@ -21,6 +21,10 @@ class EventList{
         this.eventList[event.getSport()][event.getID()] = event;
     }
 
+    changeEventOdd(sport,id){
+        
+    }
+
     printList(){
         console.log(this.eventList)
     }
