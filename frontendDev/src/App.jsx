@@ -8,7 +8,7 @@ import Root from './routes/root.jsx'
 import Sport, {loader as sportLoader}from './routes/sport.jsx'
 
 import Login from './routes/login.jsx'
-import Register from './routes/register.jsx'
+import Register,{action as registerAction} from './routes/register.jsx'
 
 function App(){
 	const t = useState("");
@@ -32,7 +32,8 @@ function App(){
 	  },
 	  {
         path: "/register",
-        element: <Register test={"ola"} />,   
+        action: registerAction,
+        element: <Register/>,   
 	   }
 	]);
 

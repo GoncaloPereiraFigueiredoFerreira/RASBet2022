@@ -1,47 +1,49 @@
-import {Link ,Form} from 'react-router-dom'
+import {Link ,Form,redirect} from 'react-router-dom'
 import './login.css'
 
-export default function Register({test}) {
+export async function action({request,params}){
+  const data = await request.formData();
+  console.log(data);
+  return redirect("/");
+}
+
+export default function Register() {
 
   return (
     <>
-    <p>
-    <h1>Pagina de registo de utilizador {test}</h1>
-    </p>
+      <h1>Pagina de registo de utilizador</h1>
 
-<div class = "box">
-<div class = "loginbox">
-  <div className='bemvindo'>
-        <p>Bem Vindo</p>
-  </div>
+      <div className = "box">
+        <div className = "loginbox">
+          <div className='bemvindo'>
+            <p>Bem Vindo</p>
+          </div>
 
-  <Form>
-    <input type="text" id="nome" name="nome" placeholder='Nome Completo'/>
+          <Form method="post">
+            <input type="text" id="nome" name="nome" placeholder='Nome Completo'/>
 
 
-      <input type="email" id="email" name="Email" placeholder='Endereço Eletrónico'/>
+              <input type="email" id="email" name="Email" placeholder='Endereço Eletrónico'/>
 
 
-    <div class="birthdate">
-    <label for="date" >Data de nascimento:  </label>
-    <input type="date" id="data" name="data" />
-    </div>
+            <div className="birthdate">
+            <label htmlFor="date" >Data de nascimento:  </label>
+            <input type="date" id="data" name="data" />
+            </div>
 
-    <input type="text" id="nif" name="nif" placeholder='NIF'/>
-    <input type="text" id="cc" name="cc" placeholder='Número de identidade'/>
-    <input type="text" id="morada" name="morada" placeholder='Morada, Número, Andar'/>
-    <input type="text" id="telemovel" name="telemovel" placeholder='Telemóvel'/>
-    <input type="password" id="password" name="password" placeholder='Palavra-passe'/>
+            <input type="text" id="nif" name="nif" placeholder='NIF'/>
+            <input type="text" id="cc" name="cc" placeholder='Número de identidade'/>
+            <input type="text" id="morada" name="morada" placeholder='Morada, Número, Andar'/>
+            <input type="text" id="telemovel" name="telemovel" placeholder='Telemóvel'/>
+            <input type="password" id="password" name="password" placeholder='Palavra-passe'/>
 
-  </Form>
-  <div class = "button">
-    <p>Confirmar</p>
-  </div>
-</div>
-<div class = "loginimg">
-  <img src="loginimage.jpg" id="loginimage"/>
-</div>
-</div>
-</>
+            <button className = "button" type="submit">Confirmar</button>
+          </Form>
+        </div>
+        <div className = "loginimg">
+          <img src="loginimage.jpg" id="loginimage"/>
+        </div>
+      </div>
+    </>
   );
 }

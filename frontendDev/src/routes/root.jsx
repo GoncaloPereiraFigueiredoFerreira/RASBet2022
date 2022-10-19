@@ -1,4 +1,4 @@
-import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigation} from "react-router-dom";
+import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "react-router-dom";
 import Login from "./login";
 
 function getToken(){
@@ -10,10 +10,10 @@ function getToken(){
 }
 
 export default function Root() {
-  const navigation = useNavigation();
+  const navigation = useNavigate();
   const token = getToken();
 
-  if(!token){console.log(token);return <Login />;}
+  //if(!token){console.log(token);return <Login />;}
 
   return (
     <>
@@ -23,6 +23,7 @@ export default function Root() {
       <Link to='/sport/forml1'>Formula 1</Link>
       <Link to='/sport/basktbol'>basquetebol</Link>
       <a href={`perfil/${token}`}><img src='logo.jpg' style={{'width':'6vh','height':'3vh'}}/></a>
+      <button onClick={()=>{navigation('login')}}>ir para login</button>
       </nav>
       <Outlet />
     </>
