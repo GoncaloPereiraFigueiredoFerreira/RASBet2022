@@ -1,3 +1,6 @@
+import {Link ,Form} from 'react-router-dom'
+import './login.css'
+
 export default function Register({test}) {
 
   return (
