@@ -13,7 +13,7 @@ export default function Login() {
     <a href='/register'>Register</a>
 
     <button type="button" onClick={()=>{setToken({"token":"ola"})}}>create token</button>
-    <button type="button" onClick={()=>{}}>clear token</button>
+    <button type="button" onClick={()=>{sessionStorage.clear()}}>clear token</button>
 
     
     </>
