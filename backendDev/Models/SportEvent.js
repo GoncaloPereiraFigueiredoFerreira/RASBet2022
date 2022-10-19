@@ -8,6 +8,15 @@ class SportEvent{
         this.State = state;
         this.DateTime =datetime;
     }
+
+    getSport(){
+        return this.Sport;
+    }
+
+    getID(){
+        return this.Id;
+    }
+
 }
 
 module.exports = SportEvent;
