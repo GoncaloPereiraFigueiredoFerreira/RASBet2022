@@ -37,8 +37,6 @@ export default function Register({test}) {
   <div class = "button">
     <p>Confirmar</p>
   </div>
-  <p>Não tem conta?</p>
-  <Link to='register'>Registe-se já!</Link>
 </div>
 <div class = "loginimg">
   <img src="loginimage.jpg" id="loginimage"/>

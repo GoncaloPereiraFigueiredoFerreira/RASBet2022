@@ -141,9 +141,10 @@ input[type=text] {
     height: 50px;
     padding: auto;
     border-radius: 2%;
-    margin: 8px 0;
+    margin: auto;
     box-sizing: border-box;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    text-align: center;
   }

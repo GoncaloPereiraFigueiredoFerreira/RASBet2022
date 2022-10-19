@@ -5,8 +5,8 @@ import ErrorPage from './error-page.jsx'
 
 import Index from './routes/index.jsx'
 import Root from './routes/root.jsx'
+import Sport, {loader as sportLoader}from './routes/sport.jsx'
 
-import Root_login from './routes/root_login.jsx'
 import Login from './routes/login.jsx'
 import Register from './routes/register.jsx'
 
@@ -15,23 +15,25 @@ function App(){
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
-	    element: <Root_login />,
-	    children: [
-	      {index: true, element: <Login />},
-	      {
-	        path: "/register",
-	        element: <Register test={"ola"} />,
-	      }
-	    ]
-	  },
-	  {
-	    path: "/home",
 	    element: <Root />,
 	    errorElement: <ErrorPage />,
 	    children: [
 	      { index: true, element: <Index /> },
+	      {
+	      	path: "sport/:sportid",
+	      	loader: sportLoader,
+	      	element: <Sport />,
+	      }
 	    ],
 	  },
+	  {
+	    path: "/login",
+	    element: <Login />,
+	  },
+	  {
+        path: "/register",
+        element: <Register test={"ola"} />,   
+	   }
 	]);
 
 	return (<RouterProvider router={router} />);

@@ -17,6 +17,13 @@ export default function Root() {
 
   return (
     <>
+      <nav>
+      <img src='logo.png'/>
+      <Link to='/sport/futebol'>Futebol</Link>
+      <Link to='/sport/forml1'>Formula 1</Link>
+      <Link to='/sport/basktbol'>basquetebol</Link>
+      <a href={`perfil/${token}`}><img src='logo.jpg' style={{'width':'6vh','height':'3vh'}}/></a>
+      </nav>
       <Outlet />
     </>
   );

@@ -1,4 +1,4 @@
-import {Link ,Form} from 'react-router-dom'
+import {Link ,Form,useNavigate} from 'react-router-dom'
 import './login.css'
 
 function setToken(userToken) {
@@ -9,6 +9,7 @@ function setToken(userToken) {
     //<button type="button" onClick={()=>{sessionStorage.clear()}}>clear token</button>
 
 export default function Login() {
+  const navigation = useNavigate();
   return (
     <>
 
@@ -26,11 +27,11 @@ export default function Login() {
           <input type="text" name="Email" placeholder="Email"/>
           <input type="password" name="Email" placeholder="Palavra-passe"/>
         </Form>
-        <div class = "button">
-          <p>Login</p>
-        </div>
+        <button class = "button" onClick={()=>{navigation('/');}}>
+            Login
+        </button>
         <p>Não tem conta?</p>
-        <Link to='register'>Registe-se já!</Link>
+        <a href='register'>Registe-se já!</a>
       </div>
 
       <div class = "loginimg">
