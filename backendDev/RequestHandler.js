@@ -125,6 +125,7 @@ function initEventLst(){
 
 
 module.exports = {
+    initEventLst,
     dummyFunction,
     transactionFunction,
     registerBetFunction,
@@ -140,5 +141,4 @@ module.exports = {
     profileInfoFunction,
     betHistoryFunction,
     transHistFunction
-    //initEventLst
 }
