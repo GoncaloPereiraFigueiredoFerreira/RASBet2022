@@ -13,6 +13,25 @@ class RaceEvent extends SportEvent{
         this.CircuitPht = circuitPhoto;
 
     }
+    changeOdds(playerOdds){
+        this.PlayerOdds = playerOdds;
+    }
+
+    superOdds(multiplier){
+        this.PlayerOdds.map(x=> x * multiplier);
+    }
+
+    toJson(){
+        return{
+            "Tipo": "RaceEvent",
+            "EventoId" : super.Id,
+            "Liga" : super.League,
+            "Participantes" : this.Pilots,
+            "Odds" : this.PlayerOdds,
+            "Logos": this.PilotsPht,
+            "Data" : super.DateTime
+        }
+    }
 
 }
 

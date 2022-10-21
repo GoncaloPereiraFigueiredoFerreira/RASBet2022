@@ -47,7 +47,6 @@ function genF1DriversRequest(api_key,season){
         }
       };
 }
-https://v1.formula-1.api-sports.io
 
 function genRaceRankingsRequest(api_key,race){
     return {
@@ -75,5 +74,7 @@ module.exports = {
     genFutRequest,
     genF1RacesRequest,
     genF1DriversRequest,
+    genUselessRequest,
     genRaceRankingsRequest
+    
 }

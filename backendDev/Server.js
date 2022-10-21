@@ -11,7 +11,7 @@ class Server{
         app.use(bodyParser.urlencoded({extended:false}));
 
         /// Init the event list
-        reqHandler.initEventLst();
+        //reqHandler.initEventLst();
         
         ///Routing
         // POST Methods
