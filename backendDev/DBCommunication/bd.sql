@@ -1,4 +1,4 @@
---DROP DATABASE Rasbet;
+--DROP DATABASE RASBET;
 CREATE DATABASE IF NOT EXISTS RASBET;
 USE RASBET;
 
@@ -9,10 +9,6 @@ CREATE TABLE IF NOT EXISTS Funcionario (
     FRole ENUM("Admin","Special"),
     PRIMARY KEY(Email)
 );
-
--- Tabelas relacionadas com Apostador e Promocao
-
-
 
 CREATE TABLE IF NOT EXISTS Apostador (
     Email VARCHAR(75) NOT NULL UNIQUE,
@@ -55,8 +51,6 @@ CREATE TABLE IF NOT EXISTS Transacao(
 );
 
 
--- Tabelas relacionadas com Aposta e Evento
-
 CREATE TABLE IF NOT EXISTS Aposta (
     ID INT NOT NULL AUTO_INCREMENT,
     ApostadorID VARCHAR(75) NOT NULL,
@@ -74,7 +68,6 @@ CREATE TABLE IF NOT EXISTS Evento(
     ID INT NOT NULL,
     Resultado INT NOT NULL,
     Descricao VARCHAR(255),
-    -- sem odds, nao iniciado, a decorrer, finalizado 
     Estado ENUM("SO","NI","AD","FN") NOT NULL,
     Desporto  ENUM("FB","F1","TN","BB") NOT NULL,
     PRIMARY KEY(ID,Desporto)
