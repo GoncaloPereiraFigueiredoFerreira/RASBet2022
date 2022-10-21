@@ -6,7 +6,8 @@ let instance = undefined
 class EventList{
 
     constructor(){
-        this.eventList = [];
+        this.eventList = {};
+        this.eventList["Futebol"] = {}
     }
 
     static getInstance(){
@@ -17,8 +18,11 @@ class EventList{
     }
 
     addEvent(event){
-        this.eventList.push(event);
-        console.log("Event added! ")
+        this.eventList[event.getSport()][event.getID()] = event;
+    }
+
+    changeEventOdd(sport,id){
+        
     }
 
     printList(){

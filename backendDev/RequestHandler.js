@@ -1,6 +1,10 @@
 const eventList = require("./Models/EventList");
 const apiComms = require("./APICommunication/APICommunication")
-const dbComms = require("./DBCommunication/DBcommunication")
+const dbComms1 = require("./DBCommunication/DBcommunication");
+const dbComms = new dbComms1();
+const e = require("express");
+const sessionHandler = require("./SessionHandler").getInstance();
+
 
 function dummyFunction(request,response){
     response.status(200).send("Dummy here! But connection worked!")
@@ -21,6 +25,7 @@ function registerFunction(request,response){
 function loginFunction(request,response){
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse,function(result){
         console.log(result)
+        let hash = sessionHandler.addUser(request.body.Email)
         response.status(200).send(result)
     })
 }

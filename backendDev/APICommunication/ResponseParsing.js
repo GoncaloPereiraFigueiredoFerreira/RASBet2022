@@ -6,7 +6,7 @@ const evLst = EventList.getInstance();
 function parseFutResp(json){
     for (let match of json.response){
           let id = match.fixture.id;
-          let date = match.fixture.timestamp;
+          let date = match.fixture.date;
           let league = match.league.name;
           let team1 = match.teams.home.name;
           let team2 = match.teams.away.name;
@@ -16,6 +16,7 @@ function parseFutResp(json){
           evLst.addEvent(e);
           
         }
+        evLst.printList();
 
 }
 
