@@ -18,14 +18,20 @@ function transactionFunction(request,response){
 }
 
 function registerFunction(request,response){
-    dbComms.registerOnDb(request.body)
-    response.status(200).send(request.body)
+    dbComms.registerOnDb(request.body,function(result){
+        response.status(200).send(result)
+    })
 }
 
 function loginFunction(request,response){
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse,function(result){
-        console.log(result)
-        let hash = sessionHandler.addUser(request.body.Email)
+        response.status(200).send(result)
+    })
+}
+
+
+function registerBetFunction(request,response){
+    dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento,function(result){
         response.status(200).send(result)
     })
 }
@@ -48,34 +54,37 @@ function editProfileFunction(request,response){
 
 
 function closeEventFunction(request,response){
-    dbComms.closeEventOnDb(request.body.Id)
-    response.status(200).send(request.body)
+    dbComms.closeEventOnDb(request.body.Id,function(result){
+        response.status(200).send(result)
+    })
 }
 
 function suspndEventFunction(request,response){
-    dbComms.suspndEventOnDb(request.body.Id)
-    response.status(200).send(request.body)
+    dbComms.suspndEventOnDb(request.body.Id,function(result){
+        response.status(200).send(result)
+    })
 }
 
-function registerBetFunction(request,response){
-    dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento)
-    response.status(200).send(request.body)
-}
 
 function registerEventFunction(request,response){
-    dbComms.registerEventOnDb(request.body)
-    response.status(200).send(request.body)
+    dbComms.registerEventOnDb(request.body,function(result){
+        response.status(200).send(result)
+    })
+    //response.status(200).send(request.body)
 }
 
 
 function addPromocaoFunction(request,response){
-    dbComms.addPromocaoOnDb(request.body)
-    response.status(200).send(request.body)
+    dbComms.addPromocaoOnDb(request.body,function(result){
+        response.status(200).send(result)
+    })
 }
 
 function addcodeUsedFunction(request,response){
-    dbComms.addcodeUsedOnDb(request.body)
-    response.status(200).send(request.body)
+    dbComms.addcodeUsedOnDb(request.body,function(result){
+        response.status(200).send(result)
+    })
+    
 }
 
 function usedCodFunction(request,response){
