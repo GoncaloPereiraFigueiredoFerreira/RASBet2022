@@ -1,5 +1,6 @@
 const EventList = require("../Models/EventList");
 const TieEvent = require("../Models/TieEvent");
+const RaceEvent = require("../Models/RaceEvent");
 const evLst = EventList.getInstance();
 
 
@@ -16,10 +17,28 @@ function parseFutResp(json){
           evLst.addEvent(e);
           
         }
-        evLst.printList();
+
+}
+
+function parseF1Resp(racesJson, pilotsJson){
+    let pilotsNames = [];
+    let pilotsPhotos = [];
+    for (let pilot of pilotsJson.response){
+        pilotsNames.push(pilot.driver.name);
+        pilotsPhotos.push(pilot.driver.image);
+    }
+    for (let race of racesJson.response){
+        let id = race.id;
+        let date = race.date;
+        let circuit = race.circuit.name;
+        let circuitPhoto = race.circuit.image;
+        let e = new RaceEvent("F1","World F1 Competition",id,"",-1,"SO",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto);
+        evLst.addEvent(e);
+    }
 
 }
 
 module.exports = {
-    parseFutResp
+    parseFutResp,
+    parseF1Resp
 }

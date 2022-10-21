@@ -18,6 +18,9 @@ class EventList{
     }
 
     addEvent(event){
+        if (this.eventList[event.getSport()] == undefined) {
+            this.eventList[event.getSport()] = {};
+        }
         this.eventList[event.getSport()][event.getID()] = event;
     }
 

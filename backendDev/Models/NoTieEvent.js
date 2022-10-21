@@ -1,3 +1,4 @@
+const SportEvent = require("./SportEvent");
 class NoTieEvent extends SportEvent{
     constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2){
         
@@ -10,3 +11,4 @@ class NoTieEvent extends SportEvent{
         this.Logo2 = logo2;
     }
 }
+module.exports = NoTieEvent;

@@ -23,40 +23,49 @@ function genBasketRequest(api_key,leagueID,season){
       };
 }
 
-function genF1RacesRequest(api_key,season){
+function genF1RacesRequest(api_key){
     return {
         method: 'get',
-        url: 'https://api-formula-1.p.rapidapi.com/races',
-        params: {season: season, type:"Race"},
+        url: 'https://v1.formula-1.api-sports.io/races',
+        params: {type:"Race", next:10},
         headers: {
           'x-rapidapi-key': api_key,
-          'x-rapidapi-host': 'api-formula-1.p.rapidapi.com'
+          'x-rapidapi-host': 'v1.formula-1.api-sports.io'
         }
       };
 }
+
 
 function genF1DriversRequest(api_key,season){
     return {
         method: 'get',
-        url: 'https://api-formula-1.p.rapidapi.com/rankings/drivers',
+        url: 'https://v1.formula-1.api-sports.io/rankings/drivers',
         params: {season: season},
         headers: {
           'x-rapidapi-key': api_key,
-          'x-rapidapi-host': 'api-formula-1.p.rapidapi.com'
+          'x-rapidapi-host': 'v1.formula-1.api-sports.io'
         }
       };
 }
+https://v1.formula-1.api-sports.io
 
 function genRaceRankingsRequest(api_key,race){
     return {
         method: 'get',
-        url: 'https://api-formula-1.p.rapidapi.com/rankings/races',
+        url: 'https://v1.formula-1.api-sports.io/rankings/races',
         params: {race:race},
         headers: {
           'x-rapidapi-key': api_key,
-          'x-rapidapi-host': 'api-formula-1.p.rapidapi.com'
+          'x-rapidapi-host': 'v1.formula-1.api-sports.io'
         }
       };
+}
+
+function genUselessRequest(){
+    return {
+        method: 'get',
+        url: 'http://ucras.di.uminho.pt/v1/games/'
+      }
 }
 
 

@@ -4,6 +4,7 @@ const cnf         = require('config');
 const getRequests = require("./Requests");
 const parser      = require("./ResponseParsing");
 
+
 const API_AUTH_KEY = cnf.get("API_AUTH_KEY");
 const rspPath = cnf.get("responsePath");
 
@@ -38,12 +39,44 @@ function initEventLst(){
         let req = getRequests.genFutRequest(API_AUTH_KEY,futLeagueDic[league],2022);
         makeRequest(req,futpath,parser.parseFutResp);
       }
-      else{
+      else {
         let json = JSON.parse(fs.readFileSync(futpath,"utf-8"));
         parser.parseFutResp(json);
       }
-  
     }
+
+    /// Formula 1 events
+    f1Racespath = rspPath + "f1" + "Races" + "Res.json"
+    if (configFlag || !fs.existsSync(f1Racespath)){
+
+      let req = getRequests.genF1RacesRequest(API_AUTH_KEY);
+      makeRequest(req,f1Racespath,auxF1);
+    }
+    else {
+      let jsonRaces = JSON.parse(fs.readFileSync(f1Racespath,"utf-8"));
+      auxF1(jsonRaces);
+    }
+
 }
+
+
+function auxF1(jsonRaces){
+  let configFlag = cnf.get("update_on_startup");
+  f1Pilotspath = rspPath + "f1"+ "Pilots" +"Res.json";
+  if (configFlag || !fs.existsSync(f1Pilotspath)){
+
+    let req = getRequests.genF1DriversRequest(API_AUTH_KEY,2022);
+    makeRequest(req,f1Pilotspath,(jsonPilots) =>{
+        parser.parseF1Resp(jsonRaces,jsonPilots);
+    });
+  }
+  else{
+    let jsonPilots = JSON.parse(fs.readFileSync(f1Pilotspath,"utf-8"));
+    parser.parseF1Resp(jsonRaces,jsonPilots);
+  }
+
+
+}
+
 
 module.exports = {initEventLst};
