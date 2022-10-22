@@ -17,6 +17,20 @@ class SportEvent{
         return this.Id;
     }
 
+    getState(){
+        return this.State;
+    }
+
+    readyEvent(){
+        if (this.State == "SO"){
+            this.State = "NO";
+        }
+    }
+
+    closeEvent(){
+        this.state = "FN";
+    }
+
 }
 
 module.exports = SportEvent;

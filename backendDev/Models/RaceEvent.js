@@ -1,13 +1,38 @@
+const SportEvent = require("./SportEvent");
+
 class RaceEvent extends SportEvent{
 
-    constructor(sport,league,id,description,result,state, datetime, racers, circuit){
+    constructor(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto){
         
         super(sport,league,id,description,result,state,datetime);
         this.PlayerOdds = [];
         this.PlayerOdds.fill(1,0,20);
-        this.Racers = racers;
+        this.Pilots = pilots;
+        this.PilotsPht = pilotsPhotos;
         this.Circuit = circuit;
+        this.CircuitPht = circuitPhoto;
 
+    }
+    changeOdds(playerOdds){
+        this.PlayerOdds = playerOdds;
+    }
+
+    superOdds(multiplier){
+        this.PlayerOdds.map(x=> x * multiplier);
+    }
+
+    toJson(){
+        return{
+            "Tipo": "RaceEvent",
+            "EventoId" : super.Id,
+            "Liga" : super.League,
+            "Participantes" : this.Pilots,
+            "Odds" : this.PlayerOdds,
+            "Logos": this.PilotsPht,
+            "Data" : super.DateTime
+        }
     }
 
 }
+
+module.exports = RaceEvent;
