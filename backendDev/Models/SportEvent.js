@@ -9,6 +9,11 @@ class SportEvent{
         this.DateTime =datetime;
     }
 
+    updateWinner(result){
+        this.Result = result;
+        this.State = "FN";
+    }
+
     getSport(){
         return this.Sport;
     }
@@ -21,6 +26,13 @@ class SportEvent{
         return this.State;
     }
 
+    getLeague(){
+        return this.League;
+    }
+    getDescription(){
+        return this.Description;
+    }
+
     readyEvent(){
         if (this.State == "SO"){
             this.State = "NO";
@@ -30,6 +42,20 @@ class SportEvent{
     closeEvent(){
         this.state = "FN";
     }
+
+    toDB(){
+        return {
+            "EventoId" : this.Id,
+            "Data" : this.DateTime,
+            "Descricao" : this.Description,
+            "Resultado" : this.Result,
+            "Estado" : this.State,
+            "Liga" : this.League
+        }
+    }
+
+
+
 
 }
 

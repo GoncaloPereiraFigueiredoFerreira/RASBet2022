@@ -7,6 +7,7 @@
 const RaceEvent = require("./RaceEvent");
 const NoTieEvent = require("./NoTieEvent");
 const TieEvent = require("./TieEvent");
+const SportEvent = require("./SportEvent");
 
 let instance = undefined
 
@@ -28,11 +29,25 @@ class EventList{
         return instance;
     }
 
-    addEvent(event){
+    addEventFromAPI(event){
         if (this.eventList[event.getSport()] == undefined) {
             this.eventList[event.getSport()] = {};
         }
         this.eventList[event.getSport()][event.getID()] = event;
+    }
+
+    addEventFromDB(sport,league,id,description,result,state,datetime){
+        if (this.eventList[sport] == undefined) {
+            this.eventList[sport] = {};
+        }
+        this.eventList[sport][id] = new SportEvent(sport,league,id,description,result,state,datetime);
+    }
+
+    getEvent(sport,id){
+        if (this.eventList[sport] != undefined && this.eventList[sport][id]){
+            return this.eventList[sport][id];
+        }
+        else return undefined;
     }
 
     /// Method that alters the inital odd for an event
@@ -78,9 +93,20 @@ class EventList{
         return lst;
     }
 
-    // Returns an event
-    getEvent(sport,id){
+    // Returns an event to the front end
+    getEventFE(sport,id){
         return this.eventList[sport][id].toJson();
+    }
+
+    // Returns an event to the DB
+    getEventDB(sport,id){
+        return this.eventList[sport][id].toDB();
+    }
+
+
+    // Change result of an event
+    updateWinner(sport,id,result){
+        this.eventList[sport][id].updateWinner(result);
     }
 
     // Activates superodds in a given 
@@ -93,6 +119,12 @@ class EventList{
     closeEvent(sport,id){
         if (this.eventList[sport][id] != undefined){
             this.eventList[sport][id].closeEvent();
+        }
+    }
+
+    getParticipants(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            this.eventList[sport][id].getParticipants();
         }
     }
 

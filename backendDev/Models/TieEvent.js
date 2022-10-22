@@ -51,6 +51,10 @@ class TieEvent extends SportEvent{
             "Data" : super.DateTime
         }
     }
+    getParticipants(){
+        return  [this.Team1,this.Team2];
+    }
+
 }
 
 module.exports = TieEvent;

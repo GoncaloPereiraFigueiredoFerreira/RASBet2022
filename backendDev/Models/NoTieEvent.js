@@ -31,6 +31,9 @@ class NoTieEvent extends SportEvent{
         }
     }
 
+    getParticipants(){
+        return [this.Team1,this.Team2];
+    }
 
 
 

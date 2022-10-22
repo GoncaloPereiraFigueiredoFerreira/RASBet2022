@@ -1,4 +1,5 @@
 const eventList = require("./Models/EventList");
+const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
 const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
@@ -21,7 +22,6 @@ function transactionFunction(request,response){
 
         
     })
-    
 }
 
 function registerFunction(request,response){
@@ -140,12 +140,87 @@ function transHistFunction(request,response){
 }
 
 
-function initEventLst(){
-    apiComms.initEventLst();
+
+function returnEventList(request,response){
+    //Depending on the role of the token of the request
+    // it returns a list of the json events
+    
 }
 
 
 
+
+function initEventLst(){
+    dbComms.getEventsOnDb((result)=>{
+        for (let event of result){
+            //////VAI dar erro
+            evLst.addEventFromDB(event.sport,event.liga,event.id,event.descricao,event.result,event.estado,event.datetime);
+        }
+        apiComms.initEventLst();
+    });
+    
+}
+
+
+function updateFUTEvents(){
+    dbComms.getPastFUTEventsOnDb((result) => {
+        let fixList =[]
+        for (let event of result){
+            fixList.push(event.ID);
+        }
+        for (let fixtures of fixList){
+            apiComms.updateFutResults(fixtures);
+            // This might not finnish in time for the db update
+        }
+        for (let fixture of fixList){
+            let eventE = evLst.getEventDB("FUT",fixture);
+            dbComms.addEvento(eventE, () => {});
+        }
+    });
+}
+
+
+function updateF1Events(){
+    dbComms.getPastF1EventsOnDb((result)=> {
+        let gameList= [];
+        for(let game of result){
+            gameList.push(game.ID);
+        }
+        for (let game of gameList){
+            apiComms.updateBSKResults(game);
+            // This might not finnish in time for the db update
+        }
+        for (let game of gameList){
+            let eventE = evLst.getEventDB("F1",game);
+            dbComms.addEvento(eventE, () => {});
+        }
+    })
+}
+
+
+function updateBSKEvents(){
+    dbComms.getPastBSKEventsOnDb((result)=> {
+        let raceList= [];
+        for(let race of result){
+            raceList.push(race.ID);
+        }
+        for (let race of raceList){
+            apiComms.updateF1Results(race);
+            // This might not finnish in time for the db update
+        }
+        for (let race of raceList){
+            let eventE = evLst.getEventDB("F1",race);
+            dbComms.addEvento(eventE, () => {});
+        }
+    })
+}
+
+
+function updateEvents(){
+    updateFUTEvents();
+    updateF1Events();
+    updateBSKEvents();
+}
 
 
 module.exports = {
@@ -164,5 +239,7 @@ module.exports = {
     usedCodFunction,
     profileInfoFunction,
     betHistoryFunction,
-    transHistFunction
+    transHistFunction,
+    updateEvents
+    
 }

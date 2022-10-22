@@ -379,6 +379,32 @@ class DBCommunication {
             
         })
     }
+
+    getPastFUTEventsOnDb(callback){
+        let sql = "SELECT * FROM EVENTO WHERE Estado = NI AND DESPORTO = FUT" // e cuja data é anterior à atual
+        this.db.query(sql,(err,result)=>{
+            try{
+                if(err) throw err;
+                return callback(result)
+            }
+            catch(err){
+                return callback(err.code)
+            }
+        });
+    }
+
+    getEventsOnDb(callback){
+        let sql = "SELECT * FROM EVENTO"
+        this.db.query(sql,(err,result)=>{
+            try{
+                if(err) throw err;
+                return callback(result)
+            }
+            catch(err){
+                return callback(err.code)
+            }
+        });
+    }
     
     
     //ordenar cronologicamente

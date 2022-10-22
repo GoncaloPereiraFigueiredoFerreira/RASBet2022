@@ -25,13 +25,18 @@ class RaceEvent extends SportEvent{
         return{
             "Tipo": "RaceEvent",
             "EventoId" : super.Id,
-            "Liga" : super.League,
-            "Participantes" : this.Pilots,
+            "Liga" : this.Circuit,
+            "Participantes" : this.Pilots.push(circuitPhoto), //Foto no fim
             "Odds" : this.PlayerOdds,
             "Logos": this.PilotsPht,
             "Data" : super.DateTime
         }
     }
+
+    getParticipants(){
+        return this.Pilots;
+    }
+
 
 }
 
