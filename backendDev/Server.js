@@ -19,7 +19,7 @@ class Server{
         });
 
         /// Init the event list
-        //reqHandler.initEventLst();
+        reqHandler.initEventLst();
         
         ///Routing
         // POST Methods
@@ -29,7 +29,7 @@ class Server{
         app.post(api + "login"      ,reqHandler.loginFunction);
         app.post(api + "register"   ,reqHandler.registerFunction);
         app.post(api + "editProfile",reqHandler.editProfileFunction);
-        app.post(api + "addEventOdd",reqHandler.dummyFunction);
+        app.post(api + "addEventOdd",reqHandler.addEventOdds);
         app.post(api + "closeEvent" ,reqHandler.closeEventFunction);
         app.post(api + "suspndEvent",reqHandler.suspndEventFunction);
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
@@ -43,7 +43,7 @@ class Server{
         app.get(api + "profileInfo" ,reqHandler.profileInfoFunction);
         app.get(api + "betHistory"  ,reqHandler.betHistoryFunction);
         app.get(api + "transHist"   ,reqHandler.transHistFunction);
-        app.get(api + "eventList"   ,reqHandler.dummyFunction);
+        app.get(api + "eventList"   ,reqHandler.returnEventList);
         app.get(api + "updateOdds"  ,reqHandler.dummyFunction);
 
         // Start Server

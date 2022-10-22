@@ -22,12 +22,12 @@ class NoTieEvent extends SportEvent{
     toJson(){
         return{
             "Tipo": "NoTieEvent",
-            "EventoId" : super.Id,
-            "Liga" : super.League,
+            "EventoId" : this.Id,
+            "Liga" : this.League,
             "Participantes" : [this.Team1,this.Team2],
             "Odds" : [this.Odds1,this.Odds2],
             "Logos": [this.Logo1,this.Logo2],
-            "Data" : super.DateTime
+            "Data" : this.DateTime
         }
     }
 

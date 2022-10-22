@@ -4,7 +4,6 @@ const apiComms = require("./APICommunication/APICommunication")
 const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
 const e = require("express");
-const SessionHandler = require("./SessionHandler");
 const sessionHandler = require("./SessionHandler").getInstance();
 
 
@@ -45,7 +44,7 @@ function loginFunction(request,response){
             response.status(400).send(result)
         }
         else {
-            result['Token']=sessionHandler.vu(request.body.Email)
+            result['Token']=sessionHandler.addUser(request.body.Email,result.FRole)
             response.status(200).send(result)
         }
     })
@@ -143,16 +142,23 @@ function transHistFunction(request,response){
 
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.body.token);
-    let retList = [];
-    if (user[1] == 0 || user[1] == 1 ) {// Apostador e Administrador
+    console.log("new event list request");
+    console.log(user);
+    if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
         response.status(200).send(evLst.getBETEvents(request.body.sport));
     }
-    else if (user[1] == 2 ){// Especialista
+    else if (user[1] == 'Special' ){// Especialista
         response.status(200).send(evLst.getSOEvents(request.body.sport));
     }
 }
 
-
+function addEventOdds(request,response){
+    let user = sessionHandler.verifyUser(request.body.token);
+    if (user[1] == 'Special'){
+        evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
+        response.status(200).send();
+    }
+}
 
 
 function initEventLst(){
@@ -246,6 +252,7 @@ module.exports = {
     betHistoryFunction,
     transHistFunction,
     updateEvents,
-    returnEventList
+    returnEventList,
+    addEventOdds
     
 }

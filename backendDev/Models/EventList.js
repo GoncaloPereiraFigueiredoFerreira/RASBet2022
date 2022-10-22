@@ -62,6 +62,7 @@ class EventList{
                  this.eventList[sport][id].readyEvent();
             }
             else if (this.eventList[sport][id] instanceof TieEvent){
+                
                 this.eventList[sport][id].changeOdds(odds[0],odds[1],odds[2]);
                 this.eventList[sport][id].readyEvent();
             }
@@ -71,13 +72,13 @@ class EventList{
     /// Returns a list of events without Odds
     getSOEvents(sport){
         let lst = [];
-        for(let match of this.eventList[sport]){
-            if (match.getState() == "SO") {
-                if (match instanceof TieEvent){
-                    lst.push(match.toJsonV2());
+        for(let match in this.eventList[sport]){
+            if (this.eventList[sport][match].getState() == "SO") {
+                if (this.eventList[sport][match] instanceof TieEvent){
+                    lst.push(this.eventList[sport][match].toJsonV2());
                 }
                 else{
-                    lst.push(match.toJson()); 
+                    lst.push(this.eventList[sport][match].toJson()); 
                 }
             }
         }
@@ -87,8 +88,8 @@ class EventList{
     /// Returns the list of events ready for bets
     getBETEvents(sport){
         let lst = [];
-        for(let match of this.eventList[sport]){
-            if (match.getState() == "NS") lst.push(match.toJson());
+        for(let match in this.eventList[sport]){
+            if (this.eventList[sport][match].getState() == "NI") lst.push(this.eventList[sport][match].toJson());
         }
         return lst;
     }

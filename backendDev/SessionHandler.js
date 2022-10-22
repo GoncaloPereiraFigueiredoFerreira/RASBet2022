@@ -13,15 +13,10 @@ class SessionHandler{
      * the hash is not yet resgistered
      */
     verifyUser(hash){
-<<<<<<< HEAD
         if (this.sessions[hash] != undefined){
             console.log("aqui vai")
             console.log(this.sessions[hash]["Email"],this.sessions[hash]["Role"])
             return ([this.sessions[hash]["Email"],this.sessions[hash]["Role"]]);}
-=======
-        if (this.sessions[hash] != undefined)
-            return [this.sessions[hash]["Email"],this.sessions[hash]["Role"]];
->>>>>>> 6804ba69 (Smal documentation fix)
         else {
             throw console.error("Hash not found");
         }

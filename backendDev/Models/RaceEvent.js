@@ -5,8 +5,7 @@ class RaceEvent extends SportEvent{
     constructor(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto){
         
         super(sport,league,id,description,result,state,datetime);
-        this.PlayerOdds = [];
-        this.PlayerOdds.fill(1,0,20);
+        this.PlayerOdds = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
         this.Pilots = pilots;
         this.PilotsPht = pilotsPhotos;
         this.Circuit = circuit;
@@ -24,12 +23,12 @@ class RaceEvent extends SportEvent{
     toJson(){
         return{
             "Tipo": "RaceEvent",
-            "EventoId" : super.Id,
+            "EventoId" : this.Id,
             "Liga" : this.Circuit,
-            "Participantes" : this.Pilots.push(circuitPhoto), //Foto no fim
+            "Participantes" : this.Pilots, //Foto no fim
             "Odds" : this.PlayerOdds,
             "Logos": this.PilotsPht,
-            "Data" : super.DateTime
+            "Data" : this.DateTime
         }
     }
 

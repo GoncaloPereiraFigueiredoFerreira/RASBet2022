@@ -86,4 +86,6 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 		REFERENCES Evento(ID,Desporto)
 );
 
+INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","12345","Special");
+
 

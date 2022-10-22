@@ -35,7 +35,7 @@ class SportEvent{
 
     readyEvent(){
         if (this.State == "SO"){
-            this.State = "NO";
+            this.State = "NI";
         }
     }
 
