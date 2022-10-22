@@ -142,9 +142,14 @@ function transHistFunction(request,response){
 
 
 function returnEventList(request,response){
-    //Depending on the role of the token of the request
-    // it returns a list of the json events
-    
+    let user = sessionHandler.verifyUser(request.body.token);
+    let retList = [];
+    if (user[1] == 0 || user[1] == 1 ) {// Apostador e Administrador
+        response.status(200).send(evLst.getBETEvents(request.body.sport));
+    }
+    else if (user[1] == 2 ){// Especialista
+        response.status(200).send(evLst.getSOEvents(request.body.sport));
+    }
 }
 
 
@@ -182,24 +187,6 @@ function updateFUTEvents(){
 
 function updateF1Events(){
     dbComms.getPastF1EventsOnDb((result)=> {
-        let gameList= [];
-        for(let game of result){
-            gameList.push(game.ID);
-        }
-        for (let game of gameList){
-            apiComms.updateBSKResults(game);
-            // This might not finnish in time for the db update
-        }
-        for (let game of gameList){
-            let eventE = evLst.getEventDB("F1",game);
-            dbComms.addEvento(eventE, () => {});
-        }
-    })
-}
-
-
-function updateBSKEvents(){
-    dbComms.getPastBSKEventsOnDb((result)=> {
         let raceList= [];
         for(let race of result){
             raceList.push(race.ID);
@@ -210,6 +197,24 @@ function updateBSKEvents(){
         }
         for (let race of raceList){
             let eventE = evLst.getEventDB("F1",race);
+            dbComms.addEvento(eventE, () => {});
+        }
+    })
+}
+
+
+function updateBSKEvents(){
+    dbComms.getPastBSKEventsOnDb((result)=> {
+        let gameList= [];
+        for(let game of result){
+            gameList.push(game.ID);
+        }
+        for (let game of gameList){
+            apiComms.updateBSKResults(game);
+            // This might not finnish in time for the db update
+        }
+        for (let game of gameList){
+            let eventE = evLst.getEventDB("BSK",game);
             dbComms.addEvento(eventE, () => {});
         }
     })
@@ -240,6 +245,7 @@ module.exports = {
     profileInfoFunction,
     betHistoryFunction,
     transHistFunction,
-    updateEvents
+    updateEvents,
+    returnEventList
     
 }
