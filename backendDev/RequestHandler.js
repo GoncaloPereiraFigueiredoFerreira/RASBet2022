@@ -3,6 +3,7 @@ const apiComms = require("./APICommunication/APICommunication")
 const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
 const e = require("express");
+const SessionHandler = require("./SessionHandler");
 const sessionHandler = require("./SessionHandler").getInstance();
 
 
@@ -11,27 +12,50 @@ function dummyFunction(request,response){
 }
 
 function transactionFunction(request,response){
+    request.body.ApostadorID= sessionHandler.verifyUser(request.body.ApostadorID)[0]
     dbComms.transactionOnDb(request.body,function(result){
-        response.status(200).send(result)
+        if(result.error){
+            response.status(400).send(result)
+        }
+        else response.status(200).send('Sim')
+
+        
     })
     
 }
 
 function registerFunction(request,response){
+
     dbComms.registerOnDb(request.body,function(result){
-        response.status(200).send(result)
+        if (result=='fine'){
+            response.status(200).send(sessionHandler.addUser(request.body.Email,'apostador'))
+        }
+        else response.status(400).send(result)
+        
+       
+        
     })
 }
 
 function loginFunction(request,response){
+
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse,function(result){
-        response.status(200).send(result)
+        console.log(result)
+        if (result.error){
+            response.status(400).send(result)
+        }
+        else {
+            result['Token']=sessionHandler.vu(request.body.Email)
+            response.status(200).send(result)
+        }
     })
 }
 
 
 function registerBetFunction(request,response){
-    dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento,function(result){
+    request.body.Aposta.ApostadorID= sessionHandler.verifyUser(request.body.Aposta.ApostadorID)[0]
+    console.log(request.body.Aposta.ApostadorID)
+    dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento,request.body.Codigo,function(result){
         response.status(200).send(result)
     })
 }
