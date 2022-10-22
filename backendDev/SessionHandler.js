@@ -8,15 +8,20 @@ class SessionHandler{
 
     /**
      * 
-     * @param {The hash to be verified if it corresponds to an user} hash 
+     * @param {String} hash Hash to be verified if it corresponds to an user 
      * @returns Returns a tuple that contains the email and role of a user with the given hash, and throws an error in case
      * the hash is not yet resgistered
      */
     verifyUser(hash){
+<<<<<<< HEAD
         if (this.sessions[hash] != undefined){
             console.log("aqui vai")
             console.log(this.sessions[hash]["Email"],this.sessions[hash]["Role"])
             return ([this.sessions[hash]["Email"],this.sessions[hash]["Role"]]);}
+=======
+        if (this.sessions[hash] != undefined)
+            return [this.sessions[hash]["Email"],this.sessions[hash]["Role"]];
+>>>>>>> 6804ba69 (Smal documentation fix)
         else {
             throw console.error("Hash not found");
         }
