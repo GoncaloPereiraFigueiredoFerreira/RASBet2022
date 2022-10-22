@@ -19,7 +19,7 @@ class Server{
         });
 
         /// Init the event list
-        reqHandler.initEventLst();
+        //reqHandler.initEventLst();
         
         ///Routing
         // POST Methods
