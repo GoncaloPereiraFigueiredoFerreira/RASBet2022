@@ -10,8 +10,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -118,7 +118,7 @@ class DBCommunication {
     }
     
     registerOnDb(apostador,callback){
-        let sql= 'INSERT INTO Apostador SET ?'
+        let sql= 'INSERT INTO Apostador SET ?,`Balance`= 0'
         this.db.query(sql,apostador,(err,result)=>{
             try{
                 if(err) throw err;

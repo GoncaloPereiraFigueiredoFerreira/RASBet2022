@@ -28,7 +28,7 @@ function registerFunction(request,response){
 
     dbComms.registerOnDb(request.body,function(result){
         if (result=='fine'){
-            response.status(200).send(sessionHandler.addUser(request.body.Email,'apostador'))
+            response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador')})
         }
         else response.status(400).send(result)
         
