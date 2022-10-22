@@ -68,19 +68,23 @@ CREATE TABLE IF NOT EXISTS Evento(
     ID INT NOT NULL,
     Resultado INT NOT NULL,
     Descricao VARCHAR(255),
-    Estado ENUM("SO","NI","AD","FN") NOT NULL,
-    Desporto  ENUM("FB","F1","TN","BB") NOT NULL,
+    Estado ENUM("Nao_iniciado","Finalizado") NOT NULL,
+    Desporto ENUM("FB","F1","TN","BB") NOT NULL,
+    DataEvent DATETIME NOT NULL,
     PRIMARY KEY(ID,Desporto)
 );
 
 CREATE TABLE IF NOT EXISTS Aposta_Evento(
 	ApostaID INT NOT NULL,
     EventoID INT NOT NULL,
+    Desporto  ENUM("FB","F1","TN","BB") NOT NULL,
     PRIMARY KEY(ApostaID,EventoID),
     FOREIGN KEY(ApostaID)
 		REFERENCES Aposta(ID),
 	FOREIGN KEY(EventoID)
-		REFERENCES Evento(ID)
+		REFERENCES Evento(ID),
+    FOREIGN KEY(EventoID)
+        REFERENCES Evento(Desporto)
 );
 
 
