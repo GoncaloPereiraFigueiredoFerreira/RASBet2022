@@ -18,6 +18,9 @@ class NoTieEvent extends SportEvent{
         this.Odds1 = Odds1 * multiplier;
         this.Odds2 = Odds2 * multiplier;
     }
+    getOdds(){
+        return [this.Odds1,this.Odds2];
+    }
 
     toJson(){
         return{

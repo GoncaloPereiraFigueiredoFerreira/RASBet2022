@@ -16,6 +16,10 @@ class RaceEvent extends SportEvent{
         this.PlayerOdds = playerOdds;
     }
 
+    getOdds(){
+        return this.PlayerOdds;
+    }
+
     superOdds(multiplier){
         this.PlayerOdds.map(x=> x * multiplier);
     }

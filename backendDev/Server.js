@@ -31,11 +31,12 @@ class Server{
         app.post(api + "editProfile",reqHandler.editProfileFunction);
         app.post(api + "addEventOdd",reqHandler.addEventOdds);
         app.post(api + "closeEvent" ,reqHandler.closeEventFunction);
-        app.post(api + "suspndEvent",reqHandler.suspndEventFunction);
+        app.post(api + "suspndEvent",reqHandler.suspndEventFunction); //Deve ser removido
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
         app.post(api + "addcodeUsed",reqHandler.addcodeUsedFunction);
+        app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);
         
-
+        //Pra que???
         app.post(api+"registerEvent",reqHandler.registerEventFunction);
 
         // GET Methods
@@ -44,7 +45,7 @@ class Server{
         app.get(api + "betHistory"  ,reqHandler.betHistoryFunction);
         app.get(api + "transHist"   ,reqHandler.transHistFunction);
         app.get(api + "eventList"   ,reqHandler.returnEventList);
-        app.get(api + "updateOdds"  ,reqHandler.dummyFunction);
+        app.get(api + "updateOdds"  ,reqHandler.getOdds);
 
         // Start Server
         app.listen(this.port, () => {

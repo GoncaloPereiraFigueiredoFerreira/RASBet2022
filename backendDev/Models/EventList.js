@@ -18,7 +18,7 @@ class EventList{
     }
 
     /**
-     * @description Creates an instance of the EventList class if it does not exist, 
+     * Creates an instance of the EventList class if it does not exist, 
      * else returns the existing one
      * @returns Returns the singleton instance of this class
      */
@@ -128,6 +128,12 @@ class EventList{
             this.eventList[sport][id].getParticipants();
         }
     }
+    getOdds(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            this.eventList[sport][id].getOdds();
+        }
+    }
+
 
 
 }

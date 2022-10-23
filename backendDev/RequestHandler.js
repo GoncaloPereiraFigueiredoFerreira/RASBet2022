@@ -5,6 +5,7 @@ const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
+const notifcationCenter = require("./NotificationCenter");
 
 
 function dummyFunction(request,response){
@@ -80,6 +81,7 @@ function closeEventFunction(request,response){
     dbComms.closeEventOnDb(request.body.Id,function(result){
         response.status(200).send(result)
     })
+    evLst.closeEvent(request.body.sport,request.body.Id);
 }
 
 function suspndEventFunction(request,response){
@@ -164,8 +166,8 @@ function addEventOdds(request,response){
 function initEventLst(){
     dbComms.getEventsOnDb((result)=>{
         for (let event of result){
-            //////VAI dar erro
-            evLst.addEventFromDB(event.sport,event.liga,event.id,event.descricao,event.result,event.estado,event.datetime);
+            //////VAI dar erro por causa do estado
+            evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }
         apiComms.initEventLst();
     });
@@ -234,6 +236,16 @@ function updateEvents(){
 }
 
 
+function activateSuperOdds(request,response){
+    evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
+    response.status(200).send();
+}
+
+function getOdds(request,response){
+    response.status(200).send(evLst.getOdds(request.body.sport,request.body.EventoID))
+}
+
+
 module.exports = {
     initEventLst,
     dummyFunction,
@@ -253,6 +265,8 @@ module.exports = {
     transHistFunction,
     updateEvents,
     returnEventList,
+    activateSuperOdds,
+    getOdds,
     addEventOdds
     
 }

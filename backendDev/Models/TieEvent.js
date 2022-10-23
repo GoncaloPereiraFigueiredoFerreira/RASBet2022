@@ -29,6 +29,10 @@ class TieEvent extends SportEvent{
         this.OddsDraw = OddsDraw * multiplier;
     }
 
+    getOdds(){
+        return [this.Odds1,this.Odds2,this.OddsDraw];
+    }
+
     toJson(){
         
         return{
