@@ -14,11 +14,10 @@ class SessionHandler{
      */
     verifyUser(hash){
         if (this.sessions[hash] != undefined){
-            console.log("aqui vai")
-            console.log(this.sessions[hash]["Email"],this.sessions[hash]["Role"])
             return ([this.sessions[hash]["Email"],this.sessions[hash]["Role"]]);}
         else {
-            throw console.error("Hash not found");
+            return ("Hash no found")
+            //throw console.error("Hash not found");
         }
     }
 
@@ -28,9 +27,6 @@ class SessionHandler{
         return hash;
     }
 
-    vu(email){
-        return sha1(email+12+email+13)
-    }
 
     static getInstance(){
         if (instance == undefined){

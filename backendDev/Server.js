@@ -33,7 +33,7 @@ class Server{
         app.post(api + "closeEvent" ,reqHandler.closeEventFunction);
         app.post(api + "suspndEvent",reqHandler.suspndEventFunction); //Deve ser removido
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
-        app.post(api + "addcodeUsed",reqHandler.addcodeUsedFunction);
+        //app.post(api + "addcodeUsed",reqHandler.addcodeUsedFunction);// deve ser removido
         app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);
         
         //Pra que???

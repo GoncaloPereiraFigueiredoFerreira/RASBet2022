@@ -10,8 +10,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -122,7 +122,7 @@ class DBCommunication {
         this.db.query(sql,apostador,(err,result)=>{
             try{
                 if(err) throw err;
-                return callback('fine')
+                return callback({"Res":"Sim"})
             }
             catch(err){
                 return callback({"error":err.code})
@@ -187,74 +187,116 @@ class DBCommunication {
 
         //regista a transação de aposta
         this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp},function(result){
-
-            //regista a utilização da promoção por parte do apostador
             if(result.error) return callback(result)
 
-            let sql= 'INSERT INTO Promocao_Apostador SET ?'
-            db.query(sql,{"Codigo":codigo,"ApostadorID":aposta.ApostadorID},(err,result)=>{
-                try{
-                    if(err) throw err
+            //caso tenha usado um 
 
-                    //procura o valor do codigo aplicado para depois somar ao montante da aposta
+            if(codigo==null){
 
-                    sql='SELECT Valor FROM Promocao WHERE Codigo = ?'
-                    db.query(sql,codigo,(err,result)=>{
-                        try{
-                            if(err) throw err
-                            let data = JSON.parse(JSON.stringify(result))
-                            aposta.Montante+= data[0].Valor
+                let sql= 'INSERT INTO Aposta SET ?'
+                db.query(sql,aposta,(err,result)=>{
+                    try{
+                        if(err) throw err
+                        //devolve o último id inserido por auto_increment
+                        sql= 'SELECT LAST_INSERT_ID() as LastID'
+                        db.query(sql,(err,result)=>{
+                            try{
+                                if(err) throw err;
+                                var data=JSON.parse(JSON.stringify(result))
+                                sql= 'INSERT INTO Aposta_Evento SET `ApostaID` = ? , ?'
+                                db.query(sql,[data[0].LastID,evento],(err,result)=>{
+                                    try{
+                                        if(err) throw err;
+                                        return callback({'Res':'Aposta adicionada'})
+                                    }
+                                    catch(err){
+                                        console.log(err)
+                                        return callback({"error":err.code})
+                                    }
+                                }) 
+                            }
+                            catch(err){
+                                console.log(err)
+                                return callback({"error":err.code})
+                            }
+                        })
+                    }
+                    catch(err){
+                        return callback({"error":err.code})
+                    }
+                })
+            }
+            else{
+                //regista a utilização da promoção por parte do apostador
 
-                            //regista a aposta
+                let sql= 'INSERT INTO Promocao_Apostador SET ?'
+                db.query(sql,{"Codigo":codigo,"ApostadorID":aposta.ApostadorID},(err,result)=>{
+                    try{
+                        if(err) throw err
 
-                            sql= 'INSERT INTO Aposta SET ?'
-                            db.query(sql,aposta,(err,result)=>{
-                                try{
-                                    if(err) throw err;
+                        //procura o valor do codigo aplicado para depois somar ao montante da aposta
+                            
+                        sql='SELECT Valor FROM Promocao WHERE Codigo = ?'
+                        db.query(sql,codigo,(err,result)=>{
+                            try{
+                                if(err) throw err
+                                let data = JSON.parse(JSON.stringify(result))
+                                aposta.Montante+= data[0].Valor
 
-                                    //devolve o último id inserido por auto_increment
+                                //regista a aposta
 
-                                    sql= 'SELECT LAST_INSERT_ID() as LastID'
-                                    db.query(sql,(err,result)=>{
-                                        try{
-                                            if(err) throw err;
-                                            var data=JSON.parse(JSON.stringify(result))
-                                            //console.log(data[0])
-                                            //console.log(data[0].LastID)
+                                sql= 'INSERT INTO Aposta SET ?'
+                                db.query(sql,aposta,(err,result)=>{
+                                    try{
+                                        if(err) throw err;
 
-                                            //regista na table aposta_evento 
+                                        //devolve o último id inserido por auto_increment
 
-                                            sql= 'INSERT INTO Aposta_Evento SET `ApostaID` = ? , ?'
-                                            db.query(sql,[data[0].LastID,evento],(err,result)=>{
-                                                try{
-                                                    if(err) throw err;
-                                                    return callback('Aposta adicionada')
+                                        sql= 'SELECT LAST_INSERT_ID() as LastID'
+                                        db.query(sql,(err,result)=>{
+                                            try{
+                                                if(err) throw err;
+                                                var data=JSON.parse(JSON.stringify(result))
+                                                //console.log(data[0])
+                                                //console.log(data[0].LastID)
 
-                                                }
-                                                catch(err){
-                                                    console.log(err)
-                                                    return callback(err.code)
-                                                }
-                                            }) 
-                                        }
-                                        catch(err){
-                                            console.log(err)
-                                            return callback(err.code)
-                                        }
-                                    })
-                                }
-                                catch(err){
-                                    return callback(err.code)
-                                }
-                            })
-                        }
-                        catch(err){
-                        }
-                    })
-                }
-                catch(err){
-                }
-            })
+                                                //regista na table aposta_evento 
+
+                                                sql= 'INSERT INTO Aposta_Evento SET `ApostaID` = ? , ?'
+                                                db.query(sql,[data[0].LastID,evento],(err,result)=>{
+                                                    try{
+                                                        if(err) throw err;
+                                                        return callback({'Res':'Aposta adicionada'})
+
+                                                    }
+                                                    catch(err){
+                                                        console.log(err)
+                                                        return callback({"error":err.code})
+                                                    }
+                                                }) 
+                                            }
+                                            catch(err){
+                                                console.log(err)
+                                                return callback({"error":err.code})
+                                            }
+                                        })
+                                    }
+                                    catch(err){
+                                        return callback({"error":err.code})
+                                    }
+                                })
+                            }
+                            catch(err){
+                                return callback({"error":err.code})
+                            }
+                        })
+                    }
+                    catch(err){
+                        return callback({"error":err.code})
+                    }
+                })
+
+            }
         })
     }
 
@@ -265,24 +307,24 @@ class DBCommunication {
         this.db.query(sql,email,(err,result)=>{
             try{
                 if(err) throw err;
-                return callback("Perfil editado")
+                return callback({"Res":"Sim"})
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
             
         })
     }
     
-    closeEventOnDb(eventID,callback){
-        let sql='UPDATE Evento SET Estado= "FN" WHERE ID = ?'
-        this.db.query(sql,eventID,(err,result)=>{
+    closeEventOnDb(eventID,desporto,callback){
+        let sql='UPDATE Evento SET Estado= "Finalizado" WHERE ID = ? AND Desporto= ?'
+        this.db.query(sql,[eventID,desporto],(err,result)=>{
             try{
                 if(err) throw err;
                 return callback("Evento Fechado")
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
             
         })
@@ -296,7 +338,7 @@ class DBCommunication {
                 return callback("Evento suspenso")
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
         })
     }
@@ -309,9 +351,8 @@ class DBCommunication {
                 return callback("Evento adicionado")
             }
             catch(err){
-                console.log("catch")
                 
-                return callback(err.code)
+                return callback({"error":err.code})
             }
         })
     }
@@ -321,10 +362,10 @@ class DBCommunication {
         this.db.query(sql,promocao,(err,result)=>{
             try{
                 if(err) throw err;
-                return callback("Promocao adicionada")
+                return callback({"Res":"Sim"})
             }
             catch{
-                return callback(err.code)
+                return callback({"error":err.code})
             }
             
         })
@@ -333,23 +374,30 @@ class DBCommunication {
     
     
     usedCodOnDb(email,codigo,callback){
-        let sql='SELECT * FROM Promocao_Apostador WHERE Codigo=? AND ApostadorID = ?'
-        this.db.query(sql,[codigo,email],(err,result)=>{
+        let sql ='SELECT * FROM Promocao WHERE Codigo=?'
+        this.db.query(sql,codigo,(err,result)=>{
             try{
-                if(err) throw err;
-                if(!result[0]){
-                    return callback(`O CLiente ${email} ainda nao usou o codigo promocional ${codigo}`)
-                }
-                else{
-                    return callback(`O CLiente ${email} ja usou o codigo promocional ${codigo}`)
-                }
+                if(!result[0]) return callback({"Res":"Codigo nao existe"})
+                sql='SELECT * FROM Promocao_Apostador WHERE Codigo=? AND ApostadorID = ?'
+                this.db.query(sql,[codigo,email],(err,result)=>{
+                    try{
+                        if(err) throw err;
+                        if(!result[0]){
+                            return callback({"Res":"Nao"})
+                        }
+                        else{
+                            return callback({"Res":"Sim"})
+                        }
+                    }
+                    catch(err){
+                        return callback({"error":err.code})
+                    }
+                })
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
-            
         })
-    
     }
     
     profileInfoOnDb(email,callback){
@@ -360,7 +408,7 @@ class DBCommunication {
                 return callback(result)
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
             
         })
@@ -374,9 +422,39 @@ class DBCommunication {
                 return callback(result)
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
             
+        })
+    }
+
+    //ordenar cronologicamente
+    transHistOnDb(email,callback){
+        let sql='SELECT * FROM Transacao WHERE ApostadorID=? ORDER BY DataTr DESC'
+        this.db.query(sql,email,(err,result)=>{
+            try{
+                if(err) throw err;
+                var data=JSON.parse(JSON.stringify(result))
+                return callback(result)
+            }
+            catch(err){
+                return callback({"error":err.code})
+            }
+        })
+    }
+
+    walletOnDb(email,callback){
+        let sql='SELECT Balance FROM Apostador WHERE Email=?'
+        this.db.query(sql,email,(err,result)=>{
+            try{
+                if(err) throw err
+                var data=JSON.parse(JSON.stringify(result))
+                
+                return callback(data[0].Balance)
+            }
+            catch(err){
+                return callback({'error':err.code})
+            }
         })
     }
 
@@ -388,7 +466,7 @@ class DBCommunication {
                 return callback(result)
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
         });
     }
@@ -401,25 +479,11 @@ class DBCommunication {
                 return callback(result)
             }
             catch(err){
-                return callback(err.code)
+                return callback({"error":err.code})
             }
         });
     }
-    
-    
-    //ordenar cronologicamente
-    transHistOnDb(email,callback){
-        let sql='SELECT * FROM Transacao WHERE ApostadorID=? ORDER BY DataTr DESC'
-        this.db.query(sql,email,(err,result)=>{
-            try{
-                if(err) throw err;
-                return callback(result)
-            }
-            catch(err){
-                return callback(err.code)
-            }
-        })
-    }
+     
 
 }
 module.exports = DBCommunication

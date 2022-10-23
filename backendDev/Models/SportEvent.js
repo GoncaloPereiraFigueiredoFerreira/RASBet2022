@@ -45,12 +45,13 @@ class SportEvent{
 
     toDB(){
         return {
-            "EventoId" : this.Id,
-            "Data" : this.DateTime,
+            "ID" : this.Id,
+            "DataEvent" : this.DateTime,
             "Descricao" : this.Description,
             "Resultado" : this.Result,
             "Estado" : this.State,
-            "Liga" : this.League
+            "Liga" : this.League,
+            "Desporto":this.Sport
         }
     }
 
