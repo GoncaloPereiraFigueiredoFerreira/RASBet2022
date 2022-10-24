@@ -10,8 +10,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -472,7 +472,7 @@ class DBCommunication {
     }
 
     getEventsOnDb(callback){
-        let sql = "SELECT * FROM EVENTO"
+        let sql = "SELECT * FROM Evento"
         this.db.query(sql,(err,result)=>{
             try{
                 if(err) throw err;
