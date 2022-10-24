@@ -70,10 +70,10 @@ class EventList{
     }
 
     /// Returns a list of events without Odds
-    getSOEvents(sport){
+    getNODDEvents(sport){
         let lst = [];
         for(let match in this.eventList[sport]){
-            if (this.eventList[sport][match].getState() == "SO") {
+            if (this.eventList[sport][match].getState() == "NODD") {
                 if (this.eventList[sport][match] instanceof TieEvent){
                     lst.push(this.eventList[sport][match].toJsonV2());
                 }
@@ -89,7 +89,7 @@ class EventList{
     getBETEvents(sport){
         let lst = [];
         for(let match in this.eventList[sport]){
-            if (this.eventList[sport][match].getState() == "NI") lst.push(this.eventList[sport][match].toJson());
+            if (this.eventList[sport][match].getState() == "BET") lst.push(this.eventList[sport][match].toJson());
         }
         return lst;
     }

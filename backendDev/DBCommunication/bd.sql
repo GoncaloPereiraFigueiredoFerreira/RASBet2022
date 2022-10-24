@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS Evento(
     Desporto ENUM("FUT","FUTPT","BSK","F1") NOT NULL,
     Resultado INT NOT NULL,
     Descricao VARCHAR(255),
-    Estado ENUM("Nao_iniciado","Finalizado") NOT NULL,
+    Estado ENUM("BET","FIN","CLS") NOT NULL,
     Liga VARCHAR(50),
     DataEvent DATETIME NOT NULL,
     PRIMARY KEY(ID,Desporto)

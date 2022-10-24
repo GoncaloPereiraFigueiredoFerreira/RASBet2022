@@ -11,7 +11,7 @@ class SportEvent{
 
     updateWinner(result){
         this.Result = result;
-        this.State = "FN";
+        this.State = "FIN";
     }
 
     getSport(){
@@ -34,13 +34,13 @@ class SportEvent{
     }
 
     readyEvent(){
-        if (this.State == "SO"){
-            this.State = "NI";
+        if (this.State == "NODD"){
+            this.State = "BET";
         }
     }
 
     closeEvent(){
-        this.state = "FN";
+        this.state = "CLS";
     }
 
     toDB(){

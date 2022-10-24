@@ -317,7 +317,7 @@ class DBCommunication {
     }
     
     closeEventOnDb(eventID,desporto,callback){
-        let sql='UPDATE Evento SET Estado= "Finalizado" WHERE ID = ? AND Desporto= ?'
+        let sql='UPDATE Evento SET Estado= "CLS" WHERE ID = ? AND Desporto= ?'
         this.db.query(sql,[eventID,desporto],(err,result)=>{
             try{
                 if(err) throw err;
@@ -331,7 +331,7 @@ class DBCommunication {
     }
     
     suspndEventOnDb(eventID,callback){
-        let sql='UPDATE Evento SET Estado= "SO" WHERE ID = ?'
+        let sql='UPDATE Evento SET Estado= "NODD" WHERE ID = ?'
         this.db.query(sql,eventID,(err,result)=>{
             try{
                 if(err) throw err;
@@ -459,7 +459,7 @@ class DBCommunication {
     }
 
     getPastFUTEventsOnDb(callback){
-        let sql = "SELECT * FROM EVENTO WHERE Estado = NI AND DESPORTO = FUT" // e cuja data é anterior à atual
+        let sql = "SELECT * FROM EVENTO WHERE Estado = BET AND DESPORTO = FUT" // e cuja data é anterior à atual
         this.db.query(sql,(err,result)=>{
             try{
                 if(err) throw err;
