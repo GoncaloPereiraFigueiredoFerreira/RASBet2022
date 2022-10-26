@@ -173,14 +173,14 @@ function closeEventFunction(request,response){
 
     evLst.closeEvent(request.body.sport,request.body.Id);
 }
-
+// Removed
 function suspndEventFunction(request,response){
     dbComms.suspndEventOnDb(request.body.Id,function(result){
         response.status(200).send(result)
     })
 }
 
-
+// Removed
 function registerEventFunction(request,response){
     dbComms.registerEventOnDb(request.body,function(result){
         response.status(200).send(result)
@@ -332,21 +332,22 @@ function transHistFunction(request,response){
 
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.body.token);
-    console.log("new event list request");
-    console.log(user);
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
         response.status(200).send(evLst.getBETEvents(request.body.sport));
     }
     else if (user[1] == 'Special' ){// Especialista
-        response.status(200).send(evLst.getSOEvents(request.body.sport));
+        response.status(200).send(evLst.getNODDEvents(request.body.sport));
     }
+    else  response.status(404).send("Not found");
+    
 }
 
 function addEventOdds(request,response){
     let user = sessionHandler.verifyUser(request.body.token);
     if (user[1] == 'Special'){
-        evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
-        response.status(200).send();
+        let flag = evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
+        if (flag) response.status(200).send("Odds for event " + request.body.EventoId+ "were added");
+        else response.status(404).send("Event not found");
     }
 }
 
@@ -354,7 +355,6 @@ function addEventOdds(request,response){
 function initEventLst(){
     dbComms.getEventsOnDb((result)=>{
         for (let event of result){
-            //////VAI dar erro por causa do estado
             evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }
         apiComms.initEventLst();
@@ -425,8 +425,9 @@ function updateEvents(){
 
 
 function activateSuperOdds(request,response){
-    evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
-    response.status(200).send();
+    let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
+    if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+    else response.status(404).send("Event not found");
 }
 
 function getOdds(request,response){

@@ -27,7 +27,6 @@ const rspPath = cnf.get("responsePath");
  * @param {String} path path where the response should be written
  * @param {Function} callback function that executes when the request is finnished
  */
-
 function makeRequest(request,path,callback){
     axios(request)
     .then( (response) => {
@@ -37,7 +36,7 @@ function makeRequest(request,path,callback){
           }
           else{
             callback(response.data);
-            if (path != undefined && response.data.errors.length==0) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+            if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
           }})
 
     .catch((error)=>{

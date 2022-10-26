@@ -66,7 +66,10 @@ class EventList{
                 this.eventList[sport][id].changeOdds(odds[0],odds[1],odds[2]);
                 this.eventList[sport][id].readyEvent();
             }
+            return true;
         }
+        return false;
+
     }
 
     /// Returns a list of events without Odds
@@ -96,12 +99,18 @@ class EventList{
 
     // Returns an event to the front end
     getEventFE(sport,id){
-        return this.eventList[sport][id].toJson();
+        if (this.eventList[sport][id] != undefined)
+            return this.eventList[sport][id].toJson();
+
+        else return null;
     }
 
     // Returns an event to the DB
     getEventDB(sport,id){
-        return this.eventList[sport][id].toDB();
+        if (this.eventList[sport][id] != undefined)
+            return this.eventList[sport][id].toDb();
+
+        else return null;
     }
 
 
@@ -114,24 +123,32 @@ class EventList{
     superOdds(sport, id,multiplier){
         if (this.eventList[sport][id] != undefined){
             this.eventList[sport][id].superOdds(multiplier);
+            return true;
         }
+        else return false;
     }
 
     closeEvent(sport,id){
         if (this.eventList[sport][id] != undefined){
             this.eventList[sport][id].closeEvent();
+            return true;
         }
+        else return false;
     }
 
     getParticipants(sport,id){
         if (this.eventList[sport][id] != undefined){
             this.eventList[sport][id].getParticipants();
+            return true;
         }
+        else return false;
     }
     getOdds(sport,id){
         if (this.eventList[sport][id] != undefined){
             this.eventList[sport][id].getOdds();
+            return true;
         }
+        else return false;
     }
 
 

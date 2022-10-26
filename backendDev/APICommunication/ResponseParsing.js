@@ -26,7 +26,7 @@ function parseFutResp(json){
                 evLst.addEventFromAPI(new TieEvent("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,-1,-1,-1));
             }
             else{
-                let e = new TieEvent("FUT",league,id,"",-1,"SO",date,team1,team2,logo1,logo2,-1,-1,-1);
+                let e = new TieEvent("FUT",league,id,"",-1,"NODD",date,team1,team2,logo1,logo2,-1,-1,-1);
                 evLst.addEventFromAPI(e);
             }
         }
@@ -74,7 +74,7 @@ function parsePTFutResp(json){
             evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie));
         }
         else{
-            let e = new TieEvent("FUTPT",league,id,"",-1,"SO",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
+            let e = new TieEvent("FUTPT",league,id,"",-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
             evLst.addEventFromAPI(e);
         }
     }
@@ -105,7 +105,7 @@ function parseF1Resp(racesJson, pilotsJson){
                 evLst.addEventFromAPI(new RaceEvent("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto));
             }
             else{
-                let e = new RaceEvent("F1","World F1 Competition",id,"",-1,"SO",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto);
+                let e = new RaceEvent("F1","World F1 Competition",id,"",-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto);
                 evLst.addEventFromAPI(e);
             }
         }
@@ -151,7 +151,7 @@ function parseNBAResp(nbaJson){
                     evLst.addEventFromAPI(new NoTieEvent("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2));
                 }
                 else{
-                    let e = new NoTieEvent("BSK",league,id,"",-1,"SO",date,team1,team2,logo1,logo2);
+                    let e = new NoTieEvent("BSK",league,id,"",-1,"NODD",date,team1,team2,logo1,logo2);
                     evLst.addEventFromAPI(e);
                 }
 
