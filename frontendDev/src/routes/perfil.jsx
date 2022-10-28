@@ -31,17 +31,14 @@ export default function Register() {
             <input type="date" id="data" name="data" />
             </div>
 
-            <input type="text" id="nif" name="nif" placeholder='NIF'/>
-            <input type="text" id="cc" name="cc" placeholder='Número de identidade'/>
-            <input type="text" id="morada" name="morada" placeholder='Morada, Número, Andar'/>
-            <input type="text" id="telemovel" name="telemovel" placeholder='Telemóvel'/>
-            <input type="password" id="password" name="password" placeholder='Palavra-passe'/>
+            <p type="text" id="nif" name="nif" placeholder='NIF'/>
+            <p type="text" id="cc" name="cc" placeholder='Número de identidade'/>
+            <p type="text" id="morada" name="morada" placeholder='Morada, Número, Andar'/>
+            <p type="text" id="telemovel" name="telemovel" placeholder='Telemóvel'/>
+            <p type="password" id="password" name="password" placeholder='Palavra-passe'/>
 
             <button className = "button" type="submit">Confirmar</button>
           </Form>
-        </div>
-        <div className = "loginimg">
-          <img src="loginimage.png" id="loginimage"/>
         </div>
       </div>
     </>

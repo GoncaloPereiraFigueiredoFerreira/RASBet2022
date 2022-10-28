@@ -50,7 +50,7 @@ export default function Root() {
           <p style={{"padding":"5px"}}>Competiçoes</p>
         </div>
 
-        <div class="betpage" id="Main">
+        <div class="betpage-spec" id="Main">
           <div class="bet-element">
             <div class="drawmatch">
               <img src="hometeam" style={{"padding":"10px"}}></img>
@@ -58,9 +58,10 @@ export default function Root() {
               <img src="awaytam" style={{"padding":"10px"}}></img>
             </div>
             <div class="drawmatchodds">
-              <button style={{"margin":"15px"}}>home odd</button>
-              <button style={{"margin":"15px"}}>draw odd</button>
-              <button style={{"margin":"15px"}}>away odd</button>
+              <input type="text" style={{"margin":"10px"}} placeholder="home odd"/>
+              <input type="text" style={{"margin":"10px"}} placeholder="draw odd"/>
+              <input type="text" style={{"margin":"10px"}} placeholder="away odd"/>
+              <button style={{"padding":"20px","justify-content":"center"}}>Submeter</button>  
             </div>
           </div> 
 
@@ -73,19 +74,16 @@ export default function Root() {
           <div class="dropdown">
             <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>
             <div class="dropdown-content">
-                <a>player1   1.3</a>
-                <a>player2   1.3</a>
-                <a>player3   1.3</a>                  <a>player4   1.3</a>
-                <a>player5   1.3</a>
+                <a><input type="text" style={{"margin":"15px"}} placeholder="player 1"/></a>
+                <a><input type="text" style={{"margin":"15px"}} placeholder="player 2"/></a>
+                <a><input type="text" style={{"margin":"15px"}} placeholder="player 3"/></a>
+                <a><input type="text" style={{"margin":"15px"}} placeholder="player 4"/></a>
+                <a><input type="text" style={{"margin":"15px"}} placeholder="player 5"/></a>
             </div>
           </div>
+          <button style={{"padding":"20px","justify-content":"center"}}>Submeter</button>
         </div>     
         </div>
-          <div class="betzone" id="Rightbar">
-            <div class="betbox">
-              
-            </div>
-          </div>
       </div>
     <Outlet />
     </>

@@ -14,7 +14,7 @@ export default function Login() {
     <>
 
     <div class="logo">
-    <img src="logo" id="logologin"/>
+    <img src='logo.png' style={{'width':'6vh','height':'3vh'}} id="logologin"/>
     </div>
 
     <div class="box">
@@ -35,7 +35,7 @@ export default function Login() {
       </div>
 
       <div class = "loginimg">
-        <img src="loginimage.jpg" id="loginimage"/>
+        <img src="logoimage.png" id="loginimage"/>
       </div>
       
       

@@ -70,17 +70,17 @@
 
 .birthdate{
     text-align: left;
-    margin-left: 11%;
+    margin-left: 11%;   
 }
 
 .loginimg{
-    order: 2;
-    flex-grow: 1;
-    flex-wrap: wrap;
-    flex-shrink: 1;
+    width: fit-content;
+    height: fit-content;
 
+    order: 2;   
+    border-color: brown;
     border-style: solid;
-    border-radius: 5%;
+    border-radius: 15px;
 
     margin: auto ;
     padding: auto;
@@ -89,9 +89,8 @@
 }
 
 #loginimage img{
-    
-    object-fit: contain;
     width: 100%;
+    height: 100%;
     object-position: 50% 50%;
 }
 
