@@ -261,6 +261,7 @@ li img{
 
 .betbox{
   display: flex;
+  flex-direction: column;
   margin:20px;
   margin-right: 5%;
   margin-left: 0%;
@@ -269,4 +270,9 @@ li img{
   border-radius: 10px;
   /*position: sticky;*/
   overflow-y:auto;
+}
+
+.bet{
+  background-color: grey;
+  margin: 5px;
 }

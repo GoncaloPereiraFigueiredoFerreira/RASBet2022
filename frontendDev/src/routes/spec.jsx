@@ -10,7 +10,7 @@ function getToken(){
   return userToken?.token;
 }
 
-export default function Root() {
+export default function Specialist() {
   const navigation = useNavigate();
   const token = getToken();
 

@@ -29,7 +29,7 @@ export default function Root() {
             <li><Link to='/sport/forml1'>Formula 1</Link></li>
             <li><Link to='/sport/basktbol'>Basquetebol</Link></li>
 
-            <div class="dropdown">
+            <div className="dropdown">
               <img src='perfil.jpg' style={{'width':'6vh','height':'3vh',"padding":"14px"}}/>
               <div class="dropdown-content">
                 <a href={`perfil/${token}`}>Perfil</a>
@@ -45,14 +45,14 @@ export default function Root() {
         </nav>
       </header>
 
-      <div class="mainpage">
-        <div class="sidebar" id="Leftbar">
+      <div className="mainpage">
+        <div className="sidebar" id="Leftbar">
           <p style={{"padding":"5px"}}>Competiçoes</p>
         </div>
 
-        <div class="betpage" id="Main">
-          <div class="bet-element">
-            <div class="drawmatch">
+        <div className="betpage" id="Main">
+          <div className="bet-element">
+            <div className="drawmatch">
               <img src="hometeam" style={{"padding":"10px"}}></img>
               <p>HomeTeam - AwayTeam</p>
               <img src="awaytam" style={{"padding":"10px"}}></img>
@@ -81,9 +81,33 @@ export default function Root() {
           </div>
         </div>     
         </div>
-          <div class="betzone" id="Rightbar">
-            <div class="betbox">
+          <div className="betzone" id="Rightbar">
+
+            <div className="betbox" id="Simples">
+              <button style={{"margin":"3px"}}>Simples</button>
+              <div className="bet">
+                <p>HomeTeam - AwayTeam</p>
+                <p>Bet: HomeTeam</p>
+                <p>Odd: 1.3</p>
+                <p type="value" placeholder='Aposta'/>
+                <button style={{"margin":"3px"}}>Cancelar</button>
+              </div>
+              <button style={{"margin":"3px"}}>Submeter</button>
+            </div>
+
+            <div className="betbox" id="Multiplas">
+              <button style={{"margin":"3px"}}>Multiplas</button>
+              <div className="bet">
+              <p>HomeTeam - AwayTeam</p>
+                <p>Bet: HomeTeam</p>
+                <p>Odd: 1.3</p>
+                <p type="value" placeholder='Aposta'/>
+                <button style={{"margin":"3px"}}>Cancelar</button>
+              </div>
               
+              
+              <p type="value" placeholder='Aposta'/>
+              <button style={{"margin":"3px"}}>Submeter</button>
             </div>
           </div>
       </div>

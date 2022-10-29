@@ -6,6 +6,7 @@ import ErrorPage from './error-page.jsx'
 import Index from './routes/index.jsx'
 import Root from './routes/root.jsx'
 import Sport, {loader as sportLoader}from './routes/sport.jsx'
+import Specialist from './routes/spec.jsx'
 
 import Login from './routes/login.jsx'
 import Register,{action as registerAction} from './routes/register.jsx'
@@ -34,6 +35,10 @@ function App(){
         path: "/register",
         action: registerAction,
         element: <Register/>,   
+	   },
+	   {
+        path: "/specialist",
+        element: <Specialist/>,   
 	   }
 	]);
 
