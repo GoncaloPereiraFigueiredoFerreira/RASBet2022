@@ -42,7 +42,7 @@ button {
   margin: 0;
 }
 button {
-  color: #3992ff;
+  color: black;
   font-weight: 500;
 }
 
@@ -71,4 +71,202 @@ form[action$="destroy"] button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+header {
+  background-color: darkgreen;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10vh;
+}
+
+header * {
+  display: inline-flexbox;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  /*overflow: hidden;*/
+  background-color: darkgreen;
+  color: black;
+}
+
+li {
+  float: left;
+  width: fit-content;
+}
+
+li:last-child {
+  border-right: none;
+  width: fit-content;
+}
+
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  font-size:x-large; 
+  padding: 14px 24px;
+  text-decoration: none;
+}
+
+li a:hover{
+  background-color: #333;
+  color: white;
+}
+
+li img{
+  object-fit: contain;
+  float: left;
+  margin-right: 80%;
+  margin-left: 10%;
+  margin-top: 5%;
+  margin-bottom: 90%; 
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  float: right;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 0;
+  width:max-content;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+.mainpage{
+  width: 100%;
+  height: 100%;
+  display:flexbox;
+  margin-top: 10vh;
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.sidebar{
+  width: 20%;
+  height: 100%;
+  background-color: white;
+  color: black;
+  display: block;
+  float: left;
+}
+
+.betzone{
+  width: 20%;
+  height: 100%;
+  background-color: white;
+  color: black;
+  display: block;
+  float:left
+}
+
+.betpage{
+  width: 60%;
+  height: 100%;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  display: block;
+  float:left;
+  overflow-y:auto;
+}
+
+.betpage-spec{
+  width: 80%;
+  height: 100%;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  display: block;
+  float:left;
+  overflow-y:auto;
+}
+
+.bet-element{
+  display: flex;
+  margin:20px;
+  margin-right: 10%;
+  margin-left: 10%;
+  padding: 10px;
+  background-color: lightsalmon;
+  border-radius: 10px;
+}
+
+.drawmatch{
+  float: right;
+  display: flex;
+  margin-right: 5%;
+  margin-left: auto;
+}
+
+.drawmatchodds{
+  display: flex;
+  float: right;
+  margin-left: 5%;
+  margin-right: auto;
+}
+
+.racematch{
+  display: flex;
+  margin-left: 5%;
+  margin-right: auto;
+  float:left;
+}
+
+.betbox{
+  display: flex;
+  margin:20px;
+  margin-right: 5%;
+  margin-left: 0%;
+  padding-top: 10px;
+  background-color: burlywood;
+  border-radius: 10px;
+  /*position: sticky;*/
+  overflow-y:auto;
 }

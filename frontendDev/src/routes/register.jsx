@@ -1,10 +1,31 @@
 import {Link ,Form,redirect} from 'react-router-dom'
+import axios from 'axios'
 import './login.css'
+
+import {setToken} from "../utils"
+
 
 export async function action({request,params}){
   const data = await request.formData();
-  console.log(data);
-  return redirect("/");
+  const updates = Object.fromEntries(data);
+  console.log(updates);
+  var flag = await axios({method:'POST',url:'http://localhost:8080/api/register/',data:updates}) 
+  .then(function (response) {
+    console.log(response);
+    const data = response.data;
+    setToken(data.Token);
+    return true;
+  })
+  .catch(function (error) {
+    console.log(error,flag);
+    return false;
+  });
+  
+
+  console.log(flag);
+  if(flag){
+    return redirect("/");
+  }
 }
 
 export default function Register() {
@@ -20,7 +41,7 @@ export default function Register() {
           </div>
 
           <Form method="post">
-            <input type="text" id="nome" name="nome" placeholder='Nome Completo'/>
+            <input type="text" id="nome" name="Nome" placeholder='Nome Completo'/>
 
 
               <input type="email" id="email" name="Email" placeholder='Endereço Eletrónico'/>
@@ -28,14 +49,14 @@ export default function Register() {
 
             <div className="birthdate">
             <label htmlFor="date" >Data de nascimento:  </label>
-            <input type="date" id="data" name="data" />
+            <input type="date" id="data" name="DataNascimento" />
             </div>
 
-            <input type="text" id="nif" name="nif" placeholder='NIF'/>
-            <input type="text" id="cc" name="cc" placeholder='Número de identidade'/>
-            <input type="text" id="morada" name="morada" placeholder='Morada, Número, Andar'/>
-            <input type="text" id="telemovel" name="telemovel" placeholder='Telemóvel'/>
-            <input type="password" id="password" name="password" placeholder='Palavra-passe'/>
+            <input type="text" id="nif" name="NIF" placeholder='NIF'/>
+            <input type="text" id="cc" name="CC" placeholder='Número de identidade'/>
+            <input type="text" id="morada" name="Morada" placeholder='Morada, Número, Andar'/>
+            <input type="text" id="telemovel" name="Telemovel" placeholder='Telemóvel'/>
+            <input type="password" id="password" name="PlvPasse" placeholder='Palavra-passe'/>
 
             <button className = "button" type="submit">Confirmar</button>
           </Form>

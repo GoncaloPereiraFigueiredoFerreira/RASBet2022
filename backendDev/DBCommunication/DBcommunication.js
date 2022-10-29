@@ -146,7 +146,7 @@ class DBCommunication {
                         try{
                             if(err) throw err;
                             if(!result[0]){
-                                return callback("Não existem essas credenciais na base de dados")
+                                return callback({error:"Não existem essas credenciais na base de dados"})
                             }
                             else{
                                 return callback({"FRole":"apostador"})

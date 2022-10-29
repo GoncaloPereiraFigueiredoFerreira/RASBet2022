@@ -54,9 +54,7 @@ function registerFunction(request,response){
 }
 
 function loginFunction(request,response){
-
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse,function(result){
-        console.log(result)
         if (result.error){
             response.status(400).send(result)
         }
@@ -91,7 +89,6 @@ function registerBetFunction(request,response){
     if(apostadorID && role=='apostador'){
 
         request.body.Aposta.ApostadorID= apostadorID
-        console.log(request.body.Aposta.ApostadorID)
 
         dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento,request.body.Codigo,function(result){
             if(result.error){
@@ -130,7 +127,6 @@ function editProfileFunction(request,response){
     let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
     let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
     if(apostadorID && role=='apostador'){
-        console.log(list)
         dbComms.editProfileOnDb(list,apostadorID,function(result){
             if(result.error){
                 response.status(400).send(result)
@@ -253,9 +249,8 @@ function usedCodFunction(request,response){
 //     }
 
 function profileInfoFunction(request,response){
-
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
+    let apostadorID = sessionHandler.verifyUser(request.query.ApostadorID)[0]
+    let role = sessionHandler.verifyUser(request.query.ApostadorID)[1]
     if(apostadorID && role=='apostador'){
         dbComms.profileInfoOnDb(apostadorID,function(result){
             if(result.error){
@@ -331,12 +326,12 @@ function transHistFunction(request,response){
 
 
 function returnEventList(request,response){
-    let user = sessionHandler.verifyUser(request.body.token);
+    let user = sessionHandler.verifyUser(request.query.token);
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
-        response.status(200).send(evLst.getBETEvents(request.body.sport));
+        response.status(200).send(evLst.getBETEvents(request.query.sport));
     }
     else if (user[1] == 'Special' ){// Especialista
-        response.status(200).send(evLst.getNODDEvents(request.body.sport));
+        response.status(200).send(evLst.getNODDEvents(request.query.sport));
     }
     else  response.status(404).send("Not found");
     

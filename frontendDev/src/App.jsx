@@ -6,34 +6,41 @@ import ErrorPage from './error-page.jsx'
 import Index from './routes/index.jsx'
 import Root from './routes/root.jsx'
 import Sport, {loader as sportLoader}from './routes/sport.jsx'
+import Perfil, {loader as perfilLoader} from './routes/perfil.jsx'
 
-import Login from './routes/login.jsx'
+import Login,{action as loginAction} from './routes/login.jsx'
 import Register,{action as registerAction} from './routes/register.jsx'
 
 function App(){
-	const t = useState("");
+	const [wallet,setWallet] = useState(0);
+	const [role,setRole] = useState(0);
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
-	    element: <Root />,
+	    element: <Root wallet={wallet}/>,
 	    errorElement: <ErrorPage />,
 	    children: [
 	      { index: true, element: <Index /> },
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,
-	      	element: <Sport />,
+	      	element: <Sport role={role}/>,
+	      },
+	      {
+	      	path: "perfil/:perfilid",
+	      	loader: perfilLoader,
+	      	element: <Perfil setWallet={setWallet}/>,
 	      }
 	    ],
 	  },
 	  {
 	    path: "/login",
-	    element: <Login />,
+	    element: <Login setRole={setRole}/>,
 	  },
 	  {
         path: "/register",
         action: registerAction,
-        element: <Register/>,   
+        element: <Register setRole={setRole}/>,   
 	   }
 	]);
 

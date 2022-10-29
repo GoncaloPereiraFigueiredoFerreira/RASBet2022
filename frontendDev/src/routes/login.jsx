@@ -1,40 +1,71 @@
-import {Link ,Form,useNavigate} from 'react-router-dom'
+import { useState,useEffect } from 'react'
+import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
+import axios from 'axios'
 import './login.css'
+import {setToken} from "../utils"
 
-function setToken(userToken) {
-  sessionStorage.setItem('token', JSON.stringify(userToken));
+async function login_req(data){
+  var resp = axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
+  .then(function (response) {
+    console.log(response);
+    const data = response.data;
+    setToken(data.Token);
+    return [data.FRole,data.Balance];
+  })
+  .catch(function (error) {
+    console.log(error);
+    return null;
+  });
+
+  return resp;
 }
 
-    //<button type="button" onClick={()=>{setToken({"token":"ola"})}}>create token</button>
-    //<button type="button" onClick={()=>{sessionStorage.clear()}}>clear token</button>
+export default function Login({setRole}) {
+  const navigate = useNavigate();
+  const [input,setInput] = useState({});
+  const [flag,setFlag] = useState(false);
 
-export default function Login() {
-  const navigation = useNavigate();
+  function handleChange({target}){
+    var aux = input;
+    input[target.name] = target.value;
+    setInput(input);
+  } 
+
+  async function handleSubmit(){
+    var resp = await login_req(input);
+
+    if(resp){
+      setRole(resp[0]);
+      setFlag(true);
+    }
+  }
+
+  useEffect(()=>{if(flag)navigate('/')});
+
+
   return (
     <>
 
-    <div class="logo">
+    <div className="logo">
     <img src="logo" id="logologin"/>
     </div>
 
-    <div class="box">
+    <div className="box">
 
-      <div class = "loginbox">
+      <div className = "loginbox">
         <div className='bemvindo'>
           <p>Bem Vindo</p>
         </div>
-        <Form>
-          <input type="text" name="Email" placeholder="Email"/>
-          <input type="password" name="Email" placeholder="Palavra-passe"/>
+        <Form onSubmit={handleSubmit}>
+          <input type="text" name="Email" placeholder="Email" onChange={handleChange}/>
+          <input type="password" name="PlvPasse" placeholder="Palavra-passe" onChange={handleChange}/>
+          <button className = "button" type="submit">Login</button> 
         </Form>
-        <button class = "button" onClick={()=>{navigation('/');}}>
-            Login
-        </button>
         <p>Não tem conta?</p>
         <a href='register'>Registe-se já!</a>
       </div>
 
-      <div class = "loginimg">
+      <div className = "loginimg">
         <img src="loginimage.jpg" id="loginimage"/>
       </div>
       
