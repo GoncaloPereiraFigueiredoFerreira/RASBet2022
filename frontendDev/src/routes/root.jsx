@@ -32,15 +32,14 @@ export default function Root() {
             <div className="dropdown">
               <img src='perfil.jpg' style={{'width':'6vh','height':'3vh',"padding":"14px"}}/>
               <div class="dropdown-content">
-                <a href={`perfil/${token}`}>Perfil</a>
-                <a href="#">Carteira</a>
-                <a href="#">Histórico Transações</a>
-                <a href="#">Histórico Apostas</a>
+                <a href={`perfil/`}>Perfil</a>
+                <a href={`histT/`}>Histórico Transações</a>
+                <a href={`histA/`}>Histórico Apostas</a>
               </div>
             </div>
            
             <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
-
+            <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('carteira')}}>Carteira: (Montante) </button></li>
           </ul>
         </nav>
       </header>
