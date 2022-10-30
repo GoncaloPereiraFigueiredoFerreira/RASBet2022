@@ -89,7 +89,7 @@ export default function Root() {
                 <p>HomeTeam - AwayTeam</p>
                 <p>Bet: HomeTeam</p>
                 <p>Odd: 1.3</p>
-                <p type="value" placeholder='Aposta'/>
+                <input type="text" placeholder='Aposta'/>
                 <button style={{"margin":"3px"}}>Cancelar</button>
               </div>
               <button style={{"margin":"3px"}}>Submeter</button>
@@ -98,10 +98,17 @@ export default function Root() {
             <div className="betbox" id="Multiplas">
               <button style={{"margin":"3px"}}>Multiplas</button>
               <div className="bet">
-              <p>HomeTeam - AwayTeam</p>
+                <p>HomeTeam - AwayTeam</p>
                 <p>Bet: HomeTeam</p>
                 <p>Odd: 1.3</p>
-                <p type="value" placeholder='Aposta'/>
+                <input type="text" placeholder='Aposta'/>
+                <button style={{"margin":"3px"}}>Cancelar</button>
+              </div>
+              <div className="bet">
+                <p>HomeTeam - AwayTeam</p>
+                <p>Bet: HomeTeam</p>
+                <p>Odd: 1.3</p>
+                <input type="text" placeholder='Aposta'/>
                 <button style={{"margin":"3px"}}>Cancelar</button>
               </div>
               
