@@ -23,14 +23,28 @@ export default function Root() {
         <nav>
           <ul>
             <li>
-              <img src='logo.png' style={{'width':'6vh','height':'3vh',"padding":"14px"}} class = "button" onClick={()=>{navigation('/');}}/>
+              <img src='logo.png' style={{'width':'fit-content','height':'3vh'}} class = "button" onClick={()=>{navigation('/');}}/>
             </li>
-            <li><Link to='/sport/futebol'>Futebol</Link></li>
-            <li><Link to='/sport/forml1'>Formula 1</Link></li>
-            <li><Link to='/sport/basktbol'>Basquetebol</Link></li>
+            <li>
+              <Link to='/sport/futebol'>
+              <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Futebol
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/forml1'>
+              <img src='formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Formula 1
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/basktbol'>
+              <img src='basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Basquetebol</Link>
+            </li>
 
             <div className="dropdown">
-              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh',"padding":"14px"}}/>
+              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh'}}/>
               <div class="dropdown-content">
                 <a href={`perfil/`}>Perfil</a>
                 <a href={`histT/`}>Histórico Transações</a>

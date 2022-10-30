@@ -16,7 +16,7 @@ export default function HistT() {
       <div className = "box">
         <div className = "loginbox">
           <div className='bemvindo'>
-            <p>Histórico de Apostas</p>
+            <p>Histórico de Transaçoes</p>
           </div>
           <div className="bet-element" id="Simples">
             <div>
