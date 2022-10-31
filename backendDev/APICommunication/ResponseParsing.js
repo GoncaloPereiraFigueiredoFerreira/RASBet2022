@@ -56,29 +56,54 @@ function parsePTFutResp(json){
     for (let match of json){
         let id = match.id;
         let date = match.commenceTime;
-        let league = "Primeira Liga";
-        let team1 = match.homeTeam;
-        let team2 = match.awayTeam;
-        let sOdds1 = undefined;
-        let sOdds2 = undefined;
-        let sOddsTie = undefined;
+        if (Date.parse(date) > Date.now()){ 
+            let league = "Primeira Liga";
+            let team1 = match.homeTeam;
+            let team2 = match.awayTeam;
+            let sOdds1 = undefined;
+            let sOdds2 = undefined;
+            let sOddsTie = undefined;
 
-        for (let outcomes of match.bookmakers[0].markets[0].outcomes){
-            if (outcomes.name == team1) sOdds1 = outcomes.price;
-            else if(outcomes.name == team2) sOdds2 = outcomes.price;
-            else if(outcomes.name == "Draw") sOddsTie = outcomes.price;
-        }
+            for (let outcomes of match.bookmakers[0].markets[0].outcomes){
+                if (outcomes.name == team1) sOdds1 = outcomes.price;
+                else if(outcomes.name == team2) sOdds2 = outcomes.price;
+                else if(outcomes.name == "Draw") sOddsTie = outcomes.price;
+            }
 
-        let event = evLst.getEvent("FUTPT",id);
-        if (event != undefined){
-            evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie));
-        }
-        else{
-            let e = new TieEvent("FUTPT",league,id,"",-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
-            evLst.addEventFromAPI(e);
+            let event = evLst.getEvent("FUTPT",id);
+            if (event != undefined){
+                evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie));
+            }
+            else{
+                let e = new TieEvent("FUTPT",league,id,"",-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
+                evLst.addEventFromAPI(e);
+            }
         }
     }
 }
+
+function parsePTFutResp(json,games){
+    for (let game in games){
+        for (let match of json){
+            let id = match.id;
+            if (id == game && match.completed){
+                const re = /(\d)x(\d)/;
+                let lst = match.scores.match(re);
+                let result =-1;
+                if (lst[1] > lst[2]) result = 0;
+                else if (lst[1] < lst[2]) result = 1;
+                if (lst[1] == lst[2]) result = 2;
+                evLst.updateWinner("FUTPT",game,result);
+            }
+        }
+    }
+}
+
+
+
+
+
+
 
 
 function parseF1Resp(racesJson, pilotsJson){

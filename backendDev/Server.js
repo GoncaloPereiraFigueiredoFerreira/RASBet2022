@@ -48,11 +48,14 @@ class Server{
         app.get(api + "transHist"   ,reqHandler.transHistFunction);
         app.get(api + "eventList"   ,reqHandler.returnEventList);
         app.get(api + "updateOdds"  ,reqHandler.getOdds);
+        app.get(api + "update"      ,reqHandler.updateEvents)
 
         // Start Server
         app.listen(this.port, () => {
             console.log("Server started at local host");
         })
+
+
 
     }
 

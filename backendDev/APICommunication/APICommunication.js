@@ -36,12 +36,37 @@ function makeRequest(request,path,callback){
           }
           else{
             callback(response.data);
-            if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+            if (path != undefined && response.data.errors.length != 0) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
           }})
 
     .catch((error)=>{
       console.error(error);
     })
+}
+
+
+/**
+ * Function responsible for sending a http request and writting the contents of the response to a file
+ * 
+ * @param {object} request object that specifies the configurations of a http request 
+ * @param {String} path path where the response should be written
+ * @param {Function} callback function that executes when the request is finnished
+ */
+ function makeRequestPT(request,path,callback){
+  axios(request)
+  .then( (response) => {
+
+        if (response == null ){
+          console.error("Null response\n")
+        }
+        else{
+          callback(response.data);
+          if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+        }})
+
+  .catch((error)=>{
+    console.error(error);
+  })
 }
 
 /**
@@ -73,7 +98,7 @@ function initPTFUTEvents(){
     /// Portuguese futebol league alternative API
     futPTpath = rspPath + "futPTUseless.json";
     let req = getRequests.genUselessRequest();
-    makeRequest(req,futPTpath,parser.parsePTFutResp);
+    makeRequestPT(req,futPTpath,parser.parsePTFutResp);
 }
 
 /**
@@ -187,5 +212,24 @@ function updateBSKResults(games){
   }
 }
 
+function updateFUTPTResults(games){
+  let req = getRequests.genUselessRequest();
+  axios(request)
+  .then( (response) => {
 
-module.exports = {initEventLst,updateFutResults,updateF1Results,updateBSKResults};
+        if (response == null ){
+          console.error("Null response\n")
+        }
+        else{
+
+          if (path != undefined && response.data.errors.length != 0) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+        }})
+
+  .catch((error)=>{
+    console.error(error);
+  })
+}
+
+
+
+module.exports = {initEventLst,updateFutResults,updateF1Results,updateBSKResults,updateFUTPTResults};

@@ -364,7 +364,7 @@ function updateF1Events(){
         }
         for (let race of raceList){
             let eventE = evLst.getEventDB("F1",race);
-            dbComms.addEvento(eventE, () => {});
+            dbComms.addEvento(eventE, () => {}); ////////////////falta fazer isto
         }
     })
 }
@@ -387,11 +387,28 @@ function updateBSKEvents(){
     })
 }
 
+function updateFUTPTEvents(){
+    dbComms.getPastFUTPTEventsOnDb((result)=> {
+        let gameList= [];
+        for(let game of result){
+            gameList.push(game.ID);
+        }
+        apiComms.updateFUTPTResults(gameList);
+        for (let game of gameList){
+            let eventE = evLst.getEventDB("FUTPT",game);
+            dbComms.addEvento(eventE, () => {});
+        }
+    })
+}
 
-function updateEvents(){
+
+
+
+function updateEvents(request,response){
     updateFUTEvents();
     updateF1Events();
     updateBSKEvents();
+    updateFUTPTEvents();
 }
 
 
