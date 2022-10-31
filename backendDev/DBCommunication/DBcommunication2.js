@@ -7,8 +7,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -469,7 +469,8 @@ class DBCommunication {
         
     }
 
-    startedEventOnDb(desporto,today){
+    startedEventOnDb(desporto){
+        let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
         return new Promise((resolve,reject)=>{
             let sql='SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ?'
             this.db.query(sql,[desporto,today],(err,result)=>{
