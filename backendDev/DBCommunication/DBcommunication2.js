@@ -472,7 +472,7 @@ class DBCommunication {
     startedEventOnDb(desporto){
         let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
         return new Promise((resolve,reject)=>{
-            let sql='SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ?'
+            let sql='SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"'
             this.db.query(sql,[desporto,today],(err,result)=>{
                 if(err) reject({'error':err.code})
                 let data = JSON.parse(JSON.stringify(result))
