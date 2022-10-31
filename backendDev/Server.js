@@ -40,7 +40,7 @@ class Server{
         
         //Pra que???
         app.post(api+"registerEvent",reqHandler.registerEventFunction);
-
+        app.post(api+"startedEvents",reqHandler.startedEventsFunction);
         // GET Methods
         app.get(api + "usedCod"     ,reqHandler.usedCodFunction);
         app.get(api + "profileInfo" ,reqHandler.profileInfoFunction);

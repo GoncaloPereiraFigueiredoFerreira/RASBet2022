@@ -141,7 +141,7 @@ function finEventFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
     if(user[0] && user[1]=='apostador'){
-        dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
+        dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto,request.body.Evento.Resultado).then((message)=>{
             response.status(200).send(message)
         }).catch((message)=>{
             response.status(400).send(message)
@@ -278,6 +278,16 @@ function transHistFunction(request,response){
     
 }
 
+function startedEventsFunction(request,response){
+    
+    let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
+    dbComms.startedEventOnDb(request.body.Desporto,today).then((message)=>{
+        response.status(200).send(message)
+    }).catch((message)=>{
+        response.status(400).send(message)
+    })
+}
+
 
 
 function returnEventList(request,response){
@@ -311,6 +321,7 @@ function initEventLst(){
     });
     
 }
+
 
 
 function updateFUTEvents(){
@@ -397,6 +408,7 @@ module.exports = {
     finEventFunction,
     suspndEventFunction,
     registerEventFunction,
+    startedEventsFunction,
     addPromocaoFunction,
     remPromocaoFunction,
     usedCodFunction,
