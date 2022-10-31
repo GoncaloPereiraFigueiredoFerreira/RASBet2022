@@ -1,7 +1,7 @@
 const eventList = require("./Models/EventList");
 const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
-const dbComms1 = require("./DBCommunication/DBcommunication");
+const dbComms1 = require("./DBCommunication/DBcommunication2");
 const dbComms = new dbComms1();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
@@ -12,108 +12,83 @@ function dummyFunction(request,response){
     response.status(200).send("Dummy here! But connection worked!")
 }
 
-function transactionFunction(request,response){
 
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
-    if(apostadorID && role=='apostador'){
-        request.body.ApostadorID= apostadorID
-        dbComms.transactionOnDb(request.body,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            //else response.status(200).send('Sim')
-            else dbComms.walletOnDb(apostadorID,function(result){
-                if(result.error){
-                    response.status(400).send(result)
-                }
-                else response.status(200).send({'Balance':result})
-            })
+function registerFunction(request,response){
+
+    dbComms.registerOnDb(request.body).then((message)=>{
+        return dbComms.walletOnDb(request.body.Email)
+    }).then((message)=>{
+        response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador'),"Balance":message})
+    }).catch((message)=>{
+        response.status(400).send(message)
+    })
+
+    
+}
+
+
+function transactionFunction(request,response){
+    
+    let user =  sessionHandler.verifyUser(request.body.ApostadorID)
+    if(user[0] && user[1]=='apostador'){
+        request.body.ApostadorID= user[0]
+        dbComms.transactionOnDb(request.body).then((message)=>{
+            console.log(message)
+            return dbComms.walletOnDb(user[0])
+        }).then((message)=>{
+            response.status(200).send({'Balance':message})
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
         response.status(400).send('Permission denied')
     }
-    
 }
 
-function registerFunction(request,response){
 
-    dbComms.registerOnDb(request.body,function(result){
-        if (result.error){
-            response.status(400).send(result)
-        }
-        else dbComms.walletOnDb(request.body.Email,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador'),"Balance":result})
-        })
-        
-    })
-}
 
 function loginFunction(request,response){
-    dbComms.loginOnDb(request.body.Email,request.body.PlvPasse,function(result){
-        if (result.error){
-            response.status(400).send(result)
-        }
-        else {
-            result['Token']=sessionHandler.addUser(request.body.Email,result.FRole)
-            dbComms.walletOnDb(request.body.Email,function(res){
-                if(res.error){
-                    response.status(400).send(res)
-                }
-                else{
-                    result['Balance']=res
-                    response.status(200).send(result)
-                }
-                    
-            })
-            
-        }
+    let answer
+    dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
+        answer=message
+        answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
+        return dbComms.walletOnDb(request.body.Email)
+    }).then((balanco)=>{
+        answer['Balance']=balanco
+        response.status(200).send(answer)
+    }).catch((message3)=>{
+        response.status(400).send(message3)
     })
+
 }
 
 
 
 function registerBetFunction(request,response){
-    let apostadorID = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)[1]
-
-    // dbComms.registerEventOnDb(request.body,function(result){
-    //     response.status(200).send(result)
-    // })
-    //evLst.getEventDB
-
-    if(apostadorID && role=='apostador'){
-
-        request.body.Aposta.ApostadorID= apostadorID
-
-        dbComms.registerBetOnDb(request.body.Aposta,request.body.Evento,request.body.Codigo,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else dbComms.walletOnDb(apostadorID,function(res){
-                if(res.error){
-                    response.status(400).send(result)
-                }
-                else{
-                    result['Balance']=res
-                    response.status(200).send(result)
-                }
-            })
+    let answer
+    let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
+    if(user[0] && user[1]=='apostador'){
+        request.body.Aposta.ApostadorID= user[0]
+        dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo).then((message)=>{
+            answer=message
+            return dbComms.walletOnDb(user[0])
+        }).then((balanco)=>{
+            answer['Balance']=balanco
+            response.status(200).send(answer)
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
+        
     }
     else{
         response.status(400).send('Permission denied')
     }
-
-    
 }
 
-function editProfileFunction(request,response){
 
+
+function editProfileFunction(request,response){
     list=""
     i= 0
     for (const key in request.body){
@@ -123,52 +98,60 @@ function editProfileFunction(request,response){
         }
         i++
     }
-
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
-    if(apostadorID && role=='apostador'){
-        dbComms.editProfileOnDb(list,apostadorID,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else dbComms.walletOnDb(apostadorID,function(res){
-                if(res.error){
-                    response.status(400).send(res)
-                }
-                else{
-                    result['Balance']=res
-                    response.status(200).send(result)
-                }
-            })
-            
-            
+    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    let answer
+    if(user[0] && user[1]=='apostador'){
+        dbComms.editProfileOnDb(list,user[0]).then((message)=>{
+            answer=message
+            return dbComms.walletOnDb(user[0])
+        }).then((balance)=>{
+            answer['Balance']=balance
+            response.status(200).send(answer)
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
         response.status(400).send('Permission denied')
     }
-
-    
 }
+
+
 
 
 function closeEventFunction(request,response){
-
-    let ID = sessionHandler.verifyUser(request.body.Token)[0]
-    let role = sessionHandler.verifyUser(request.body.Token)[1]
+    
+    let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
-    if(ID && role=='apostador'){
-        dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto,function(result){
-            response.status(200).send(result)
-        })
+    if(user[0] && user[1]=='apostador'){
+        dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
+            response.status(200).send(message)
+        }).catch((message)=>{
+            response.status(400).send(message)
+        }) 
     }
     else{
         response.status(400).send('Permission denied')
     }
-
-
-    evLst.closeEvent(request.body.sport,request.body.Id);
+    //evLst.closeEvent(request.body.sport,request.body.Id);
 }
+
+function finEventFunction(request,response){
+
+    let user = sessionHandler.verifyUser(request.body.Token)
+    //mudar para admin
+    if(user[0] && user[1]=='apostador'){
+        dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
+            response.status(200).send(message)
+        }).catch((message)=>{
+            response.status(400).send(message)
+        }) 
+    }
+    else{
+        response.status(400).send('Permission denied')
+    }
+}
+
 // Removed
 function suspndEventFunction(request,response){
     dbComms.suspndEventOnDb(request.body.Id,function(result){
@@ -186,17 +169,13 @@ function registerEventFunction(request,response){
 
 
 function addPromocaoFunction(request,response){
-    let ID = sessionHandler.verifyUser(request.body.Token)[0]
-    let role = sessionHandler.verifyUser(request.body.Token)[1]
+    let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
-    if(ID && role=='apostador'){
-        dbComms.addPromocaoOnDb(request.body.Promocao,function(result){
-            if(result.err){
-                response.status(400).send(result)
-            }
-            else{
-                response.status(200).send(result)
-            }
+    if(user[0] && user[1]=='apostador'){
+        dbComms.addPromocaoOnDb(request.body.Promocao).then((message)=>{
+            response.status(200).send(message)
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
@@ -204,117 +183,93 @@ function addPromocaoFunction(request,response){
     }
 }
 
-//para remover
-
-// function addcodeUsedFunction(request,response){
-//     dbComms.addcodeUsedOnDb(request.body,function(result){
-//         response.status(200).send(result)
-//     })
-    
-// }
+function remPromocaoFunction(request,response){
+    let user = sessionHandler.verifyUser(request.body.Token)
+    //mudar para admin
+    if(user[0] && user[1]=='apostador'){
+        dbComms.remPromocaoOnDb(request.body.Codigo).then((message)=>{
+            response.status(200).send(message)
+        }).catch((message)=>{
+            response.status(400).send(message)
+        })
+    }
+    else{
+        response.status(400).send('Permission denied')
+    }
+}
 
 function usedCodFunction(request,response){
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
-    if(apostadorID && role=='apostador'){
-        dbComms.usedCodOnDb(apostadorID,request.body.Codigo,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else dbComms.walletOnDb(apostadorID,function(res){
-                if(res.error){
-                    response.status(400).send(res)
-                }
-                else{
-                    result['Balance']=res
-                    response.status(200).send(result)
-                }
-            })
+    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    let answer
+    if(user[0] && user[1]=='apostador'){
+        dbComms.usedCodOnDb(user[0],request.body.Codigo).then((message)=>{
+            answer=message
+            return dbComms.walletOnDb(user[0])
+        }).then((balance)=>{
+            answer['Balance']=balance
+            response.status(200).send(answer)
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
         response.status(400).send('Permission denied')
     }
-    
 }
 
-
-// let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-//     let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
-//     if(apostadorID && role=='apostador'){
-
-//     }
-//     else{
-//         response.status(400).send('Permission denied')
-//     }
 
 function profileInfoFunction(request,response){
-    let apostadorID = sessionHandler.verifyUser(request.query.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.query.ApostadorID)[1]
-    if(apostadorID && role=='apostador'){
-        dbComms.profileInfoOnDb(apostadorID,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else response.status(200).send(result) 
+    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    
+    if(user[0] && user[1]=='apostador'){
+        dbComms.profileInfoOnDb(user[0]).then((message)=>{
+            
+            response.status(200).send(message) 
+
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
         response.status(400).send('Permission denied')
     }
 
-
-    
-
 }
+
 
 function betHistoryFunction(request,response){
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
+    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    let answer
+    if(user[0] && user[1]=='apostador'){
 
-    if(apostadorID && role=='apostador'){
-
-        dbComms.betHistoryOnDb(apostadorID,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else dbComms.walletOnDb(apostadorID,function(res){
-                if(res.error){
-                    response.status(400).send(res)
-                }
-                else{
-                   
-                    response.status(200).send({'lista':result,'Balance':res})
-                }
-            })
+        dbComms.betHistoryOnDb(user[0]).then((message)=>{
+            answer=message
+            return dbComms.walletOnDb(user[0])
+        }).then((balance)=>{
+            response.status(200).send({'lista':answer,'Balance':balance})
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
         response.status(400).send('Permission denied')
     }
-
-    
-
 }
 
-//ordenar cronologicamente
+
+
 function transHistFunction(request,response){
-    let apostadorID = sessionHandler.verifyUser(request.body.ApostadorID)[0]
-    let role = sessionHandler.verifyUser(request.body.ApostadorID)[1]
-    if(apostadorID && role=='apostador'){
-        dbComms.transHistOnDb(apostadorID,function(result){
-            if(result.error){
-                response.status(400).send(result)
-            }
-            else dbComms.walletOnDb(apostadorID,function(res){
-                if(res.error){
-                    response.status(400).send(res)
-                }
-                else{
-                    
-                    response.status(200).send({'lista':result,'Balance':res})
-                }
-            })
+    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    let answer
+    if(user[0] && user[1]=='apostador'){
+        
+        dbComms.transHistOnDb(user[0]).then((message)=>{
+            answer=message
+            return dbComms.walletOnDb(user[0])
+        }).then((balance)=>{
+            response.status(200).send({'lista':answer,'Balance':balance})
+        }).catch((message)=>{
+            response.status(400).send(message)
         })
     }
     else{
@@ -439,10 +394,11 @@ module.exports = {
     registerFunction,
     editProfileFunction,
     closeEventFunction,
+    finEventFunction,
     suspndEventFunction,
     registerEventFunction,
     addPromocaoFunction,
-    //addcodeUsedFunction,
+    remPromocaoFunction,
     usedCodFunction,
     profileInfoFunction,
     betHistoryFunction,
