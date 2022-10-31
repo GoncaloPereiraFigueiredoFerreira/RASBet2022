@@ -279,9 +279,9 @@ function transHistFunction(request,response){
 }
 
 function startedEventsFunction(request,response){
+
     
-    let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
-    dbComms.startedEventOnDb(request.body.Desporto,today).then((message)=>{
+    dbComms.startedEventOnDb(request.body.Desporto).then((message)=>{
         response.status(200).send(message)
     }).catch((message)=>{
         response.status(400).send(message)
