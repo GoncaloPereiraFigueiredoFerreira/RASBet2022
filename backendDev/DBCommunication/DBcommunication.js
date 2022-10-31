@@ -10,8 +10,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -21,7 +21,8 @@ class DBCommunication {
             console.log('MySql Connected...')
         })
         this.initDB("DBCommunication/bd.sql")    
-            
+        
+        
     }
 
     initDB(filename){
@@ -35,6 +36,21 @@ class DBCommunication {
         }));
             
     };
+
+    
+
+    registerOnDb(apostador,callback){
+        let sql= 'INSERT INTO Apostador SET ?,`Balance`= 0'
+        this.db.query(sql,apostador,(err,result)=>{
+            try{
+                if(err) throw err;
+                return callback({"Res":"Sim"})
+            }
+            catch(err){
+                return callback({"error":err.code})
+            }
+        })
+    }
 
     transactionOnDb(transacao,callback){
     
@@ -117,18 +133,7 @@ class DBCommunication {
         }
     }
     
-    registerOnDb(apostador,callback){
-        let sql= 'INSERT INTO Apostador SET ?,`Balance`= 0'
-        this.db.query(sql,apostador,(err,result)=>{
-            try{
-                if(err) throw err;
-                return callback({"Res":"Sim"})
-            }
-            catch(err){
-                return callback({"error":err.code})
-            }
-        })
-    }
+    
     
     
     
@@ -181,15 +186,16 @@ class DBCommunication {
             
     //     })
     // }
-    registerBetOnDb(aposta,evento,codigo,callback){
+    registerBetOnDb(aposta,eventos,codigo,callback){
         let db= this.db
+        let eventosquery=""
         //nao verifica se se pode usar codigo promocional
-
+        
         //regista a transação de aposta
         this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp},function(result){
             if(result.error) return callback(result)
 
-            //caso tenha usado um 
+            //caso nao tenha usado um codigo promocional
 
             if(codigo==null){
 
@@ -203,17 +209,23 @@ class DBCommunication {
                             try{
                                 if(err) throw err;
                                 var data=JSON.parse(JSON.stringify(result))
-                                sql= 'INSERT INTO Aposta_Evento SET `ApostaID` = ? , ?'
-                                db.query(sql,[data[0].LastID,evento],(err,result)=>{
+                                for(let i =0; i<eventos.length;i++){
+                                    eventosquery+=`(${data[0].LastID},'${eventos[i].EventoID}','${eventos[i].Desporto}')`
+                                    if(i<eventos.length-1){eventosquery+=','}
+                                }
+                                sql= 'INSERT INTO Aposta_Evento VALUES '+eventosquery
+                                db.query(sql,(err,result)=>{
                                     try{
                                         if(err) throw err;
                                         return callback({'Res':'Aposta adicionada'})
+
                                     }
                                     catch(err){
                                         console.log(err)
                                         return callback({"error":err.code})
                                     }
                                 }) 
+
                             }
                             catch(err){
                                 console.log(err)
@@ -262,12 +274,16 @@ class DBCommunication {
 
                                                 //regista na table aposta_evento 
 
-                                                sql= 'INSERT INTO Aposta_Evento SET `ApostaID` = ? , ?'
-                                                db.query(sql,[data[0].LastID,evento],(err,result)=>{
+                                                for(let i =0; i<eventos.length;i++){
+                                                    eventosquery+=`(${data[0].LastID},'${eventos[i].EventoID}','${eventos[i].Desporto}')`
+                                                    if(i<eventos.length-1){eventosquery+=','}
+                                                }
+                                                sql= 'INSERT INTO Aposta_Evento VALUES '+eventosquery
+                                                db.query(sql,(err,result)=>{
                                                     try{
                                                         if(err) throw err;
                                                         return callback({'Res':'Aposta adicionada'})
-
+                
                                                     }
                                                     catch(err){
                                                         console.log(err)
@@ -434,7 +450,6 @@ class DBCommunication {
         this.db.query(sql,email,(err,result)=>{
             try{
                 if(err) throw err;
-                var data=JSON.parse(JSON.stringify(result))
                 return callback(result)
             }
             catch(err){
