@@ -9,7 +9,7 @@ const evLst = EventList.getInstance();
 function parseFutResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let match of json.response){
@@ -36,7 +36,7 @@ function parseFutResp(json){
 function parseFutResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let match of json.response){
@@ -113,7 +113,7 @@ function parseF1Resp(racesJson, pilotsJson){
     let pilotsPhotos = [];
     if (racesJson.errors.length != 0 || pilotsJson.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let pilot of pilotsJson.response){
@@ -143,7 +143,7 @@ function parseF1Resp(racesJson, pilotsJson){
 function parseF1ResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         let id = json.response[0].race.id;
@@ -159,7 +159,7 @@ function parseF1ResultResp(json){
 function parseNBAResp(nbaJson){
     if (nbaJson.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let game of nbaJson.response){
@@ -192,7 +192,7 @@ function parseNBAResp(nbaJson){
 function parseNBAResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        response.data.errors.map(x=> console.error(JSON.stringify(x)));
+        json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         let id = json.response[0].id;
