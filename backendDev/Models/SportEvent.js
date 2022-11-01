@@ -33,6 +33,10 @@ class SportEvent{
         return this.Description;
     }
 
+    getResult(){
+        return this.Result;
+    }
+
     readyEvent(){
         if (this.State == "NODD"){
             this.State = "BET";

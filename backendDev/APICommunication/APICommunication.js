@@ -65,9 +65,17 @@ function makeRequest(request,path,callback){
         }})
 
   .catch((error)=>{
-    console.error(error);
+    if (fs.existsSync(path)){
+      console.log("Cant acess API! Reading cached file")
+      let futptJson = JSON.parse(fs.readFileSync(path,"utf-8"));
+      callback(futptJson);
+    }
+    else console.error("Cant find file or contact API FUTPT")
   })
 }
+
+
+
 
 /**
  * Initializes the futebol events that come from the SPORTS.API api
@@ -99,6 +107,7 @@ function initPTFUTEvents(){
     futPTpath = rspPath + "futPTUseless.json";
     let req = getRequests.genUselessRequest();
     makeRequestPT(req,futPTpath,parser.parsePTFutResp);
+
 }
 
 /**
@@ -221,7 +230,7 @@ function updateFUTPTResults(games){
           console.error("Null response\n")
         }
         else{
-          parser.parsePTFutResp(games,response.data)
+          parser.parsePTFutResultResp(games,response.data)
           if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
         }})
 

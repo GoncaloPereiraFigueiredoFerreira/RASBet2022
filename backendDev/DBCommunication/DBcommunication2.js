@@ -117,11 +117,12 @@ class DBCommunication {
             this.db.query(sql,[email,pass],(err,result)=>{
 
                 if(err) reject({"error":err.code})
-                if(!result[0]){
+                
+                else if(!result[0]){ // devia ser length
                     sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
                     this.db.query(sql,[email,pass],(err,result)=>{
                             if(err) reject({"error":err.code});
-                            if(!result[0]){
+                            else if(!result[0]){
                                 reject({error:"Não existem essas credenciais na base de dados"})
                             }
                             else{
@@ -554,8 +555,10 @@ class DBCommunication {
                         reject({'error':err.code})
                     }
                     else{
-                        var data=JSON.parse(JSON.stringify(result))
-                        resolve(data[0].Balance)
+                        if (result.length >0){
+                            var data=JSON.parse(JSON.stringify(result))
+                            resolve(data[0].Balance)
+                        }else resolve(0);
                     }  
             })
         }) 

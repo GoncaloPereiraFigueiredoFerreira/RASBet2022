@@ -82,7 +82,7 @@ function parsePTFutResp(json){
     }
 }
 
-function parsePTFutResp(json,games){
+function parsePTFutResultResp(json,games){
     for (let game in games){
         for (let match of json){
             let id = match.id;
@@ -212,7 +212,9 @@ module.exports = {
     parseF1Resp,
     parseF1ResultResp,
     parsePTFutResp,
+    parsePTFutResultResp,
     parseNBAResp,
     parseNBAResultResp
+
 
 }

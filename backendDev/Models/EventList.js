@@ -52,21 +52,23 @@ class EventList{
 
     /// Method that alters the inital odd for an event
     changeEventOdd(sport,id,odds){
-        if (this.eventList[sport][id] != undefined){
-            if (this.eventList[sport][id] instanceof RaceEvent){
-                this.eventList[sport][id].changeOdds(odds);
-                this.eventList[sport][id].readyEvent();
-            }
-            else if (this.eventList[sport][id] instanceof NoTieEvent){
-                 this.eventList[sport][id].changeOdds(odds[0],odds[1]);
-                 this.eventList[sport][id].readyEvent();
-            }
-            else if (this.eventList[sport][id] instanceof TieEvent){
-                
-                this.eventList[sport][id].changeOdds(odds[0],odds[1],odds[2]);
-                this.eventList[sport][id].readyEvent();
-            }
-            return true;
+
+        if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState() == "NODD"){
+
+                if (this.eventList[sport][id] instanceof RaceEvent){
+                    this.eventList[sport][id].changeOdds(odds);
+                    this.eventList[sport][id].readyEvent();
+                }
+                else if (this.eventList[sport][id] instanceof NoTieEvent){
+                    this.eventList[sport][id].changeOdds(odds[0],odds[1]);
+                    this.eventList[sport][id].readyEvent();
+                }
+                else if (this.eventList[sport][id] instanceof TieEvent){
+                    
+                    this.eventList[sport][id].changeOdds(odds[0],odds[1],odds[2]);
+                    this.eventList[sport][id].readyEvent();
+                }
+                return true;
         }
         return false;
 
@@ -166,7 +168,7 @@ class EventList{
 
     toDb(sport,id){
         if (this.eventList[sport][id] != undefined){
-            return this.eventList[sport][id].toDb();
+            return this.eventList[sport][id].toDB();
         }
         else return null;
     }
