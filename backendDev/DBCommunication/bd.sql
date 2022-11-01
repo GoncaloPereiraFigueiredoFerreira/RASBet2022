@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Transacao(
     ID INT NOT NULL AUTO_INCREMENT,
     ApostadorID VARCHAR(75) NOT NULL,
     Valor decimal(15,2) NOT NULL,
-    Tipo ENUM("Aposta_Ganha", "Aposta","Levantamento_Conta","Deposito_Conta") NOT NULL,
+    Tipo ENUM("Aposta_Ganha", "Aposta","Levantamento_Conta","Deposito_Conta","Refund") NOT NULL,
     DataTr DATETIME NOT NULL,
     PRIMARY KEY(ID),
     FOREIGN KEY(ApostadorID)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Aposta (
     Odd FLOAT NOT NULL,
     Montante decimal(15,2) NOT NULL,
     Estado ENUM("PEN","WON","LOST","CLS") NOT NULL,
-    Escolha INT NOT NULL,
+    
     DateAp DATETIME NOT NULL,
     PRIMARY KEY(ID),
     FOREIGN KEY (ApostadorID)
@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 	ApostaID INT NOT NULL,
     EventoID VARCHAR(25) NOT NULL,
     Desporto ENUM("FUT","FUTPT","BSK","F1") NOT NULL,
+    Escolha INT NOT NULL,
     PRIMARY KEY(ApostaID,EventoID),
     FOREIGN KEY(ApostaID)
 		REFERENCES Aposta(ID),
@@ -87,5 +88,6 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 );
 
 INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","12345","Special");
+INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("admin@coisas.pt","12345","Admin");
 
 
