@@ -150,6 +150,12 @@ class EventList{
         }
         else return false;
     }
+    toDb(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            return this.eventList[sport][id].toDB();
+        }
+        else return null;
+    }
 
 
 
