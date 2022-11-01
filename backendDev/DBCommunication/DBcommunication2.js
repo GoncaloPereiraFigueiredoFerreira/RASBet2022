@@ -193,10 +193,10 @@ class DBCommunication {
                     // se nao esta na base de dados insere
                     if(message=='no'){
                         
-                        let today = "'"+eventos[i].DataEvent.slice(0,10) + " " + eventos[i].DataEvent.slice(11,19)+"'"
-                        let eventosquery="("+eventos[i].ID+",'"+eventos[i].Desporto+"',"+eventos[i].Resultado+",'"+eventos[i].Descricao+"','BET','"+eventos[i].Liga+"',"+today+")"
-                        
-                        let sql= `INSERT INTO Evento VALUES ${eventosquery}`
+                        let today = `'${eventos[i].DataEvent.slice(0,10)} ${eventos[i].DataEvent.slice(11,19)}'`
+                        //let eventosquery=("+eventos[i].ID+",'"+eventos[i].Desporto+"',"+eventos[i].Resultado+",'"+eventos[i].Descricao+"','BET','"+eventos[i].Liga+"',"+today+")"
+                        let eventosquery=`(${eventos[i].ID},'${eventos[i].Desporto}',${eventos[i].Resultado},'${eventos[i].Descricao}','BET','${eventos[i].Liga}',${today})`
+                        let sql= 'INSERT INTO Evento VALUES'+eventosquery
                         this.db.query(sql,(err,result)=>{
                             if(err) {
                                 throw({'error':err.code});}
