@@ -53,7 +53,11 @@ function loginFunction(request,response){
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
         answer=message
         answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
-        return dbComms.walletOnDb(request.body.Email)
+        if(message.FRole=='apostador'){
+            return dbComms.walletOnDb(request.body.Email)
+        }
+        else return 0
+        
     }).then((balanco)=>{
         answer['Balance']=balanco
         response.status(200).send(answer)
@@ -66,11 +70,17 @@ function loginFunction(request,response){
 
 
 function registerBetFunction(request,response){
+    let list=[]
+    for(let i = 0 ; i< request.body.Eventos.length; i++){
+        list.push(evLst.toDb(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID))
+    }
     let answer
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
     if(user[0] && user[1]=='apostador'){
         request.body.Aposta.ApostadorID= user[0]
-        dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo).then((message)=>{
+        dbComms.registerEventOnDb(list).then((message)=>{
+            return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo)
+        }).then((message)=>{
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
