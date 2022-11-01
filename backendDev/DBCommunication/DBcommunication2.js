@@ -1,5 +1,6 @@
 const mysql= require('mysql')
-const fs = require('fs')
+const fs = require('fs');
+const EventList = require('../Models/EventList');
 
 class DBCommunication {
 
@@ -164,12 +165,62 @@ class DBCommunication {
         })
     }
 
+    async eventexistsOnDB(desporto,eventID){
+        return new Promise((resolve,reject)=>{
+            
+            let sql='SELECT * FROM Evento WHERE Desporto=? AND ID=?'
+            this.db.query(sql,[desporto,eventID],(err,result)=>{
+                if(err) {
+                    reject({'error':err.code});
+                    return 
+                }
+                if(result[0]==null){
+                    resolve('no')
+                }
+                else{
+                    resolve('yes')
+                }
+            })
+        })
+    }
+
+    registerEventOnDb(eventos){
+        return new Promise(async (resolve,reject)=>{
+          
+            for(let i =0; i<eventos.length;i++){
+               
+                await this.eventexistsOnDB(eventos[i].Desporto,eventos[i].ID).then((message)=>{
+                    // se nao esta na base de dados insere
+                    if(message=='no'){
+                        
+                        let today = "'"+eventos[i].DataEvent.slice(0,10) + " " + eventos[i].DataEvent.slice(11,19)+"'"
+                        let eventosquery="("+eventos[i].ID+",'"+eventos[i].Desporto+"',"+eventos[i].Resultado+",'"+eventos[i].Descricao+"','BET','"+eventos[i].Liga+"',"+today+")"
+                        
+                        let sql= `INSERT INTO Evento VALUES ${eventosquery}`
+                        this.db.query(sql,(err,result)=>{
+                            if(err) {
+                                throw({'error':err.code});}
+                        })
+                    }
+                }).then(()=>{
+                    resolve({'res':"Evento adicionado"})
+                }).catch((message)=>{
+                    reject(message)
+                    return
+                })
+                
+            } 
+        })
+    }
+
     registerBetOnDb(aposta,eventos,codigo){
         
+
         //nao verifica se se pode usar codigo promocional
         return new Promise((resolve,reject)=>{
 
             //regista a transação de aposta
+
             this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp}).then((message)=>{
                 return new Promise((resolve1,reject1)=>{
                     if(codigo==null){
@@ -376,19 +427,7 @@ class DBCommunication {
         })
     }
     
-    registerEventOnDb(evento,callback){
-        let sql= 'INSERT INTO Evento SET ?'
-        this.db.query(sql,evento,(err,result)=>{
-            try{
-                if(err) throw err;
-                return callback("Evento adicionado")
-            }
-            catch(err){
-                
-                return callback({"error":err.code})
-            }
-        })
-    }
+    
     
     addPromocaoOnDb(promocao){
         return new Promise((resolve,reject)=>{
