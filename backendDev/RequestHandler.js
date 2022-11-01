@@ -395,8 +395,11 @@ function updateFUTPTEvents(){
         }
         apiComms.updateFUTPTResults(gameList);
         for (let game of gameList){
-            let eventE = evLst.getEventDB("FUTPT",game);
-            dbComms.addEvento(eventE, () => {});
+            let event= evLst.getEventDB("FUTPT",game);
+            if (event.getState()=="FIN"){
+                dbComms.addEvento(eventE, () => {});
+            }
+            
         }
     })
 }

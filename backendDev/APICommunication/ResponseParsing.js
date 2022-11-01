@@ -94,6 +94,7 @@ function parsePTFutResp(json,games){
                 else if (lst[1] < lst[2]) result = 1;
                 if (lst[1] == lst[2]) result = 2;
                 evLst.updateWinner("FUTPT",game,result);
+                break;
             }
         }
     }

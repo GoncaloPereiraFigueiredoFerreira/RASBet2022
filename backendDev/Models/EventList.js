@@ -138,17 +138,17 @@ class EventList{
 
     getParticipants(sport,id){
         if (this.eventList[sport][id] != undefined){
-            this.eventList[sport][id].getParticipants();
-            return true;
+            return this.eventList[sport][id].getParticipants();
+
         }
-        else return false;
+        else return null;
     }
     getOdds(sport,id){
         if (this.eventList[sport][id] != undefined){
-            this.eventList[sport][id].getOdds();
-            return true;
+            
+            return this.eventList[sport][id].getOdds();;
         }
-        else return false;
+        else return null;
     }
     toDb(sport,id){
         if (this.eventList[sport][id] != undefined){
@@ -157,7 +157,20 @@ class EventList{
         else return null;
     }
 
+    getState(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            return this.eventList[sport][id].getState();
+        }
+        else return null;
+    }
 
+    toDb(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            return this.eventList[sport][id].toDb();
+        }
+        else return null;
+    }
+    
 
 }
 

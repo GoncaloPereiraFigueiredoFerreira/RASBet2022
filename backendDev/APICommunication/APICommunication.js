@@ -214,15 +214,15 @@ function updateBSKResults(games){
 
 function updateFUTPTResults(games){
   let req = getRequests.genUselessRequest();
-  axios(request)
+  axios(req)
   .then( (response) => {
-
+    
         if (response == null ){
           console.error("Null response\n")
         }
         else{
-
-          if (path != undefined && response.data.errors.length != 0) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+          parser.parsePTFutResp(games,response.data)
+          if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
         }})
 
   .catch((error)=>{
