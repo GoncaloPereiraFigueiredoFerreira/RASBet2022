@@ -56,7 +56,7 @@ function parsePTFutResp(json){
     for (let match of json){
         let id = match.id;
         let date = match.commenceTime;
-        if (Date.parse(date) > Date.now()){ 
+        //if (Date.parse(date) > Date.now()){ 
             let league = "Primeira Liga";
             let team1 = match.homeTeam;
             let team2 = match.awayTeam;
@@ -78,7 +78,7 @@ function parsePTFutResp(json){
                 let e = new TieEvent("FUTPT",league,id,"",-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
                 evLst.addEventFromAPI(e);
             }
-        }
+        //}
     }
 }
 
