@@ -190,7 +190,7 @@ class DBCommunication {
         let db= this.db
         let eventosquery=""
         //nao verifica se se pode usar codigo promocional
-        
+        console.log("OLaaaaaaaaaaaaa")
         //regista a transação de aposta
         this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp},function(result){
             if(result.error) return callback(result)
@@ -198,7 +198,7 @@ class DBCommunication {
             //caso nao tenha usado um codigo promocional
 
             if(codigo==null){
-
+                
                 let sql= 'INSERT INTO Aposta SET ?'
                 db.query(sql,aposta,(err,result)=>{
                     try{

@@ -17,7 +17,6 @@ class SessionHandler{
             return ([this.sessions[hash]["Email"],this.sessions[hash]["Role"]]);}
         else {
             return ("Hash no found")
-            //throw console.error("Hash not found");
         }
     }
 

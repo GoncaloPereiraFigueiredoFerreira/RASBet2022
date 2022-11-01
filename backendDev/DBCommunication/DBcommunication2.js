@@ -84,14 +84,21 @@ class DBCommunication {
             }
             else{
                 let sql='SELECT Balance From Apostador Where Email= ? '
+
                 this.db.query(sql,transacao.ApostadorID,(err,result)=>{
-                    if(err)reject({'error':err})
+
+                    if(err){
+
+                        reject({'error':err})
+                    }
                     else{
                         if(result[0].Balance<transacao.Valor){
                             reject({"error":"Not enough balance"})
                         }
                         else{
+                            
                             sql='UPDATE Apostador SET Balance= Balance - ? WHERE Email= ? '
+                            
                             this.db.query(sql,[transacao.Valor,transacao.ApostadorID],(err,result)=>{ 
                                 if(err){reject({'error':err})}
                                 else{
@@ -187,16 +194,17 @@ class DBCommunication {
 
     registerEventOnDb(eventos){
         return new Promise(async (resolve,reject)=>{
-          
+            
             for(let i =0; i<eventos.length;i++){
-               
+                console.log(eventos[i].ID);
                 await this.eventexistsOnDB(eventos[i].Desporto,eventos[i].ID).then((message)=>{
                     // se nao esta na base de dados insere
                     if(message=='no'){
                         
                         let today = `'${eventos[i].DataEvent.slice(0,10)} ${eventos[i].DataEvent.slice(11,19)}'`
                         //let eventosquery=("+eventos[i].ID+",'"+eventos[i].Desporto+"',"+eventos[i].Resultado+",'"+eventos[i].Descricao+"','BET','"+eventos[i].Liga+"',"+today+")"
-                        let eventosquery=`(${eventos[i].ID},'${eventos[i].Desporto}',${eventos[i].Resultado},'${eventos[i].Descricao}','BET','${eventos[i].Liga}',${today})`
+                        let eventosquery=`('${eventos[i].ID}','${eventos[i].Desporto}',${eventos[i].Resultado},'${eventos[i].Descricao}','BET','${eventos[i].Liga}',${today})`
+                        
                         let sql= 'INSERT INTO Evento VALUES'+eventosquery
                         this.db.query(sql,(err,result)=>{
                             if(err) {
@@ -221,11 +229,11 @@ class DBCommunication {
         return new Promise((resolve,reject)=>{
 
             //regista a transação de aposta
-
+           
             this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp}).then((message)=>{
                 return new Promise((resolve1,reject1)=>{
                     if(codigo==null){
-                       
+                        
                         this.insert_aposta(aposta,eventos).then((message)=>{
                             resolve1(message)
                         }).catch((message)=>{

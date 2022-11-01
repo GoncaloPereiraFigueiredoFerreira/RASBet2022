@@ -83,10 +83,11 @@ function parsePTFutResp(json){
 }
 
 function parsePTFutResultResp(json,games){
-    for (let game in games){
+
+    for (let game of games){
         for (let match of json){
             let id = match.id;
-            if (id == game && match.completed){
+            if (id == game && match.completed){       
                 const re = /(\d)x(\d)/;
                 let lst = match.scores.match(re);
                 let result =-1;

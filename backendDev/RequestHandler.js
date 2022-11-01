@@ -33,7 +33,6 @@ function transactionFunction(request,response){
     if(user[0] && user[1]=='apostador'){
         request.body.ApostadorID= user[0]
         dbComms.transactionOnDb(request.body).then((message)=>{
-            console.log(message)
             return dbComms.walletOnDb(user[0])
         }).then((message)=>{
             response.status(200).send({'Balance':message})
@@ -78,9 +77,12 @@ function registerBetFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
     if(user[0] && user[1]=='apostador'){
         request.body.Aposta.ApostadorID= user[0]
+        
         dbComms.registerEventOnDb(list).then((message)=>{
+            
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo)
         }).then((message)=>{
+            
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
@@ -250,7 +252,6 @@ function profileInfoFunction(request,response){
 function betHistoryFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
-    console.log(user)
     if(user[0] && user[1]=='apostador'){
 
         dbComms.betHistoryOnDb(user[0]).then((message)=>{
@@ -303,7 +304,6 @@ function startedEventsFunction(request,response){
 
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
-    console.log(user)
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
         response.status(200).send(evLst.getBETEvents(request.query.sport));
     }
@@ -342,7 +342,6 @@ function updateFUTEvents(){
             for (let fixture of result){
                 let event = evLst.getEventDB("FUT",fixture);
                 if (event["Estado"] == "FIN"){
-                    console.log("Evento Finalizado")
                     dbComms.finEventOnDb(fixture,"FUT",event["Resultado"]);
                 }
             }
@@ -373,7 +372,6 @@ function updateBSKEvents(){
             for (let game of result){
                 let event = evLst.getEventDB("BSK",game);
                 if (event["Estado"] == "FIN"){
-                    console.log("Evento Finalizado")
                     dbComms.finEventOnDb(game,"BSK",event["Resultado"]);
                 }
             }
@@ -384,15 +382,16 @@ function updateBSKEvents(){
 
 function updateFUTPTEvents(){
     dbComms.startedEventOnDb("FUTPT").then((result)=>{
-        apiComms.updateFUTPTResults(result);
+        apiComms.updateFUTPTResults(result).then(()=>{
         for (let game of result){
             let event= evLst.getEventDB("FUTPT",game);
-            if (event.getState()=="FIN"){
-                dbComms.finEventOnDb(game,"FUTPT",event.getResult());
-            }
-            
+            if (event["Estado"] == "FIN"){
+                dbComms.finEventOnDb(game,"FUTPT",event["Resultado"]);
+            } 
         }
+    
     })
+})
 }
 
 

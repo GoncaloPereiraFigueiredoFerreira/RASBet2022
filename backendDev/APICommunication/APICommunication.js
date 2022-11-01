@@ -238,17 +238,16 @@ function updateBSKResults(games){
 }
 
 function updateFUTPTResults(games){
-  return new Promise((resolve)=>{
-  let req = getRequests.genUselessRequest();
-  axios(req)
-  .then((response) => {
+  return new Promise(async(resolve)=>{
+    let req = getRequests.genUselessRequest();
+    await axios(req)
+    .then((response) => {
     
         if (response == null ){
           console.error("Null response\n")
         }
         else{
-          parser.parsePTFutResultResp(games,response.data)
-          if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+          parser.parsePTFutResultResp(response.data,games)
           resolve();
         }})
 
