@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS Aposta (
     ApostadorID VARCHAR(75) NOT NULL,
     Odd FLOAT NOT NULL,
     Montante decimal(15,2) NOT NULL,
-    Estado INT NOT NULL,
+    Estado ENUM("PEN","WON","LOST","CLS") NOT NULL,
     Escolha INT NOT NULL,
     DateAp DATETIME NOT NULL,
     PRIMARY KEY(ID),

@@ -328,16 +328,21 @@ class DBCommunication {
             this.setEstadoEvento("CLS",eventID,desporto).then(async (message)=>{
                 for(let i = 0 ; i< message.length ;i++){
                     await this.delete_apostaID(message,i).then((data)=>{
-                        let sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
+                        let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
                         this.db.query(sql,data[i].ApostaID,(err,result)=>{
+                            if(err) throw({'error':err.code});
 
-                            if(err) reject({'error':err.code});
-                            let data2 = JSON.parse(JSON.stringify(result))
-                            let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+                            sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
+                            this.db.query(sql,data[i].ApostaID,(err,result)=>{
 
-                            this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Aposta_Ganha","DataTr":today
-                            }).catch((message)=>{
-                                reject(message)
+                                if(err) throw({'error':err.code});
+                                let data2 = JSON.parse(JSON.stringify(result))
+                                let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+
+                                this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Aposta_Ganha","DataTr":today
+                                }).catch((message)=>{
+                                    throw(message)
+                                })
                             })
                         })
                     })
@@ -372,34 +377,52 @@ class DBCommunication {
                     // se nao houver, da lhe o dinheiro
                     //se perdeu evento vai retirar todas as ocurrencia daquela ApostaID no Aposta_Evento
                     await this.wonBet(mes,i,resultado).then((message)=>{
-            
+                        //message[0] se ganhou
+                        // message[1] ids de aposta
                         if(message[0]=='win'){
                             
                             let sql='SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"'
                             this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                if(err) reject({'error':err.code});
+                                if(err) throw({'error':err.code});
+
+                                //todas estao finalizadas 
                                 if(result[0]==null){
+
                                     console.log('test 2')
-                                    sql='Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?'
+
+                                    sql='UPDATE Aposta SET Estado = "WON" WHERE ID=?'
                                     this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                        
-                                        if(err) reject({'error':err.code});
-    
-                                        let data2 = JSON.parse(JSON.stringify(result))
-                                        let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-    
-                                        this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante)*(data2[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today
-                                        }).catch((message)=>{
-                                            throw(message)
+                                        if(err) throw({'error':err.code});
+
+                                        sql='Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?'
+                                        this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                            
+                                            if(err) throw({'error':err.code});
+        
+                                            let data2 = JSON.parse(JSON.stringify(result))
+                                            let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+        
+                                            this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante)*(data2[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today
+                                            }).catch((message)=>{
+                                                throw(message)
+                                            })
                                         })
-                                    })
+                                    })  
                                 }
                             })  
                         }
                         else{
-                            this.delete_apostaID(message[1],i).catch((message)=>{
-                                throw(message)
+                            console.log('perdeu')
+                            console.log(message[1][i])
+                            let sql='UPDATE Aposta SET Estado = "LOST" WHERE ID=?'
+                            this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                console.log("aquisfeesfse")
+                                if(err) throw({'error':err.code});
+                                this.delete_apostaID(message[1],i).catch((message)=>{
+                                    throw(message)
+                                })
                             })
+                            
                         }
                     }).catch((message)=>{
                         throw(message)
