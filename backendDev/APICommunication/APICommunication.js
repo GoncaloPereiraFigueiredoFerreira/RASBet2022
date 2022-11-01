@@ -28,8 +28,9 @@ const rspPath = cnf.get("responsePath");
  * @param {Function} callback function that executes when the request is finnished
  */
 function makeRequest(request,path,callback){
-    axios(request)
-    .then( (response) => {
+    return new Promise((resolve,reject)=>{
+      axios(request)
+      .then( (response) => {
 
           if (response == null ){
             console.error("Null response\n")
@@ -37,12 +38,15 @@ function makeRequest(request,path,callback){
           else{
             callback(response.data);
             if (path != undefined && response.data.errors.length != 0) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+            resolve();
           }})
 
     .catch((error)=>{
       console.error(error);
+      reject();
     })
-}
+    })}
+    
 
 
 /**
@@ -53,6 +57,7 @@ function makeRequest(request,path,callback){
  * @param {Function} callback function that executes when the request is finnished
  */
  function makeRequestPT(request,path,callback){
+  return new Promise((resolve)=>{
   axios(request)
   .then( (response) => {
 
@@ -69,10 +74,12 @@ function makeRequest(request,path,callback){
       console.log("Cant acess API! Reading cached file")
       let futptJson = JSON.parse(fs.readFileSync(path,"utf-8"));
       callback(futptJson);
+      
     }
     else console.error("Cant find file or contact API FUTPT")
   })
-}
+})}
+    
 
 
 
@@ -186,45 +193,55 @@ function initEventLst(){
  * @param {List} fixtures list of ids for futebol events 
  */
 function updateFutResults(fixtures){
-  let fixturesLst = []
-  let fixtureStr = ""
-  let i =0;
-  let l =0;
-  while (i<fixtures){
-    l=0;
-    while(l<20 && i<fixture){
-      fixtureStr += fixtures[i] + "-" 
-      l++;
-      i++;
+  return new Promise(async (resolve)=>{
+    let fixturesLst = []
+    let fixtureStr = ""
+    let i =0;
+    let l =0;
+    while (i<fixtures.length){
+      l=0;
+      while(l<20 && i<fixtures.length){
+        fixtureStr += fixtures[i] + "-" 
+        l++;
+        i++;
+      }
+  
+      fixtureStr = fixtureStr.slice(0,-1);
+      fixturesLst.push(fixtureStr);
     }
-    fixtureStr.slice(0,-1);
-    fixturesLst.push(fixtureStr);
-  }
-  for (let request of fixturesLst){
-    let req = getRequests.genFutResultRequest(API_AUTH_KEY,request);
-    makeRequest(req,undefined,parser.parseFutResp);
-
-  }
+    for (let request of fixturesLst){
+      let req = getRequests.genFutResultRequest(API_AUTH_KEY,request);
+      await makeRequest(req,undefined,parser.parseFutResultResp);
+    }
+    resolve();
+  })
 }
 
 function updateF1Results(races){
-  for (let race of races){
-    let req = getRequests.genRaceRankingsRequest(API_AUTH_KEY,race);
-    makeRequest(req,undefined,parser.parseF1Resp);
-  }
+  return new Promise(async (resolve)=>{
+    for (let race of races){
+      let req = getRequests.genRaceRankingsRequest(API_AUTH_KEY,race);
+      await makeRequest(req,undefined,parser.parseF1ResultResp);
+    }
+    resolve();
+  })
 }
 
 function updateBSKResults(games){
+  return new Promise(async (resolve)=>{ 
   for (let game of games){
     let req = getRequests.genBasketResultRequest(API_AUTH_KEY,game);
-    makeRequest(req,undefined,parser.parseNBAResultResp);
+    await makeRequest(req,undefined,parser.parseNBAResultResp);
   }
+  resolve();
+});
 }
 
 function updateFUTPTResults(games){
+  return new Promise((resolve)=>{
   let req = getRequests.genUselessRequest();
   axios(req)
-  .then( (response) => {
+  .then((response) => {
     
         if (response == null ){
           console.error("Null response\n")
@@ -232,11 +249,14 @@ function updateFUTPTResults(games){
         else{
           parser.parsePTFutResultResp(games,response.data)
           if (path != undefined) fs.writeFileSync(path, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+          resolve();
         }})
 
   .catch((error)=>{
-    console.error(error);
+    console.error("Can't acess FUT PT for update");
+    resolve();
   })
+});
 }
 
 

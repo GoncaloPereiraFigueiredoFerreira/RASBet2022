@@ -145,7 +145,7 @@ function parseF1ResultResp(json){
         response.data.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
-        let id = json.response[0].id;
+        let id = json.response[0].race.id;
         let pilotList = evLst.getParticipants("F1",id);
         let winner =  json.response[0].driver.name;
         let index = pilotList.indexOf(winner);
@@ -194,8 +194,9 @@ function parseNBAResultResp(json){
         response.data.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
-        let id = json.response.id;
+        let id = json.response[0].id;
         let result = -1;
+        let scores =json.response[0].scores;
         if (scores.home.total != null &&  scores.away.total != null){
             if (scores.home.total > scores.away.total) result = 0;
             else if (scores.home.total < scores.away.total) result = 1;

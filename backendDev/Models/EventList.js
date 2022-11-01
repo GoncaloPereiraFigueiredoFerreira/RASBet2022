@@ -110,7 +110,7 @@ class EventList{
     // Returns an event to the DB
     getEventDB(sport,id){
         if (this.eventList[sport][id] != undefined)
-            return this.eventList[sport][id].toDb();
+            return this.eventList[sport][id].toDB();
 
         else return null;
     }
@@ -118,6 +118,7 @@ class EventList{
 
     // Change result of an event
     updateWinner(sport,id,result){
+        console.log("OLAAA " + result)
         this.eventList[sport][id].updateWinner(result);
     }
 

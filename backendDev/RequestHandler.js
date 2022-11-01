@@ -53,16 +53,11 @@ function loginFunction(request,response){
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
         answer=message
         answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
-<<<<<<< HEAD
         if(message.FRole=='apostador'){
             return dbComms.walletOnDb(request.body.Email)
         }
         else return 0
         
-=======
-        
-        return dbComms.walletOnDb(request.body.Email)
->>>>>>> 382676a9 (Update fixes2)
     }).then((balanco)=>{
         answer['Balance']=balanco
         response.status(200).send(answer)
@@ -310,7 +305,6 @@ function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
     console.log(user)
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
-        console.log("OLa")
         response.status(200).send(evLst.getBETEvents(request.query.sport));
     }
     else if (user[1] == 'Special' ){// Especialista
@@ -344,48 +338,47 @@ function initEventLst(){
 
 function updateFUTEvents(){
     dbComms.startedEventOnDb("FUT").then((result)=>{
-        console.log(result)
-        for (let fixtures of result){
-            apiComms.updateFutResults(fixtures);
-            // This might not finnish in time for the db update
-        }
-        for (let fixture of result){
-            let event = evLst.getEventDB("FUT",fixture);
-            if (event.getState() == "FIN"){
-                console.log("Evento Finalizado")
-                dbComms.finEventOnDb(fixture,"FUT",event.getResult());
+        apiComms.updateFutResults(result).then(()=>{
+            for (let fixture of result){
+                let event = evLst.getEventDB("FUT",fixture);
+                if (event["Estado"] == "FIN"){
+                    console.log("Evento Finalizado")
+                    dbComms.finEventOnDb(fixture,"FUT",event["Resultado"]);
+                }
             }
-        }
+        });
     });
 }
 
 
 function updateF1Events(){ 
     dbComms.startedEventOnDb("F1").then((result)=>{
-        for (let race of result){
-            apiComms.updateF1Results(race);
-            // This might not finnish in time for the db update
-        }
-        for (let race of result){
-            let event = evLst.getEventDB("F1",race);
-            if (event.getState() == "FIN")
-                dbComms.finEventOnDb(race,"F1",event.getResult());
-        }
+
+        apiComms.updateF1Results(result).then(()=>{
+            for (let race of result){
+                let event = evLst.getEventDB("F1",race);
+                if (event["Estado"]  == "FIN")
+                    dbComms.finEventOnDb(race,"F1",event["Resultado"]);
+            }
+        });
+            
+
     });
 }
 
 
 function updateBSKEvents(){
     dbComms.startedEventOnDb("BSK").then((result)=>{
-        for (let game of result){
-            apiComms.updateBSKResults(game);
-            // This might not finnish in time for the db update
-        }
-        for (let game of result){
-            let event = evLst.getEventDB("BSK",game);
-            if (event.getState() == "FIN")
-                dbComms.finEventOnDb(game,"BSK",event.getResult());
-        }
+        apiComms.updateBSKResults(result).then(()=>{
+            for (let game of result){
+                let event = evLst.getEventDB("BSK",game);
+                if (event["Estado"] == "FIN"){
+                    console.log("Evento Finalizado")
+                    dbComms.finEventOnDb(game,"BSK",event["Resultado"]);
+                }
+            }
+
+        });
     })
 }
 
