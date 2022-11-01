@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -67,7 +67,7 @@ class DBCommunication {
 
     transactionOnDb(transacao){
         return new Promise((resolve,reject)=>{
-            if(transacao.Tipo=="Aposta_Ganha" || transacao.Tipo=="Deposito_Conta"){
+            if(transacao.Tipo=="Aposta_Ganha" || transacao.Tipo=="Deposito_Conta"||  transacao.Tipo=="Refund"){
                 let sql='UPDATE Apostador SET Balance= Balance + ? WHERE Email= ? '
                 this.db.query(sql,[transacao.Valor,transacao.ApostadorID],(err,result)=>{
                     if(err){
@@ -151,7 +151,7 @@ class DBCommunication {
                     if(err) reject({"error":err.code})
                     var data=JSON.parse(JSON.stringify(result))
                     for(let i =0; i<eventos.length;i++){
-                        eventosquery+=`(${data[0].LastID},'${eventos[i].EventoID}','${eventos[i].Desporto}')`
+                        eventosquery+=`(${data[0].LastID},'${eventos[i].EventoID}','${eventos[i].Desporto}',${eventos[i].Escolha})`
                         if(i<eventos.length-1){eventosquery+=','}
                     }
                     sql= 'INSERT INTO Aposta_Evento VALUES '+eventosquery
@@ -339,8 +339,7 @@ class DBCommunication {
                                 let data2 = JSON.parse(JSON.stringify(result))
                                 let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
 
-                                this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Aposta_Ganha","DataTr":today
-                                }).catch((message)=>{
+                                this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Refund","DataTr":today}).catch((message)=>{
                                     throw(message)
                                 })
                             })
@@ -354,10 +353,10 @@ class DBCommunication {
         })
     }
 
-    wonBet(apostaID,i,resultado){
+    wonBet(apostaID,i,resultado,desporto,eventID){
         return new Promise((resolve,reject)=>{
-            let sql='SELECT Escolha FROM Aposta WHERE ID=?'
-            this.db.query(sql,apostaID[i].ApostaID,(err,result)=>{
+            let sql='SELECT Escolha FROM Aposta_Evento WHERE ApostaID=? AND EventoID = ? AND Desporto = ?'
+            this.db.query(sql,[apostaID[i].ApostaID,eventID,desporto],(err,result)=>{
                 if(err) reject({'error':err.code});
                 let data = JSON.parse(JSON.stringify(result))
                 if(data[0].Escolha==resultado){
@@ -376,7 +375,7 @@ class DBCommunication {
                     //se ganhou evento vai verificar se há algum evento daquela ApostaID que nao tenha acabado
                     // se nao houver, da lhe o dinheiro
                     //se perdeu evento vai retirar todas as ocurrencia daquela ApostaID no Aposta_Evento
-                    await this.wonBet(mes,i,resultado).then((message)=>{
+                    await this.wonBet(mes,i,resultado,desporto,eventID).then((message)=>{
                         //message[0] se ganhou
                         // message[1] ids de aposta
                         if(message[0]=='win'){
@@ -387,8 +386,6 @@ class DBCommunication {
 
                                 //todas estao finalizadas 
                                 if(result[0]==null){
-
-                                    console.log('test 2')
 
                                     sql='UPDATE Aposta SET Estado = "WON" WHERE ID=?'
                                     this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
@@ -412,11 +409,10 @@ class DBCommunication {
                             })  
                         }
                         else{
-                            console.log('perdeu')
-                            console.log(message[1][i])
+                           
                             let sql='UPDATE Aposta SET Estado = "LOST" WHERE ID=?'
                             this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                console.log("aquisfeesfse")
+                               
                                 if(err) throw({'error':err.code});
                                 this.delete_apostaID(message[1],i).catch((message)=>{
                                     throw(message)
@@ -465,10 +461,13 @@ class DBCommunication {
     //nao verifica se ainda existe
     remPromocaoOnDb(codigo){
         return new Promise((resolve,reject)=>{
-            let sql= 'DELETE FROM Promocao WHERE Codigo=?'
-            this.db.query(sql,codigo,(err,result)=>{  
-                if(err) reject({"error":err.code});
-                resolve({"Res":"Sim"})   
+            let sql= 'DELETE FROM Promocao_Apostador WHERE Codigo=?'
+            this.db.query(sql,codigo,(err,result)=>{
+                sql= 'DELETE FROM Promocao WHERE Codigo=?'
+                this.db.query(sql,codigo,(err,result)=>{  
+                    if(err) reject({"error":err.code});
+                    resolve({"Res":"Sim"})   
+                })
             })
         })
     }

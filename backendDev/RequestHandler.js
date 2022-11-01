@@ -133,7 +133,7 @@ function closeEventFunction(request,response){
     
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
-    if(user[0] && user[1]=='apostador'){
+    if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
             response.status(200).send(message)
         }).catch((message)=>{
@@ -150,7 +150,7 @@ function finEventFunction(request,response){
 
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
-    if(user[0] && user[1]=='apostador'){
+    if(user[0] && user[1]=='Admin'){
         dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto,request.body.Evento.Resultado).then((message)=>{
             response.status(200).send(message)
         }).catch((message)=>{
@@ -180,8 +180,8 @@ function registerEventFunction(request,response){
 
 function addPromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
-    //mudar para admin
-    if(user[0] && user[1]=='apostador'){
+    
+    if(user[0] && user[1]=='Admin'){
         dbComms.addPromocaoOnDb(request.body.Promocao).then((message)=>{
             response.status(200).send(message)
         }).catch((message)=>{
@@ -195,8 +195,8 @@ function addPromocaoFunction(request,response){
 
 function remPromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
-    //mudar para admin
-    if(user[0] && user[1]=='apostador'){
+    
+    if(user[0] && user[1]=='Admin'){
         dbComms.remPromocaoOnDb(request.body.Codigo).then((message)=>{
             response.status(200).send(message)
         }).catch((message)=>{
