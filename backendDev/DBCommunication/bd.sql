@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Aposta (
 );
 
 CREATE TABLE IF NOT EXISTS Evento(
-    ID VARCHAR(25) NOT NULL,
+    ID VARCHAR(40) NOT NULL,
     Desporto ENUM("FUT","FUTPT","BSK","F1") NOT NULL,
     Resultado INT NOT NULL,
     Descricao VARCHAR(255),
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS Evento(
 
 CREATE TABLE IF NOT EXISTS Aposta_Evento(
 	ApostaID INT NOT NULL,
-    EventoID VARCHAR(25) NOT NULL,
+    EventoID VARCHAR(40) NOT NULL,
     Desporto ENUM("FUT","FUTPT","BSK","F1") NOT NULL,
     Escolha INT NOT NULL,
     PRIMARY KEY(ApostaID,EventoID),
