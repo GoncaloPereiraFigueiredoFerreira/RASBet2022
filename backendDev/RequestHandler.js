@@ -211,10 +211,10 @@ function remPromocaoFunction(request,response){
 }
 
 function usedCodFunction(request,response){
-    let user = sessionHandler.verifyUser(request.body.ApostadorID)
+    let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
     if(user[0] && user[1]=='apostador'){
-        dbComms.usedCodOnDb(user[0],request.body.Codigo).then((message)=>{
+        dbComms.usedCodOnDb(user[0],request.query.Codigo).then((message)=>{
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balance)=>{

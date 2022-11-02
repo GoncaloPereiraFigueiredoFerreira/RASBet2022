@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -196,13 +196,12 @@ class DBCommunication {
         return new Promise(async (resolve,reject)=>{
             
             for(let i =0; i<eventos.length;i++){
-                console.log(eventos[i].ID);
+                
                 await this.eventexistsOnDB(eventos[i].Desporto,eventos[i].ID).then((message)=>{
                     // se nao esta na base de dados insere
                     if(message=='no'){
                         
                         let today = `'${eventos[i].DataEvent.slice(0,10)} ${eventos[i].DataEvent.slice(11,19)}'`
-                        //let eventosquery=("+eventos[i].ID+",'"+eventos[i].Desporto+"',"+eventos[i].Resultado+",'"+eventos[i].Descricao+"','BET','"+eventos[i].Liga+"',"+today+")"
                         let eventosquery=`('${eventos[i].ID}','${eventos[i].Desporto}',${eventos[i].Resultado},'${eventos[i].Descricao}','BET','${eventos[i].Liga}',${today})`
                         
                         let sql= 'INSERT INTO Evento VALUES'+eventosquery
@@ -222,15 +221,47 @@ class DBCommunication {
         })
     }
 
+    is_closed_finalized(eventos){
+        return new Promise((resolve,reject)=>{
+            let eventsquery="("
+            for(let i =0;i<eventos.length;i++){
+                eventsquery+=`(ID= '${eventos[i].EventoID}' AND Desporto='${eventos[i].Desporto}')`
+                if(i<eventos.length-1) eventsquery+="OR"
+            }
+            eventsquery+=")"
+            
+            let sql='SELECT * FROM Evento WHERE (Estado="CLS" OR Estado="FIN") AND '+eventsquery
+            this.db.query(sql,(err,result)=>{
+                if(err){
+                    reject({'error':err.code})
+                    return
+                }
+                else if(result[0]!=null){
+                    reject({'error':'eventos invalidos'})
+                    return
+                }
+                else{
+                    resolve("valido")
+                }
+            })
+        })
+    }
+
     registerBetOnDb(aposta,eventos,codigo){
         
-
+        // nao deixar apostas sobre eventos que estejam finalizados ou closed
         //nao verifica se se pode usar codigo promocional
         return new Promise((resolve,reject)=>{
 
             //regista a transação de aposta
-           
-            this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp}).then((message)=>{
+            if(eventos.length<1){
+                reject('sem eventos')
+                return
+            }
+            this.is_closed_finalized(eventos).then((message)=>{
+                
+                return this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp})
+            }).then((message)=>{
                 return new Promise((resolve1,reject1)=>{
                     if(codigo==null){
                         
@@ -483,20 +514,30 @@ class DBCommunication {
     
     usedCodOnDb(email,codigo){
         return new Promise((resolve,reject)=>{
+            
             let sql ='SELECT * FROM Promocao WHERE Codigo=?'
             this.db.query(sql,codigo,(err,result)=>{
-                if(err) reject({"error":err.code})
-                if(!result[0]) return reject({"error":"Codigo nao existe"})
+                
+                if(err){ 
+                    reject({"error":err.code})
+                    return
+                }
+                if(!result[0]){
+                    
+                    reject({"error":"Codigo nao existe"})
+                    return
+                }  
 
                 sql='SELECT * FROM Promocao_Apostador WHERE Codigo=? AND ApostadorID = ?'
                 this.db.query(sql,[codigo,email],(err,result)=>{
                     
                     if(err) reject({"error":err.code});
                     if(!result[0]){
-                        return resolve({"Res":"Nao"})
+                        resolve({"Res":"Nao"})
+                         
                     }
                     else{
-                        return resolve({"Res":"Sim"})
+                        resolve({"Res":"Sim"})
                     }
                 })
             })
