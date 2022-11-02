@@ -24,9 +24,9 @@ class TieEvent extends SportEvent{
     }
 
     superOdds(multiplier){
-        this.Odds1 = Odds1 * multiplier;
-        this.Odds2 = Odds2 * multiplier;
-        this.OddsDraw = OddsDraw * multiplier;
+        this.Odds1 = this.Odds1 * multiplier;
+        this.Odds2 = this.Odds2 * multiplier;
+        this.OddsDraw = this.OddsDraw * multiplier;
     }
 
     getOdds(){
