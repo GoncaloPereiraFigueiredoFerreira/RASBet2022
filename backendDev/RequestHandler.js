@@ -294,9 +294,11 @@ function profileInfoFunction(request,response){
 function betHistoryFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
+   
     if(user[0] && user[1]=='apostador'){
 
         dbComms.betHistoryOnDb(user[0]).then((message)=>{
+           
             for(let i =0 ; i<message.length;i++){
                 let array = message[i].Descricao.split("#")
                 message[i]['Codigo']=array[0]
@@ -304,12 +306,11 @@ function betHistoryFunction(request,response){
                 message[i]['Jogos']=[]
                 for(let j = 2; j<array.length ; j++){
                     let jogo = array[j].split(">")
-                    console.log(jogo)
+                    
                     let dic={"Desporto":jogo[0],"Liga":jogo[1],"Descricao":jogo[2]}
-                    message[i]['jogos'].push(dic)
+                    message[i]['Jogos'].push(dic)
                 }
             }
-            console.log(message)
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balance)=>{
