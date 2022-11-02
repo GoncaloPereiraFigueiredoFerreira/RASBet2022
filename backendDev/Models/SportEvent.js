@@ -60,7 +60,9 @@ class SportEvent{
         }
     }
 
-
+    isSuperOddsOn(){
+        return this.SuperOdds;
+    }
 
 
 }

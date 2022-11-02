@@ -118,13 +118,12 @@ class EventList{
 
     // Change result of an event
     updateWinner(sport,id,result){
-        console.log("OLAAA " + result)
         this.eventList[sport][id].updateWinner(result);
     }
 
     // Activates superodds in a given 
     superOdds(sport, id,multiplier){
-        if (this.eventList[sport][id] != undefined){
+        if (this.eventList[sport][id] != undefined && !this.eventList[sport][id].isSuperOddsOn()){
             this.eventList[sport][id].superOdds(multiplier);
             return true;
         }
@@ -153,12 +152,7 @@ class EventList{
         }
         else return null;
     }
-    toDb(sport,id){
-        if (this.eventList[sport][id] != undefined){
-            return this.eventList[sport][id].toDB();
-        }
-        else return null;
-    }
+
 
     getState(sport,id){
         if (this.eventList[sport][id] != undefined){
