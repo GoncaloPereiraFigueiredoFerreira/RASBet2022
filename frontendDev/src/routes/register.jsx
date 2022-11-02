@@ -2,7 +2,7 @@ import {Link ,Form,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
 
-import {setToken} from "../utils"
+import {setToken,setRole,setWallet} from "../utils"
 
 
 export async function action({request,params}){
@@ -14,7 +14,9 @@ export async function action({request,params}){
     console.log(response);
     const data = response.data;
     setToken(data.Token);
-    return true;
+    setRole("apostador");
+    if(data.FRole == "apostador") setWallet(data.Balance);
+    return response;
   })
   .catch(function (error) {
     console.log(error,flag);

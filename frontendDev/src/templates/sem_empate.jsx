@@ -1,16 +1,17 @@
+import {parseBet} from "../utils"
 
-export default function Empate(evento){
+
+export default function SemEmpate({evento,addAposta}){
 	return(
-			<div class="bet-element">
+			<div class="bet-element" key={evento.EventoId.toString()}>
 	            <div class="drawmatch">
 	              <img src="hometeam" style={{"padding":"10px"}}></img>
 	              <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 	              <img src="awaytam" style={{"padding":"10px"}}></img>
 	            </div>
 	            <div class="drawmatchodds">
-	              <button style={{"margin":"15px"}}>home {evento.Odds[0]}</button>
-	              <button style={{"margin":"15px"}}>draw {evento.Odds[2]}</button>
-	              <button style={{"margin":"15px"}}>away {evento.Odds[1]}</button>
+	              <button style={{"margin":"15px"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>
+	              <button style={{"margin":"15px"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1]}</button>
 	            </div>
 	          </div>
 	);

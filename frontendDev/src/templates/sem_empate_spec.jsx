@@ -14,7 +14,7 @@ async function register_bet(data){
   });
 }
 
-export default function SemEmpate(evento,sportid){
+export default function SemEmpate({evento,sportid}){
   let input = {sport:sportid,token:getToken(),Odds:[1,1],EventoId:evento.EventoId.toString()};
 
   function handleChange({target}){
@@ -29,7 +29,7 @@ export default function SemEmpate(evento,sportid){
   }
 
 	return(
-		 <div class="bet-element" key={evento.EventoId.toString()}>
+		 <div class="bet-element">
             <div class="drawmatch">
               <img src="hometeam" style={{"padding":"10px"}}></img>
               <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>

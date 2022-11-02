@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react'
 import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
-import {setToken} from "../utils"
+import {setToken,setRole,setWallet} from "../utils"
 
 async function login_req(data){
   var resp = axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
@@ -10,7 +10,9 @@ async function login_req(data){
     console.log(response);
     const data = response.data;
     setToken(data.Token);
-    return [data.FRole,data.Balance];
+    setRole(data.FRole);
+    if(data.FRole == "apostador") setWallet(data.Balance);
+    return true;
   })
   .catch(function (error) {
     console.log(error);
@@ -20,7 +22,7 @@ async function login_req(data){
   return resp;
 }
 
-export default function Login({setRole}) {
+export default function Login() {
   const navigate = useNavigate();
   const [input,setInput] = useState({});
   const [flag,setFlag] = useState(false);
@@ -34,8 +36,7 @@ export default function Login({setRole}) {
   async function handleSubmit(){
     var resp = await login_req(input);
 
-    if(resp){
-      setRole(resp[0]);
+    if(resp != null){
       setFlag(true);
     }
   }
