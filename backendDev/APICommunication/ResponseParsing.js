@@ -170,7 +170,7 @@ function parseNBAResp(nbaJson){
                 let team1 = game.teams.home.name;
                 let team2 = game.teams.away.name;
                 let logo1 = game.teams.home.logo;
-                let logo2 = game.teams.home.logo;
+                let logo2 = game.teams.away.logo;
 
 
                 let event = evLst.getEvent("BSK",id);
