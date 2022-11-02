@@ -138,7 +138,7 @@ function closeEventFunction(request,response){
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
             response.status(200).send(message)
-            evLst.closeEvent(request.body.sport,request.body.Id);
+            evLst.closeEvent(request.body.Desporto,request.body.EventoID);
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
