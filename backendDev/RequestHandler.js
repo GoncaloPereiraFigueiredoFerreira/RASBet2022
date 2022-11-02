@@ -116,14 +116,24 @@ function registerBetFunction(request,response){
 
 function editProfileFunction(request,response){
     list=""
-    i= 0
-    for (const key in request.body){
-        if(i>0){
-            list+=`${key}="${request.body[key]}"`
-            if(i<Object.keys(request.body).length-1){list+=","}
-        }
-        i++
+    let size = Object.keys(request.body).length-1
+    if(request.body.Morada){
+        list+=`Morada='${request.body.Morada}'`
+        size--
+        if(size>0)list+=','
     }
+    if(request.body.Nome){
+        list+=`Nome='${request.body.Nome}'`
+        size--
+        if(size>0)list+=','
+    }
+    if(request.body.Telemovel){
+        list+=`Telemovel='${request.body.Telemovel}'`
+        size--
+        if(size>0)list+=','
+    }
+
+    console.log(list)
     let user = sessionHandler.verifyUser(request.body.ApostadorID)
     let answer
     if(user[0] && user[1]=='apostador'){

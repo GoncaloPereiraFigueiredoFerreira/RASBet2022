@@ -233,6 +233,10 @@ li a:hover{
   border-radius: 10px;
 }
 
+.bet-element img{
+  height: 10vh;
+}
+
 .drawmatch{
   float: right;
   display: flex;

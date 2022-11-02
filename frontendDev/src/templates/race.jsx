@@ -9,9 +9,7 @@ export default function Race({evento,addAposta}){
   return(
   		<div class="bet-element" key={evento.EventoId.toString()}>
           <div class="racematch">
-            <img src="racelogo" style={{"padding":"10px"}}></img>
             <p>{evento.Liga}</p>
-            <img src="racetrack" style={{"padding":"10px"}}></img>
           </div>
         <div class="dropdown">
           <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>

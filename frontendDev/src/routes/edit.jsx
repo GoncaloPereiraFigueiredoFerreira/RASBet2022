@@ -1,5 +1,5 @@
 import {useLoaderData,useNavigate,Form} from 'react-router-dom';
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import axios from "axios"
 import Login from "./login"
 import {getToken,getRole,getWallet,setWallet,parseDate} from "../utils"
@@ -32,6 +32,7 @@ async function edit(data){
 	    console.log(error);
 	    return false;
 	  });
+	  return res;
 }
 
 
@@ -39,6 +40,7 @@ export default function Perfil(props){
 	const navigate = useNavigate();
 	const perfil = useLoaderData();
 	const [input,setInput] = useState({});
+	const [flag,setFlag] = useState(false);
 
 	console.log(perfil);
 
@@ -49,12 +51,15 @@ export default function Perfil(props){
 		data.ApostadorID = getToken();
 		console.log(data);
 		const ret = await edit(data);
+		if(ret) setFlag(true);
 	}
 
 	function handleChange({target}){
 		input[target.name] = target.value;
 		setInput(input);
 	}
+
+	useEffect(()=>{if(flag)navigate(-1)});
 
 	return(
 	 <>

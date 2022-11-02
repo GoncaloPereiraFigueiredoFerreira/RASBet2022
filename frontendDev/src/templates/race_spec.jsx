@@ -36,9 +36,7 @@ export default function Race({evento,sportid}){
   return(
   		<div class="bet-element">
             <div class="racematch">
-              <img src="racelogo" style={{"padding":"10px"}}></img>
               <p>{evento.Liga}</p>
-              <img src="racetrack" style={{"padding":"10px"}}></img>
             </div>
           <Form onSubmit={handleSubmit}>
             <div class="dropdown">

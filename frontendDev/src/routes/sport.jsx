@@ -229,7 +229,7 @@ export default function Sport(props){
 		<div className="sidebar" id="Leftbar">
             <p style={{"padding":"5px"}}>Competiçoes</p>
         </div>
-		<div className="betpage">
+		<div className="betpage-spec">
 			<Bet_spec data={sport} tipo={sportid}/>
 		</div></>
 				);

@@ -1,4 +1,4 @@
-import {createBrowserRouter,RouterProvider} from 'react-router-dom'
+import {createBrowserRouter,RouterProvider,Navigate} from 'react-router-dom'
 import {useState} from 'react'
 
 import ErrorPage from './error-page.jsx'
@@ -22,7 +22,7 @@ function App(){
 	    element: <Root/>,
 	    errorElement: <ErrorPage />,
 	    children: [
-	      { index: true, element: <Index /> },
+	      { index: true, element: <Navigate to="sport/FUTPT"/> },
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,

@@ -1,7 +1,7 @@
 import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "react-router-dom";
 import Login from "./login";
 
-import {getToken,getWallet} from "../utils"
+import {getToken,getWallet,getRole} from "../utils"
 
 export default function Root(props) {
   const navigation = useNavigate();
@@ -39,6 +39,7 @@ export default function Root(props) {
               Basquetebol</Link>
             </li>
 
+            {(getRole() == "apostador")?
             <div className="dropdown">
               <img src='perfil.jpg' style={{'width':'6vh','height':'3vh'}}/>
               <div class="dropdown-content">
@@ -46,10 +47,10 @@ export default function Root(props) {
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
                 <Link to={`histA/${token}`}>Histórico Apostas</Link>
               </div>
-            </div>
+            </div>:null}
            
             <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
-            <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {getWallet()} </button></li>
+            {(getRole() == "apostador")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {getWallet()} </button></li>:null}
           </ul>
         </nav>
       </header>

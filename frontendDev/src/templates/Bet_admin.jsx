@@ -47,9 +47,9 @@ function Aux({evento,sport}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
-		              <img src="hometeam" style={{"padding":"10px"}}></img>
+		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>:null}
 		              <p>{desc}</p>
-		              <img src="awaytam" style={{"padding":"10px"}}></img>
+		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>:null}
 		            </div>
 		            <div className="drawmatchodds">
 		              <button style={{"margin":"15px"}} onClick={()=>(cancelar_aposta(evento,sport))}>Cancelar Aposta</button>

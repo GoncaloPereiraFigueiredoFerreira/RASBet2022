@@ -5,9 +5,9 @@ export default function Empate({evento,addAposta}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
-		              <img src="hometeam" style={{"padding":"10px"}}></img>
+		              <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 		              <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-		              <img src="awaytam" style={{"padding":"10px"}}></img>
+		              <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		            </div>
 		            <div className="drawmatchodds">
 		              <button style={{"margin":"15px"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>

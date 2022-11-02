@@ -31,9 +31,9 @@ export default function SemEmpate({evento,sportid}){
 	return(
 		 <div class="bet-element">
             <div class="drawmatch">
-              <img src="hometeam" style={{"padding":"10px"}}></img>
+              <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
               <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-              <img src="awaytam" style={{"padding":"10px"}}></img>
+              <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
             </div>
             <div class="drawmatchodds">
 	            <Form onSubmit={handleSubmit}>
