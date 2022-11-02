@@ -78,7 +78,14 @@ function registerBetFunction(request,response){
     if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
         request.body.Aposta.ApostadorID= user[0]
         
-        dbComms.registerEventOnDb(list).then((message)=>{
+        dbComms.usedCodOnDb(request.body.Aposta.ApostadorID,request.body.Codigo).then((message)=>{
+            if(message.Res=="Sim"){ 
+                console.log("aqui")
+                throw new Error("Codigo promocional ja utilizado")
+            }
+            console.log('test 1')
+            return dbComms.registerEventOnDb(list)
+        }).then((message)=>{
             
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo)
         }).then((message)=>{
@@ -88,8 +95,15 @@ function registerBetFunction(request,response){
         }).then((balanco)=>{
             answer['Balance']=balanco
             response.status(200).send(answer)
-        }).catch((message)=>{
-            response.status(400).send(message)
+        }).catch((e)=>{
+            console.log('catch')
+            if(e.message){
+                
+                response.status(400).send({'error':e.message})
+            }
+            else{
+                response.status(400).send(e)
+            }
         })
         
     }
@@ -138,6 +152,7 @@ function closeEventFunction(request,response){
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
             response.status(200).send(message)
+            evLst.closeEvent(request.body.Desporto,request.body.EventoID);
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -145,7 +160,6 @@ function closeEventFunction(request,response){
     else{
         response.status(400).send('Permission denied')
     }
-    //evLst.closeEvent(request.body.sport,request.body.Id);
 }
 
 function finEventFunction(request,response){
