@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getToken,setWallet} from  "../utils"
+import {getToken,setWallet,parseDate} from  "../utils"
 import {useLoaderData} from 'react-router-dom';
 
 export async function loader({params}){
@@ -11,7 +11,7 @@ export async function loader({params}){
         console.log("response",response);
         const data = response.data;
         setWallet(data.Balance);
-        return data;
+        return data.lista;
       })
       .catch(function (error) {
         console.log(error);
@@ -30,45 +30,32 @@ export default function HistA() {
           <div className='bemvindo'>
             <p>Histórico de Apostas</p>
           </div>
-          <div className="bet-element" id="Simples">
-            <p>Tipo: Multipla/simples</p>
-            <div style={{"background-color":"gray","margin":"2px"}}>
-                <p>Campeonato:</p>
-                <p>HomeTeam vs AwayTeam</p>
-                <p>Odd:</p>            
+
+          {list.map((evento)=>(
+            <div className="bet-element" id={evento.Aridade} key={evento.ID}>
+            <p>Tipo: {evento.Aridade}</p>
+            <div>
+                {evento.Jogos.map((jogo,ind)=>(
+                <div style={{"background-color":"gray","margin":"2px"}} key={ind.toString()}>
+                    <p>Campeonato:{jogo.Liga}</p>
+                    <p>{jogo.Descricao}</p>            
+                </div>
+                ))}
             </div>
             <div>
-                <p>Aposta:</p>
-                <p>Data: </p>
-                <p>Estado: (da aposta/jogo)</p>                
+                <p>Aposta:{evento.Montante}</p>
+                <p>Data:{parseDate(evento.DateAp)} </p>
+                <p>Estado:{evento.Estado}</p>
+                <p>Odd:{evento.Odd}</p>                
             </div>
 
 
           </div>
+          ))}
 
-          <div className="bet-element" id="Multipla">
-            <p>Tipo: Multipla/simples</p>
-            <div>
-                <div style={{"background-color":"gray","margin":"2px"}} >
-                    <p>Campeonato:</p>
-                    <p>HomeTeam vs AwayTeam</p>
-                    <p>Odd:</p>     
-                </div>
 
-                <div style={{"background-color":"gray","margin":"2px"}}>
-                    <p>Campeonato:</p>
-                    <p>HomeTeam vs AwayTeam</p>
-                    <p>Odd:</p>
-                </div>
-            </div>
-            <div>
-                <p>Aposta:</p>
-                <p>Multiplyer: </p>
-                <p>Data: </p>
-                <p>Estado: (da aposta/jogo)</p>
-            </div>
 
-          </div>
+        
         </div>
       </div>
     </>

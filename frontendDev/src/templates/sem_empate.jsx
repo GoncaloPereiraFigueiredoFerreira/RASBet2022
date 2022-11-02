@@ -1,4 +1,4 @@
-import {parseBet} from "../utils"
+import {parseBet,parseDate} from "../utils"
 
 
 export default function SemEmpate({evento,addAposta}){
@@ -6,7 +6,10 @@ export default function SemEmpate({evento,addAposta}){
 			<div class="bet-element" key={evento.EventoId.toString()}>
 	            <div class="drawmatch">
 	              <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
-	              <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+	              <div>
+	                <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+	                <p>{parseDate(evento.Data)}</p>
+	              </div>
 	              <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 	            </div>
 	            <div class="drawmatchodds">

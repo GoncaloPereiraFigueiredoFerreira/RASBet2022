@@ -1,11 +1,25 @@
 import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "react-router-dom";
 import Login from "./login";
+import axios from "axios";
 
 import {getToken,getWallet,getRole} from "../utils"
 
 export default function Root(props) {
   const navigation = useNavigate();
   const token = getToken();
+
+  async function refresh(){
+    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/'}) 
+      .then(function (response) {
+        console.log(response);
+        const data = response.data;
+        return data;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return null;
+      }); 
+  }
 
   return (
     <>
@@ -51,6 +65,7 @@ export default function Root(props) {
            
             <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
             {(getRole() == "apostador")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {getWallet()} </button></li>:null}
+            {(getRole() == "Admin")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{refresh();}}>Refresh</button></li>:null}
           </ul>
         </nav>
       </header>

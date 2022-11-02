@@ -1,5 +1,5 @@
 import { Form } from 'react-router-dom'
-import { getToken } from "../utils"
+import { getToken,parseDate} from "../utils"
 import axios from 'axios'
 
 function test (part,odds){
@@ -36,7 +36,11 @@ export default function Race({evento,sportid}){
   return(
   		<div class="bet-element">
             <div class="racematch">
-              <p>{evento.Liga}</p>
+              <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px"}}/>
+              <div>
+                <p>{evento.Liga}</p>
+                <p>{parseDate(evento.Data)}</p>
+              </div>
             </div>
           <Form onSubmit={handleSubmit}>
             <div class="dropdown">

@@ -15,6 +15,8 @@ import Wallet from './routes/wallet.jsx'
 import Login,{action as loginAction} from './routes/login.jsx'
 import Register,{action as registerAction} from './routes/register.jsx'
 
+import {getRole} from "./utils"
+
 function App(){
 	const router = createBrowserRouter([
 	  {
@@ -22,7 +24,7 @@ function App(){
 	    element: <Root/>,
 	    errorElement: <ErrorPage />,
 	    children: [
-	      { index: true, element: <Navigate to="sport/FUTPT"/> },
+	      { index: true, element: (getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>},
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,

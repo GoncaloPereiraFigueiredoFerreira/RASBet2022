@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Form } from 'react-router-dom'
-import { getToken } from '../utils'
+import { getToken,parseDate} from '../utils'
 import axios from 'axios'
 
 async function register_bet(data){
@@ -32,7 +32,10 @@ export default function Empate({evento,sportid}){
 		 <div class="bet-element">
             <div class="drawmatch">
               <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
-              <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+              <div>
+                <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+                <p>{parseDate(evento.Data)}</p>
+              </div>
               <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
             </div>
             <div class="drawmatchodds">

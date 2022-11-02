@@ -1,5 +1,5 @@
 import axios from "axios"
-import {getToken} from "../utils"
+import {getToken,parseDate} from "../utils"
 import {Form} from "react-router-dom"
 
 async function cancelar_aposta(evento,sport){
@@ -47,8 +47,12 @@ function Aux({evento,sport}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
+		            	{(evento.Tipo=="RaceEvent")?<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px"}}></img>:null}
 		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>:null}
-		              <p>{desc}</p>
+		              <div>
+		              	<p>{desc}</p>
+		              	<p>{parseDate(evento.Data)}</p>
+		              </div>
 		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>:null}
 		            </div>
 		            <div className="drawmatchodds">

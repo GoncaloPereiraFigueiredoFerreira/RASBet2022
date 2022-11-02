@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {useLoaderData,Form} from 'react-router-dom';
 import axios from "axios"	
 
-import {getToken,getRole,getDate} from "../utils"
+import {getToken,getRole,getDate,setWallet} from "../utils"
 
 import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
@@ -13,6 +13,7 @@ async function reg_bet(data){
   .then(function (response) {
     console.log("response",response);
     const data = response.data;
+    setWallet(data.Balance);
   })
   .catch(function (error) {
     console.log(error);
@@ -120,6 +121,7 @@ export default function Sport(props){
 				var ret = null;
 				var data = apostas.simples;
 				data.Aposta.DateAp = getDate();
+				data.Aposta.Descricao = "";
 				data.Eventos = [data.Evento];
 				delete data.Desc;
 				delete data.Evento;
@@ -127,18 +129,26 @@ export default function Sport(props){
 				data.Codigo = (input.check) ? input.codigo:null;
 				console.log("registo simles",data)
 				ret = await reg_bet(data);
+				var napostas = {...apostas};
+				napostas.simples = null;
+				setApostas(napostas);
 			}
 			else{
 				var ret = null;
 				var data = {};
 				data.Aposta = apostas.mult[0].Aposta;
+				data.Aposta.Descricao = "";
 				data.Aposta.Montante = input.valor;
 				data.Aposta.DateAp = getDate();
+				data.Aposta.Odd = apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1);
 				data.Eventos = apostas.mult.map((e)=>(e.Evento));
 				data.Codigo = (data.Codigo != "")? data.Codigo:null
 				console.log("registo mult",data);
 				ret = await reg_bet(data);
 				console.log(ret);
+				var napostas = {...apostas};
+				napostas.mult = [];
+				setApostas(napostas);
 			}
 
 			console.log(ret);
@@ -211,6 +221,7 @@ export default function Sport(props){
 							</div>
 					  	))}</>)}
 						<Form onSubmit={handleSubmit_cod}>
+							{(input.check)?<img src="check.png"/>:null}
 							<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS}/>
 							<button style={{"margin":"3px"}} type="subit">Aplicar</button>
 						</Form>
