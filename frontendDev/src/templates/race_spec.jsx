@@ -18,7 +18,7 @@ async function register_bet(data){
   });
 }
 
-export default function Race(evento,sportid){
+export default function Race({evento,sportid}){
   let input = {sport:sportid,token:getToken(),Odds:evento.Participantes.map(()=>('1')),EventoId:evento.EventoId.toString()}; 
 
   function handleChange({target}){
@@ -34,8 +34,7 @@ export default function Race(evento,sportid){
 
 
   return(
-  <>
-  		<div class="bet-element" key={evento.EventoId.toString()}>
+  		<div class="bet-element">
             <div class="racematch">
               <img src="racelogo" style={{"padding":"10px"}}></img>
               <p>{evento.Liga}</p>
@@ -53,6 +52,5 @@ export default function Race(evento,sportid){
             <button style={{"padding":"20px","justify-content":"center"}} type="submit">Submeter</button>
           </Form>
         </div>     
-	</>
   );
 }

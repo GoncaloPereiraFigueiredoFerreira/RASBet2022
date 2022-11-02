@@ -1,7 +1,7 @@
 import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "react-router-dom";
 import Login from "./login";
 
-import {getToken} from "../utils"
+import {getToken,getWallet} from "../utils"
 
 export default function Root(props) {
   const navigation = useNavigate();
@@ -9,16 +9,53 @@ export default function Root(props) {
 
   return (
     <>
-      <nav>
-      <img src='logo.png'/>
-      <Link to='/sport/FUT'>Futebol</Link>
-      <Link to='/sport/F1'>Formula 1</Link>
-      <Link to='/sport/BSK'>basquetebol</Link>
-      <Link to={`perfil/${token}`}><img src='logo.jpg' style={{'width':'6vh','height':'3vh'}}/></Link>
-      <button onClick={()=>{navigation('login')}}>ir para login</button>
-      <h1>carteira:{props.wallet}</h1>
-      </nav>
-      <Outlet />
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <img src='logo.png' style={{'width':'fit-content','height':'3vh'}} class = "button" onClick={()=>{navigation('/');}}/>
+            </li>
+            <li>
+              <Link to='/sport/FUT'>
+              <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Futebol
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/FUTPT'>
+              <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Futebol
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/F1'>
+              <img src='formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Formula 1
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/BSK'>
+              <img src='basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+              Basquetebol</Link>
+            </li>
+
+            <div className="dropdown">
+              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh'}}/>
+              <div class="dropdown-content">
+                <Link to={`perfil/${token}`}>Perfil</Link>
+                <Link to={`histT/${token}`}>Histórico Transações</Link>
+                <Link to={`histA/${token}`}>Histórico Apostas</Link>
+              </div>
+            </div>
+           
+            <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
+            <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {getWallet()} </button></li>
+          </ul>
+        </nav>
+      </header>
+      <div className="mainpage">
+        <Outlet />
+      </div>
     </>
   );
 }

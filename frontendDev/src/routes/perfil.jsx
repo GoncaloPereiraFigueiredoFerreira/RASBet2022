@@ -1,7 +1,7 @@
 import {useLoaderData,useNavigate,Form} from 'react-router-dom';
 import axios from "axios"
 import Login from "./login"
-import {getToken} from "../utils"
+import {getToken,getRole,getWallet,setWallet,parseDate} from "../utils"
 
 export async function loader({params}){
 	const token = params.perfilid;
@@ -10,7 +10,7 @@ export async function loader({params}){
 	else ret = await axios({method:'GET',url:'http://localhost:8080/api/profileInfo/',params:{"ApostadorID":token}}) 
   		.then(function (response) {
     		console.log(response);
-    		const data = response.data[0];
+    		const data = response.data;
     		return data;
   		})
   		.catch(function (error) {
@@ -23,56 +23,31 @@ export async function loader({params}){
 export default function Perfil(props){
 	const navigate = useNavigate();
 	const perfil = useLoaderData();
-	var money = 0;
 
-	props.setWallet(perfil.Balance);
+	console.log(perfil);
 
-	function handleChange({target}){
-		money = target.value;
-	}
-
-	function Levantar(){
-	  var data={Valor:money,Tipo:"LC",ApostadorID:getToken(),DataTR:"2022-10-14 00:00:00"};
-	  console.log(data);
-	  var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
-	  .then(function (response) {
-	    console.log(response);
-	    const data = response.data;
-	  })
-	  .catch(function (error) {
-	    console.log(error);
-	  });
-	}
-
-	function Depositar(){
-	  var data={Valor:money,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTR:"2022-10-14 00:00:00"};
-	  console.log(data);
-	  var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
-	  .then(function (response) {
-	    console.log(response);
-	    const data = response.data;
-	  })
-	  .catch(function (error) {
-	    console.log(error);
-	  });
-	}
-
+	setWallet(perfil.Balance);
 
 	//if(!perfil){return navigate("/login");}
 	return(
-	<>
-		<h1>Email:{perfil.Email}</h1>
-		<h1>Pass:{perfil.PlvPasse}</h1>
-		<h1>Balance:{perfil.Balance}</h1>
-		<Form onSubmit={Depositar}>
-			<input placeholder="quantia" name="money" onChange={handleChange}/>
-			<button type="submit">Depositar</button>
-		</Form>
-		<Form onSubmit={Levantar}>
-			<input placeholder="quantia" name="money" onChange={handleChange}/>
-			<button type="submit">Levantar</button>
-		</Form>
-	</>
+	 <>
+      <div className = "box">
+        <div className = "loginbox">
+          <div className='bemvindo'>
+            <p>Perfil</p>
+          </div>
+          <p>Nome Completo:{perfil.Nome}</p>
+          <p>Email:{perfil.Email}</p>
+          <p>Data de nascimeto:{parseDate(perfil.DataNascimento)} </p>
+          <p>Nif:{perfil.NIF}</p>
+          <p>CC:{perfil.CC}</p>
+          <p>Morada:{perfil.Morada}</p>
+          <p>Telemovel:{perfil.Telemovel}</p>
+
+          <button className = "button" type="submit" style={{"margin-right":"30vh","margin-left":"30vh","width":"40%"}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
+        </div>
+      </div>
+    </>
 	);
 }
 
