@@ -87,7 +87,10 @@ class EventList{
                 }
             }
         }
-        return lst;
+        return lst.sort((a,b)=>{
+            return new Date(b["Data"]) -new Date(a["Data"]) 
+
+        });
     }
 
     /// Returns the list of events ready for bets
@@ -96,7 +99,10 @@ class EventList{
         for(let match in this.eventList[sport]){
             if (this.eventList[sport][match].getState() == "BET") lst.push(this.eventList[sport][match].toJson());
         }
-        return lst;
+        return lst.sort((a,b)=>{
+            return new Date(b["Data"]) -new Date(a["Data"]) 
+
+        });
     }
 
     // Returns an event to the front end
