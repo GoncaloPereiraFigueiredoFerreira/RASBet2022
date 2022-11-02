@@ -210,6 +210,22 @@ function remPromocaoFunction(request,response){
     }
 }
 
+function getpromocaoFunction(request,response){
+    let user = sessionHandler.verifyUser(request.query.Token)
+    
+    if(user[0] && user[1]=='Admin'){
+        
+        dbComms.getpromocaoOnDb().then((message)=>{
+            response.status(200).send(message)
+        }).catch((message)=>{
+            response.status(400).send(message)
+        })
+    }
+    else{
+        response.status(400).send('Permission denied')
+    }
+}
+
 function usedCodFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
@@ -289,6 +305,8 @@ function transHistFunction(request,response){
     }
     
 }
+
+
 
 function startedEventsFunction(request,response){
 
@@ -432,6 +450,7 @@ module.exports = {
     startedEventsFunction,
     addPromocaoFunction,
     remPromocaoFunction,
+    getpromocaoFunction,
     usedCodFunction,
     profileInfoFunction,
     betHistoryFunction,

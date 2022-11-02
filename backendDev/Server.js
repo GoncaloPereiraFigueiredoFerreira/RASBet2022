@@ -38,6 +38,7 @@ class Server{
         //app.post(api + "addcodeUsed",reqHandler.addcodeUsedFunction);// deve ser removido
         app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);
         
+        
         //Pra que???
         app.post(api+"registerEvent",reqHandler.registerEventFunction);
         app.post(api+"startedEvents",reqHandler.startedEventsFunction);
@@ -49,6 +50,7 @@ class Server{
         app.get(api + "eventList"   ,reqHandler.returnEventList);
         app.get(api + "updateOdds"  ,reqHandler.getOdds);
         app.get(api + "update"      ,reqHandler.updateEvents);
+        app.get(api + "getpromocoes",reqHandler.getpromocaoFunction)
 
         // Start Server
         app.listen(this.port, () => {

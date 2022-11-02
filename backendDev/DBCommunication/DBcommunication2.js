@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -508,6 +508,22 @@ class DBCommunication {
             })
         })
     }
+
+    getpromocaoOnDb(codigo){
+        return new Promise((resolve,reject)=>{
+            let sql= 'SELECT * FROM Promocao'
+            this.db.query(sql,codigo,(err,result)=>{
+                
+                if(err) {
+                    reject({"error":err.code})
+                    return
+                }
+                
+                resolve(result)   
+               
+            })
+        })
+    }
     
     usedCodOnDb(email,codigo){
         return new Promise((resolve,reject)=>{
@@ -547,7 +563,7 @@ class DBCommunication {
             this.db.query(sql,email,(err,result)=>{
                 
                 if(err) reject({"error":err.code});
-                resolve(result)     
+                resolve(result[0])     
             })
         }) 
     }
