@@ -138,6 +138,7 @@ function closeEventFunction(request,response){
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
             response.status(200).send(message)
+            evLst.closeEvent(request.body.sport,request.body.Id);
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -145,7 +146,6 @@ function closeEventFunction(request,response){
     else{
         response.status(400).send('Permission denied')
     }
-    //evLst.closeEvent(request.body.sport,request.body.Id);
 }
 
 function finEventFunction(request,response){
