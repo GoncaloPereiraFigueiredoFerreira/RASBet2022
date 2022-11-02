@@ -116,14 +116,24 @@ function registerBetFunction(request,response){
 
 function editProfileFunction(request,response){
     list=""
-    i= 0
-    for (const key in request.body){
-        if(i>0){
-            list+=`${key}="${request.body[key]}"`
-            if(i<Object.keys(request.body).length-1){list+=","}
-        }
-        i++
+    let size = Object.keys(request.body).length-1
+    if(request.body.Morada){
+        list+=`Morada='${request.body.Morada}'`
+        size--
+        if(size>0)list+=','
     }
+    if(request.body.Nome){
+        list+=`Nome='${request.body.Nome}'`
+        size--
+        if(size>0)list+=','
+    }
+    if(request.body.Telemovel){
+        list+=`Telemovel='${request.body.Telemovel}'`
+        size--
+        if(size>0)list+=','
+    }
+
+    console.log(list)
     let user = sessionHandler.verifyUser(request.body.ApostadorID)
     let answer
     if(user[0] && user[1]=='apostador'){
@@ -151,8 +161,10 @@ function closeEventFunction(request,response){
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
-            response.status(200).send(message)
+            console.log(message)
             evLst.closeEvent(request.body.Desporto,request.body.EventoID);
+            response.status(200).send(message)
+            
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -285,6 +297,19 @@ function betHistoryFunction(request,response){
     if(user[0] && user[1]=='apostador'){
 
         dbComms.betHistoryOnDb(user[0]).then((message)=>{
+            for(let i =0 ; i<message.length;i++){
+                let array = message[i].Descricao.split("#")
+                message[i]['Codigo']=array[0]
+                message[i]['Aridade']=array[1]
+                message[i]['Jogos']=[]
+                for(let j = 2; j<array.length ; j++){
+                    let jogo = array[j].split(">")
+                    console.log(jogo)
+                    let dic={"Desporto":jogo[0],"Liga":jogo[1],"Descricao":jogo[2]}
+                    message[i]['jogos'].push(dic)
+                }
+            }
+            console.log(message)
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balance)=>{
