@@ -161,8 +161,10 @@ function closeEventFunction(request,response){
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
+            console.log(message)
+            evLst.closeEvent(request.body.Evento.Desporto,request.body.Evento.EventoID);
             response.status(200).send(message)
-            evLst.closeEvent(request.body.Desporto,request.body.EventoID);
+            
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -292,9 +294,23 @@ function profileInfoFunction(request,response){
 function betHistoryFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
+   
     if(user[0] && user[1]=='apostador'){
 
         dbComms.betHistoryOnDb(user[0]).then((message)=>{
+           
+            for(let i =0 ; i<message.length;i++){
+                let array = message[i].Descricao.split("#")
+                message[i]['Codigo']=array[0]
+                message[i]['Aridade']=array[1]
+                message[i]['Jogos']=[]
+                for(let j = 2; j<array.length ; j++){
+                    let jogo = array[j].split(">")
+                    
+                    let dic={"Desporto":jogo[0],"Liga":jogo[1],"Descricao":jogo[2]}
+                    message[i]['Jogos'].push(dic)
+                }
+            }
             answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balance)=>{

@@ -247,6 +247,24 @@ class DBCommunication {
         })
     }
 
+    getDescricaoLiga(eventoid){
+        return new Promise((resolve,reject)=>{
+            let sql = "SELECT Descricao,Liga FROM Evento WHERE ID=?"
+            this.db.query(sql,eventoid,(err,result)=>{
+                if(err){
+                    reject({"error":err.code})
+                    return
+                }
+                else{
+                    let data = JSON.parse(JSON.stringify(result))
+                    console.log('get descricao liga')
+                    console.log(data)
+                    resolve([data[0].Descricao,data[0].Liga])
+                }
+            })
+        })
+    }
+
     registerBetOnDb(aposta,eventos,codigo){
         
         // nao deixar apostas sobre eventos que estejam finalizados ou closed
@@ -293,6 +311,30 @@ class DBCommunication {
                         })
                     }
                 })
+            }).then( (message)=>{
+                return new Promise(async (resolve,reject)=>{
+                    let descricao=`${codigo}#`
+                    
+                    if(eventos.length>1) descricao+="Multipla#"
+                    else descricao+="Simples#"
+                    for(let i =0 ; i< eventos.length ; i++){
+
+                        await this.getDescricaoLiga(eventos[i].EventoID).then((event)=>{
+                            console.log('test 1111')
+                            console.log(event)
+                            descricao+=`${eventos[i].Desporto}>${event[1]}>${event[0]}`
+                            if(i<eventos.length-1) descricao+="#"
+                        }).catch((message)=>{
+                            reject(message)
+                        })
+                        
+                    }
+                    console.log(descricao)
+                    
+                    aposta.Descricao=descricao
+                    resolve('done')
+                })
+            
             }).then((message)=>{
                 return this.insert_aposta(aposta,eventos)
             }).then((message)=>{  
