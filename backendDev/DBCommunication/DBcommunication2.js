@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -258,43 +258,43 @@ class DBCommunication {
             this.is_closed_finalized(eventos).then((message)=>{
                 
                 return this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp})
+
             }).then((message)=>{
-                return new Promise((resolve1,reject1)=>{
+                return new Promise((resolve,reject)=>{
                     if(codigo==null){
-                        
-                        this.insert_aposta(aposta,eventos).then((message)=>{
-                            resolve1(message)
-                        }).catch((message)=>{
-                            reject1(message)
-                        })
+
+                        resolve('done')
+
                     }
                     else{
-    
                         //regista a utilização da promoção por parte do apostador
     
                         let sql= 'INSERT INTO Promocao_Apostador SET ?'
                         this.db.query(sql,{"Codigo":codigo,"ApostadorID":aposta.ApostadorID},(err,result)=>{
                             
-                            if(err) reject({"error":err.code})
+                            if(err) {
+                                reject({"error":err.code})
+                                return
+                            }
                             //procura o valor do codigo aplicado para depois somar ao montante da aposta
             
                             sql='SELECT Valor FROM Promocao WHERE Codigo = ?'
                             this.db.query(sql,codigo,(err,result)=>{
                                
-                                if(err) reject({"error":err.code})
+                                if(err) {
+                                    reject({"error":err.code})
+                                    return
+                                }
                                 let data = JSON.parse(JSON.stringify(result))
                                 aposta.Montante+= data[0].Valor
-                                //regista a aposta
-                               
-                                this.insert_aposta(aposta,eventos).then((message)=>{
-                                    resolve1(message)
-                                }).catch((message)=>{
-                                    reject1(message)
-                                })
+                                resolve('done')
+                                
                             })
                         })
                     }
                 })
+            }).then((message)=>{
+                return this.insert_aposta(aposta,eventos)
             }).then((message)=>{  
                 resolve(message)
             }).catch((message)=>{
@@ -527,7 +527,10 @@ class DBCommunication {
     
     usedCodOnDb(email,codigo){
         return new Promise((resolve,reject)=>{
-            
+            if(codigo==null){
+                resolve({"Res":"Codigo promocional nulo"})
+                return
+            }
             let sql ='SELECT * FROM Promocao WHERE Codigo=?'
             this.db.query(sql,codigo,(err,result)=>{
                 
