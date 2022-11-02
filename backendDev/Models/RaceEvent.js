@@ -26,14 +26,18 @@ class RaceEvent extends SportEvent{
     }
 
     toJson(){
+        let photos = [];
+        this.PilotsPht.map(x=>{photos.push(x)});
+        photos.push(this.CircuitPht)
         return{
             "Tipo": "RaceEvent",
             "EventoId" : this.Id,
             "Liga" : this.Circuit,
             "Participantes" : this.Pilots, //Foto no fim
             "Odds" : this.PlayerOdds,
-            "Logos": this.PilotsPht,
-            "Data" : this.DateTime
+            "Logos": photos,
+            "Data" : this.DateTime,
+            "SuperOdds" : this.SuperOdds
         }
     }
 
