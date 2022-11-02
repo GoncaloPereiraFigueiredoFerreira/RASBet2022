@@ -75,7 +75,7 @@ function registerBetFunction(request,response){
     }
     let answer
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
-    if(user[0] && user[1]=='apostador'){
+    if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
         request.body.Aposta.ApostadorID= user[0]
         
         dbComms.registerEventOnDb(list).then((message)=>{

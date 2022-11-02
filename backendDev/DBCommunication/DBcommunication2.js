@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -254,10 +254,7 @@ class DBCommunication {
         return new Promise((resolve,reject)=>{
 
             //regista a transação de aposta
-            if(eventos.length<1){
-                reject('sem eventos')
-                return
-            }
+            
             this.is_closed_finalized(eventos).then((message)=>{
                 
                 return this.transactionOnDb({"ApostadorID":aposta.ApostadorID,"Valor":aposta.Montante,"Tipo":"Aposta","DataTr":aposta.DateAp})
