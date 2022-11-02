@@ -425,9 +425,12 @@ function updateEvents(request,response){
 
 
 function activateSuperOdds(request,response){
-    let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
-    if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
-    else response.status(404).send("Event not found");
+    let user = sessionHandler.verifyUser(request.body.token);
+    if (user[1] == "Admin"){
+        let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
+        if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+        else response.status(404).send("Event not found");
+    }
 }
 
 function getOdds(request,response){
