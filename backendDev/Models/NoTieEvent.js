@@ -17,6 +17,7 @@ class NoTieEvent extends SportEvent{
     superOdds(multiplier){
         this.Odds1 = Odds1 * multiplier;
         this.Odds2 = Odds2 * multiplier;
+        this.SuperOdds = true;
     }
     getOdds(){
         return [this.Odds1,this.Odds2];
@@ -30,7 +31,8 @@ class NoTieEvent extends SportEvent{
             "Participantes" : [this.Team1,this.Team2],
             "Odds" : [this.Odds1,this.Odds2],
             "Logos": [this.Logo1,this.Logo2],
-            "Data" : this.DateTime
+            "Data" : this.DateTime,
+            "SuperOdds" : this.SuperOdds
         }
     }
 

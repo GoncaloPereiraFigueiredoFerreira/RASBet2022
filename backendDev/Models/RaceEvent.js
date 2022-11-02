@@ -22,6 +22,7 @@ class RaceEvent extends SportEvent{
 
     superOdds(multiplier){
         this.PlayerOdds.map(x=> x * multiplier);
+        this.SuperOdds = true;
     }
 
     toJson(){

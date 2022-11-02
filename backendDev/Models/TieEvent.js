@@ -27,6 +27,7 @@ class TieEvent extends SportEvent{
         this.Odds1 = Odds1 * multiplier;
         this.Odds2 = Odds2 * multiplier;
         this.OddsDraw = OddsDraw * multiplier;
+        this.SuperOdds = true;
     }
 
     getOdds(){
@@ -42,7 +43,8 @@ class TieEvent extends SportEvent{
             "Participantes" : [this.Team1,this.Team2],
             "Odds" : [this.Odds1,this.Odds2,this.OddsDraw],
             "Logos": [this.Logo1,this.Logo2],
-            "Data" : this.DateTime
+            "Data" : this.DateTime,
+            "SuperOdds" : this.SuperOdds
         }
     }
     toJsonV2(){
@@ -53,7 +55,8 @@ class TieEvent extends SportEvent{
             "Participantes" : [this.Team1,this.Team2],
             "Odds" : [this.SugestedOdds1,this.SugestedOdds2,this.SugestedOddsTie],
             "Logos": [this.Logo1,this.Logo2],
-            "Data" : this.DateTime
+            "Data" : this.DateTime,
+            "SuperOdds" : this.SuperOdds
         }
     }
     getParticipants(){
