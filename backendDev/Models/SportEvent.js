@@ -10,7 +10,8 @@ class SportEvent{
         this.SuperOdds=false;
     }
 
-    updateWinner(result){
+    updateWinner(result,description){
+        this.description = description;
         this.Result = result;
         this.State = "FIN";
     }

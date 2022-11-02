@@ -117,8 +117,8 @@ class EventList{
 
 
     // Change result of an event
-    updateWinner(sport,id,result){
-        this.eventList[sport][id].updateWinner(result);
+    updateWinner(sport,id,result,description){
+        this.eventList[sport][id].updateWinner(result,description);
     }
 
     // Activates superodds in a given 
@@ -167,6 +167,14 @@ class EventList{
         }
         else return null;
     }
+
+    getDescription(sport,id){
+        if (this.eventList[sport][id] != undefined){
+            return this.eventList[sport][id].getDescription();
+        }
+        else return null;
+    }
+    
     
 
 }
