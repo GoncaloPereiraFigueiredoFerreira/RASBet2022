@@ -88,7 +88,7 @@ class EventList{
             }
         }
         return lst.sort((a,b)=>{
-            return new Date(b["Data"]) -new Date(a["Data"]) 
+            return new Date(a["Data"]) -new Date(b["Data"]) 
 
         });
     }
@@ -100,7 +100,7 @@ class EventList{
             if (this.eventList[sport][match].getState() == "BET") lst.push(this.eventList[sport][match].toJson());
         }
         return lst.sort((a,b)=>{
-            return new Date(b["Data"]) -new Date(a["Data"]) 
+            return new Date(a["Data"]) -new Date(b["Data"]) 
 
         });
     }
