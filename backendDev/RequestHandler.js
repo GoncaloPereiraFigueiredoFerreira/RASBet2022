@@ -152,6 +152,7 @@ function closeEventFunction(request,response){
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
             response.status(200).send(message)
+            evLst.closeEvent(request.body.Desporto,request.body.EventoID);
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -159,7 +160,6 @@ function closeEventFunction(request,response){
     else{
         response.status(400).send('Permission denied')
     }
-    //evLst.closeEvent(request.body.sport,request.body.Id);
 }
 
 function finEventFunction(request,response){
@@ -439,9 +439,12 @@ function updateEvents(request,response){
 
 
 function activateSuperOdds(request,response){
-    let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
-    if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
-    else response.status(404).send("Event not found");
+    let user = sessionHandler.verifyUser(request.body.token);
+    if (user[1] == "Admin"){
+        let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
+        if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+        else response.status(404).send("Event not found");
+    }
 }
 
 function getOdds(request,response){

@@ -7,6 +7,7 @@ class SportEvent{
         this.Result = result;
         this.State = state;
         this.DateTime =datetime;
+        this.SuperOdds=false;
     }
 
     updateWinner(result){
@@ -59,7 +60,9 @@ class SportEvent{
         }
     }
 
-
+    isSuperOddsOn(){
+        return this.SuperOdds;
+    }
 
 
 }
