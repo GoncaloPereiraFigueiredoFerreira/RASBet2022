@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"",
-            password:""
+            user:"root",
+            password:"ola123"
         });
 
         this.db.connect((err)=>{
@@ -247,23 +247,6 @@ class DBCommunication {
         })
     }
 
-    getDescricaoLiga(eventoid){
-        return new Promise((resolve,reject)=>{
-            let sql = "SELECT Descricao,Liga FROM Evento WHERE ID=?"
-            this.db.query(sql,eventoid,(err,result)=>{
-                if(err){
-                    reject({"error":err.code})
-                    return
-                }
-                else{
-                    let data = JSON.parse(JSON.stringify(result))
-                    console.log('get descricao liga')
-                    console.log(data)
-                    resolve([data[0].Descricao,data[0].Liga])
-                }
-            })
-        })
-    }
 
     registerBetOnDb(aposta,eventos,codigo){
         
@@ -313,25 +296,7 @@ class DBCommunication {
                 })
             }).then( (message)=>{
                 return new Promise(async (resolve,reject)=>{
-                    let descricao=`${codigo}#`
-                    
-                    if(eventos.length>1) descricao+="Multipla#"
-                    else descricao+="Simples#"
-                    for(let i =0 ; i< eventos.length ; i++){
-
-                        await this.getDescricaoLiga(eventos[i].EventoID).then((event)=>{
-                            console.log('test 1111')
-                            console.log(event)
-                            descricao+=`${eventos[i].Desporto}>${event[1]}>${event[0]}`
-                            if(i<eventos.length-1) descricao+="#"
-                        }).catch((message)=>{
-                            reject(message)
-                        })
-                        
-                    }
-                    console.log(descricao)
-                    
-                    aposta.Descricao=descricao
+                    aposta.Promocao=`${codigo}`
                     resolve('done')
                 })
             
@@ -364,13 +329,13 @@ class DBCommunication {
     }
 
     //devolve lista de apostaID's nos quais foram mudados os estados dos eventos
-    setEstadoEvento(estado,eventID,desporto,resultado){
+    setEstadoEvento(estado,eventID,desporto,resultado,descricao){
         return new Promise((resolve,reject)=>{
             let sql
             let args
             if(estado=='FIN'){
-                sql = 'UPDATE Evento SET Estado= ? , Resultado=? WHERE ID = ? AND Desporto= ?'
-                args=[estado,resultado,eventID,desporto]
+                sql = 'UPDATE Evento SET Estado= ? , Resultado=? ,Descricao = ? WHERE ID = ? AND Desporto= ?'
+                args=[estado,resultado,descricao,eventID,desporto]
             }
             else{
                 sql='UPDATE Evento SET Estado= ? WHERE ID = ? AND Desporto= ?'
@@ -402,28 +367,73 @@ class DBCommunication {
         })
     }
 
+    is_aposta_cls(data,i){
+        return new Promise((resolve,reject)=>{
+            let sql='SELECT Estado FROM Aposta WHERE ID=?'
+            this.db.query(sql,data[i].ApostaID,(err,result)=>{
+                if(err){
+                    reject({'error':err.code})
+                    
+                }
+                else if(result[0].Estado=='PEN'){
+                    
+                    resolve(data)
+                }
+                else(resolve('ja esta cls'))
+            })
+        })
+    }
+
     closeEventOnDb(eventID,desporto){
         return new Promise((resolve,reject)=>{
             this.setEstadoEvento("CLS",eventID,desporto).then(async (message)=>{
                 for(let i = 0 ; i< message.length ;i++){
-                    await this.delete_apostaID(message,i).then((data)=>{
-                        let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
-                        this.db.query(sql,data[i].ApostaID,(err,result)=>{
-                            if(err) throw({'error':err.code});
 
-                            sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
+
+                    await this.is_aposta_cls(message,i).then((data)=>{
+
+                        if(data!='ja esta cls'){
+                           
+
+                           let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
                             this.db.query(sql,data[i].ApostaID,(err,result)=>{
-
                                 if(err) throw({'error':err.code});
-                                let data2 = JSON.parse(JSON.stringify(result))
-                                let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
 
-                                this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Refund","DataTr":today}).catch((message)=>{
-                                    throw(message)
+                                sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
+                                this.db.query(sql,data[i].ApostaID,(err,result)=>{
+
+                                    if(err) throw({'error':err.code});
+                                    let data2 = JSON.parse(JSON.stringify(result))
+                                    let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+
+                                    this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Refund","DataTr":today}).catch((message)=>{
+                                        throw(message)
+                                    })
                                 })
                             })
-                        })
+                        }
                     })
+
+
+                    // await this.delete_apostaID(message,i).then((data)=>{
+                        
+                    //     let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
+                    //     this.db.query(sql,data[i].ApostaID,(err,result)=>{
+                    //         if(err) throw({'error':err.code});
+
+                    //         sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
+                    //         this.db.query(sql,data[i].ApostaID,(err,result)=>{
+
+                    //             if(err) throw({'error':err.code});
+                    //             let data2 = JSON.parse(JSON.stringify(result))
+                    //             let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+
+                    //             this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Refund","DataTr":today}).catch((message)=>{
+                    //                 throw(message)
+                    //             })
+                    //         })
+                    //     })
+                    // })
                 }
             }).then(resolve({'Res':'evento closed'})
             ).catch((message)=>{
@@ -447,61 +457,71 @@ class DBCommunication {
 
     }
 
-    finEventOnDb(eventID,desporto,resultado){
+    finEventOnDb(eventID,desporto,resultado,descricao){
         return new Promise((resolve,reject)=>{
-            this.setEstadoEvento("FIN",eventID,desporto,resultado).then(async (mes)=>{
+            this.setEstadoEvento("FIN",eventID,desporto,resultado,descricao).then(async (mes)=>{
                 for(let i = 0 ; i< mes.length ;i++){
                     //se ganhou evento vai verificar se há algum evento daquela ApostaID que nao tenha acabado
                     // se nao houver, da lhe o dinheiro
                     //se perdeu evento vai retirar todas as ocurrencia daquela ApostaID no Aposta_Evento
-                    await this.wonBet(mes,i,resultado,desporto,eventID).then((message)=>{
-                        //message[0] se ganhou
-                        // message[1] ids de aposta
-                        if(message[0]=='win'){
-                            
-                            let sql='SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"'
-                            this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                if(err) throw({'error':err.code});
-
-                                //todas estao finalizadas 
-                                if(result[0]==null){
-
-                                    sql='UPDATE Aposta SET Estado = "WON" WHERE ID=?'
-                                    this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                        if(err) throw({'error':err.code});
-
-                                        sql='Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?'
-                                        this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                            
-                                            if(err) throw({'error':err.code});
-        
-                                            let data2 = JSON.parse(JSON.stringify(result))
-                                            let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-        
-                                            this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante)*(data2[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today
-                                            }).catch((message)=>{
-                                                throw(message)
-                                            })
-                                        })
-                                    })  
-                                }
-                            })  
-                        }
-                        else{
-                           
-                            let sql='UPDATE Aposta SET Estado = "LOST" WHERE ID=?'
-                            this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                               
-                                if(err) throw({'error':err.code});
-                                this.delete_apostaID(message[1],i).catch((message)=>{
-                                    throw(message)
-                                })
-                            })
-                            
-                        }
+                    let flag=true
+                    await this.is_aposta_cls(mes,i).then((message)=>{
+                        if(message=='ja esta cls') flag=false
+                        
                     }).catch((message)=>{
                         throw(message)
                     })
+                    if(flag){
+                        await this.wonBet(mes,i,resultado,desporto,eventID).then((message)=>{
+                            //message[0] se ganhou
+                            // message[1] ids de aposta
+                           
+                            if(message[0]=='win'){
+                                
+                                let sql='SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"'
+                                this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                    if(err) throw({'error':err.code});
+    
+                                    //todas estao finalizadas 
+                                    if(result[0]==null){
+    
+                                        sql='UPDATE Aposta SET Estado = "WON" WHERE ID=?'
+                                        this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                            if(err) throw({'error':err.code});
+    
+                                            sql='Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?'
+                                            this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                                
+                                                if(err) throw({'error':err.code});
+            
+                                                let data2 = JSON.parse(JSON.stringify(result))
+                                                let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+            
+                                                this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante)*(data2[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today
+                                                }).catch((message)=>{
+                                                    throw(message)
+                                                })
+                                            })
+                                        })  
+                                    }
+                                })  
+                            }
+                            else{
+                               
+                                let sql='UPDATE Aposta SET Estado = "LOST" WHERE ID=?'
+                                this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
+                                   
+                                    if(err) throw({'error':err.code});
+                                    this.delete_apostaID(message[1],i).catch((message)=>{
+                                        throw(message)
+                                    })
+                                })
+                                
+                            }
+                        }).catch((message)=>{
+                            throw(message)
+                        })
+                    }
                 }
             }).then(()=>{
                 resolve({'Res':'Evento finalizado'})
@@ -616,13 +636,54 @@ class DBCommunication {
 
     betHistoryOnDb(email,callback){
         return new Promise((resolve,reject)=>{
-            let sql='SELECT * FROM Aposta where ApostadorID=?'
+            let sql='SELECT * FROM Aposta WHERE ApostadorID=?'
             this.db.query(sql,email,(err,result)=>{
-                    if(err) reject ({"error":err.code});
+                    if(err){
+                        reject ({"error":err.code});
+                    } 
                     resolve(result)  
             })
         })
     }
+
+    dados_eventos(desporto,eventoid){
+        return new Promise((resolve,reject)=>{
+            let sql='SELECT * FROM Evento WHERE Desporto=? AND ID=?'
+            this.db.query(sql,[desporto,eventoid],(err,result)=>{
+                if(err){
+                    reject({'error':err.code})
+                    
+                }
+                else{
+                    let data = JSON.parse(JSON.stringify(result)) 
+                    resolve(data)
+                }
+            })
+        })
+    }
+
+    betHistoryOnDb2(apostaid){
+        return new Promise((resolve,reject)=>{
+            
+            let sql='SELECT Desporto,EventoID FROM Aposta_Evento WHERE ApostaID=?'
+            this.db.query(sql,apostaid,async (err,result)=>{
+                if(err){
+                    reject({'error':err.code})
+                    return
+                }
+                let data = JSON.parse(JSON.stringify(result))
+                let resposta=[]
+                for(let i = 0; i< data.length;i++){
+                    
+                    await this.dados_eventos(data[i].Desporto,data[i].EventoID).then((message)=>{
+                        resposta.push(message)
+                    })
+                }
+                resolve(resposta)
+            })
+        })
+    }
+
 
     //ordenar cronologicamente
     transHistOnDb(email,callback){
