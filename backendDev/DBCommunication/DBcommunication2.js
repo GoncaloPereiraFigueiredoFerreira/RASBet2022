@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -119,28 +119,39 @@ class DBCommunication {
     loginOnDb(email,pass){
         return new Promise((resolve,reject)=>{
             //verifica se há o email na tabela funcionario e caso nao haja vai aos apostadores
+            let sql = 'SELECT Apostador.Email FROM Apostador LEFT JOIN Funcionario ON Apostador.Email = Funcionario.Email WHERE Apostador.Email = ? UNION ALL SELECT funcionario.Email FROM Apostador RIGHT JOIN Funcionario ON Apostador.Email = Funcionario.Email WHERE Funcionario.Email=?'
+            this.db.query(sql,[email,email],(err,result)=>{
+                if(err){
+                    reject({"error":err.code})
 
-            let sql= 'SELECT * FROM Funcionario where Email=? AND PlvPasse=? '
-            this.db.query(sql,[email,pass],(err,result)=>{
-
-                if(err) reject({"error":err.code})
-                
-                else if(!result[0]){ // devia ser length
-                    sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
-                    this.db.query(sql,[email,pass],(err,result)=>{
-                            if(err) reject({"error":err.code});
-                            else if(!result[0]){
-                                reject({error:"Não existem essas credenciais na base de dados"})
-                            }
-                            else{
-                                resolve({"FRole":"apostador"})
-                            }
-                    }) 
+                }
+                else if(result[0]==null){
+                    reject({"error":"Email nao registado"})
                 }
                 else{
-                    let data = JSON.parse(JSON.stringify(result))
-                    resolve({'FRole':data[0].FRole})
-                } 
+                    sql= 'SELECT * FROM Funcionario where Email=? AND PlvPasse=? '
+                    this.db.query(sql,[email,pass],(err,result)=>{
+
+                        if(err) reject({"error":err.code})
+                        
+                        else if(!result[0]){ // devia ser length
+                            sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
+                            this.db.query(sql,[email,pass],(err,result)=>{
+                                    if(err) reject({"error":err.code});
+                                    else if(!result[0]){
+                                        reject({error:"Password errada"})
+                                    }
+                                    else{
+                                        resolve({"FRole":"apostador"})
+                                    }
+                            }) 
+                        }
+                        else{
+                            let data = JSON.parse(JSON.stringify(result))
+                            resolve({'FRole':data[0].FRole})
+                        } 
+                    })
+                }
             })
         })
     }
@@ -294,12 +305,6 @@ class DBCommunication {
                         })
                     }
                 })
-            }).then( (message)=>{
-                return new Promise(async (resolve,reject)=>{
-                    aposta.Promocao=`${codigo}`
-                    resolve('done')
-                })
-            
             }).then((message)=>{
                 return this.insert_aposta(aposta,eventos)
             }).then((message)=>{  
@@ -413,27 +418,6 @@ class DBCommunication {
                             })
                         }
                     })
-
-
-                    // await this.delete_apostaID(message,i).then((data)=>{
-                        
-                    //     let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
-                    //     this.db.query(sql,data[i].ApostaID,(err,result)=>{
-                    //         if(err) throw({'error':err.code});
-
-                    //         sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
-                    //         this.db.query(sql,data[i].ApostaID,(err,result)=>{
-
-                    //             if(err) throw({'error':err.code});
-                    //             let data2 = JSON.parse(JSON.stringify(result))
-                    //             let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-
-                    //             this.transactionOnDb({"ApostadorID":data2[0].ApostadorID,"Valor":(data2[0].Montante),"Tipo":"Refund","DataTr":today}).catch((message)=>{
-                    //                 throw(message)
-                    //             })
-                    //         })
-                    //     })
-                    // })
                 }
             }).then(resolve({'Res':'evento closed'})
             ).catch((message)=>{

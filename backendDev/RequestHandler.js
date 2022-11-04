@@ -78,7 +78,7 @@ function registerBetFunction(request,response){
     if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
         request.body.Aposta.ApostadorID= user[0]
         
-        dbComms.usedCodOnDb(request.body.Aposta.ApostadorID,request.body.Codigo).then((message)=>{
+        dbComms.usedCodOnDb(request.body.Aposta.ApostadorID,request.body.Aposta.Codigo).then((message)=>{
             if(message.Res=="Sim"){ 
               
                 throw new Error("Codigo promocional ja utilizado")
@@ -86,7 +86,7 @@ function registerBetFunction(request,response){
             return dbComms.registerEventOnDb(list)
         }).then((message)=>{
             
-            return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Codigo)
+            return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
         }).then((message)=>{
             
             answer=message

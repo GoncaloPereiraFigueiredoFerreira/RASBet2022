@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Apostador (
     DataNascimento DATE NOT NULL,
     Balance decimal(15,2) NOT NULL,
     PlvPasse VARCHAR(75) NOT NULL,
-    CC VARCHAR(10) NOT NULL,
+    CC VARCHAR(10) NOT NULL UNIQUE,
     PRIMARY KEY(Email)   
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Aposta (
     Odd FLOAT NOT NULL,
     Montante decimal(15,2) NOT NULL,
     Estado ENUM("PEN","WON","LOST","CLS") NOT NULL,
-    Promocao VARCHAR(50),
+    Codigo VARCHAR(50),
     DateAp DATETIME NOT NULL,
     PRIMARY KEY(ID),
     FOREIGN KEY (ApostadorID)
