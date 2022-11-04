@@ -26,6 +26,7 @@ export default function SemEmpate({evento,sportid}){
 
   async function handleSubmit(){
  	await register_bet(input);
+  window.location.reload(false);
   }
 
 	return(
