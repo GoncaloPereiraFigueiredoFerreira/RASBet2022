@@ -41,7 +41,7 @@ export default function Login({set,flag}) {
     }
   }
 
-  useEffect(()=>{if(flag)navigate('/')});
+  useEffect(()=>{if(flag){set(false);navigate('/')}});
 
 
   return (
