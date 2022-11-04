@@ -18,6 +18,7 @@ import Register,{action as registerAction} from './routes/register.jsx'
 import {getRole} from "./utils"
 
 function App(){
+	const [flag,setFlag] = useState(false);
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
@@ -58,7 +59,7 @@ function App(){
 	  },
 	  {
 	    path: "/login",
-	    element: <Login/>,
+	    element: <Login set={setFlag} flag={flag}/>,
 	  },
 	  {
         path: "/register",
