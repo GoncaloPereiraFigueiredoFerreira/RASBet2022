@@ -382,9 +382,10 @@ class DBCommunication {
                 }
                 else if(result[0].Estado=='PEN'){
                     
-                    resolve(data)
+                    resolve([data,'pen'])
                 }
-                else(resolve('ja esta cls'))
+                else if(result[0].Estado=='CLS')(resolve([data,'cls']))
+                else (resolve([data,'lost']))
             })
         })
     }
@@ -397,15 +398,15 @@ class DBCommunication {
 
                     await this.is_aposta_cls(message,i).then((data)=>{
 
-                        if(data!='ja esta cls'){
+                        if(data[1]!='cls'){
                            
 
                            let sql='UPDATE Aposta SET Estado = "CLS" WHERE ID=?'
-                            this.db.query(sql,data[i].ApostaID,(err,result)=>{
+                            this.db.query(sql,data[0][i].ApostaID,(err,result)=>{
                                 if(err) throw({'error':err.code});
 
                                 sql='Select Montante,ApostadorID FROM Aposta WHERE ID=?'
-                                this.db.query(sql,data[i].ApostaID,(err,result)=>{
+                                this.db.query(sql,data[0][i].ApostaID,(err,result)=>{
 
                                     if(err) throw({'error':err.code});
                                     let data2 = JSON.parse(JSON.stringify(result))
@@ -454,7 +455,7 @@ class DBCommunication {
                     //se perdeu evento vai retirar todas as ocurrencia daquela ApostaID no Aposta_Evento
                     let flag=true
                     await this.is_aposta_cls(mes,i).then((message)=>{
-                        if(message=='ja esta cls') flag=false
+                        if(message[1]!='pen') flag=false
                         
                     }).catch((message)=>{
                         throw(message)
