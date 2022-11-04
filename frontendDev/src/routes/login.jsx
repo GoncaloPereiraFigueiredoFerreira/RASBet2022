@@ -5,6 +5,7 @@ import './login.css'
 import {setToken,setRole,setWallet} from "../utils"
 
 async function login_req(data){
+  console.log(data);
   var resp = axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
   .then(function (response) {
     console.log(response);

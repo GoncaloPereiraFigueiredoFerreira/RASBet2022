@@ -8,20 +8,7 @@ import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
 import Bet_admin from "../templates/Bet_admin"
 
-async function reg_bet(data){
-  var resp = axios({method:'POST',url:'http://localhost:8080/api/registerBet/',data:data}) 
-  .then(function (response) {
-    console.log("response",response);
-    const data = response.data;
-    setWallet(data.Balance);
-  })
-  .catch(function (error) {
-    console.log(error);
-    return null;
-  });
 
-  return resp;
-}
 
 async function add_cod(data){
   var resp = axios({method:'POST',url:'http://localhost:8080/api/addPromocao/',data:data}) 
@@ -97,7 +84,7 @@ async function getCods(){
 }
 
 
-export default function Sport(props){
+export default function Sport({set}){
 	const {sportid,sport,cods} = useLoaderData();
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
@@ -106,6 +93,22 @@ export default function Sport(props){
 	const role = getRole();
 
 	if(role == "apostador"){
+
+		async function reg_bet(data){
+		  var resp = axios({method:'POST',url:'http://localhost:8080/api/registerBet/',data:data}) 
+		  .then(function (response) {
+		    console.log("response",response);
+		    const data = response.data;
+		    setWallet(data.Balance);
+		    set({Valor:data.Balance});
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		    return null;
+		  });
+
+		  return resp;
+		}
 
 		function handleChange({target}){
 		    input[target.name] = parseInt(target.value);
@@ -116,40 +119,42 @@ export default function Sport(props){
 			setInput(input);
 		}
 
-		async function handleSubmit(){
-			if(state){
-				var ret = null;
-				var data = apostas.simples;
-				data.Aposta.DateAp = getDate();
-				data.Eventos = [data.Evento];
-				delete data.Desc;
-				delete data.Evento;
-				data.Aposta.Montante = input.valor;
-				data.Aposta.Codigo = (input.check) ? input.codigo:null;
-				console.log("registo simles",data)
-				ret = await reg_bet(data);
-				var napostas = {...apostas};
-				napostas.simples = null;
-				setApostas(napostas);
-			}
-			else{
-				var ret = null;
-				var data = {};
-				data.Aposta = apostas.mult[0].Aposta;
-				data.Aposta.Montante = input.valor;
-				data.Aposta.DateAp = getDate();
-				data.Aposta.Odd = apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1);
-				data.Eventos = apostas.mult.map((e)=>(e.Evento));
-				data.Aposta.Codigo = (input.check) ? input.codigo:null;
-				console.log("registo mult",data);
-				ret = await reg_bet(data);
-				console.log(ret);
-				var napostas = {...apostas};
-				napostas.mult = [];
-				setApostas(napostas);
-			}
+		function handleSubmit(){
+			if(window.confirm("Deseja apostar?")){
+				if(state){
+					var ret = null;
+					var data = apostas.simples;
+					data.Aposta.DateAp = getDate();
+					data.Eventos = [data.Evento];
+					delete data.Desc;
+					delete data.Evento;
+					data.Aposta.Montante = input.valor;
+					data.Aposta.Codigo = (input.check) ? input.codigo:null;
+					console.log("registo simles",data)
+					ret = reg_bet(data);
+					var napostas = {...apostas};
+					napostas.simples = null;
+					setApostas(napostas);
+				}
+				else{
+					var ret = null;
+					var data = {};
+					data.Aposta = apostas.mult[0].Aposta;
+					data.Aposta.Montante = input.valor;
+					data.Aposta.DateAp = getDate();
+					data.Aposta.Odd = apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1);
+					data.Eventos = apostas.mult.map((e)=>(e.Evento));
+					data.Aposta.Codigo = (input.check) ? input.codigo:null;
+					console.log("registo mult",data);
+					ret = reg_bet(data);
+					console.log(ret);
+					var napostas = {...apostas};
+					napostas.mult = [];
+					setApostas(napostas);
+				}
 
-			console.log(ret);
+				console.log(ret);
+			}
 		}
 
 		async function handleSubmit_cod(){

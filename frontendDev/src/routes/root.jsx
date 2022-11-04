@@ -4,7 +4,7 @@ import axios from "axios";
 
 import {getToken,getWallet,getRole} from "../utils"
 
-export default function Root(props) {
+export default function Root({wallet,setWallet}) {
   const navigation = useNavigate();
   const token = getToken();
 
@@ -20,6 +20,9 @@ export default function Root(props) {
         return null;
       }); 
   }
+
+  const money = getWallet();
+  if(money != wallet.Valor) setWallet({Valor:getWallet()})
 
   return (
     <>
@@ -38,7 +41,7 @@ export default function Root(props) {
             <li>
               <Link to='/sport/FUTPT'>
               <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
-              Futebol
+              FutebolPT
               </Link>
             </li>
             <li>
@@ -64,7 +67,7 @@ export default function Root(props) {
             </div>:null}
            
             <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
-            {(getRole() == "apostador")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {getWallet()} </button></li>:null}
+            {(getRole() == "apostador")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {wallet.Valor} </button></li>:null}
             {(getRole() == "Admin")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{refresh();}}>Refresh</button></li>:null}
           </ul>
         </nav>

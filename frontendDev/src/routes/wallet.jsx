@@ -3,7 +3,7 @@ import {useState} from "react"
 import axios from "axios"
 import {getDate,getToken,setWallet} from "../utils"
 
-export default function Wallet() {
+export default function Wallet({set}) {
     const [input,setInput] = useState({Valor:0});
 
 
@@ -15,6 +15,7 @@ export default function Wallet() {
         console.log(response);
         const data = response.data;
         setWallet(data.Balance);
+        set({Valor:data.Balance});
       })
       .catch(function (error) {
         console.log(error);
@@ -29,6 +30,7 @@ export default function Wallet() {
         console.log(response);
         const data = response.data;
         setWallet(data.Balance);
+        set({Valor:data.Balance});
       })
       .catch(function (error) {
         console.log(error);
