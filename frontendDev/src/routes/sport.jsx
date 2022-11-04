@@ -121,12 +121,11 @@ export default function Sport(props){
 				var ret = null;
 				var data = apostas.simples;
 				data.Aposta.DateAp = getDate();
-				data.Aposta.Descricao = "";
 				data.Eventos = [data.Evento];
 				delete data.Desc;
 				delete data.Evento;
 				data.Aposta.Montante = input.valor;
-				data.Codigo = (input.check) ? input.codigo:null;
+				data.Aposta.Codigo = (input.check) ? input.codigo:null;
 				console.log("registo simles",data)
 				ret = await reg_bet(data);
 				var napostas = {...apostas};
@@ -137,12 +136,11 @@ export default function Sport(props){
 				var ret = null;
 				var data = {};
 				data.Aposta = apostas.mult[0].Aposta;
-				data.Aposta.Descricao = "";
 				data.Aposta.Montante = input.valor;
 				data.Aposta.DateAp = getDate();
 				data.Aposta.Odd = apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1);
 				data.Eventos = apostas.mult.map((e)=>(e.Evento));
-				data.Codigo = (data.Codigo != "")? data.Codigo:null
+				data.Aposta.Codigo = (input.check) ? input.codigo:null;
 				console.log("registo mult",data);
 				ret = await reg_bet(data);
 				console.log(ret);

@@ -8,8 +8,8 @@ class DBCommunication {
        
         this.db = mysql.createConnection({
             host:"localhost",
-            user:"root",
-            password:"ola123"
+            user:"",
+            password:""
         });
 
         this.db.connect((err)=>{
@@ -442,6 +442,10 @@ class DBCommunication {
     }
 
     finEventOnDb(eventID,desporto,resultado,descricao){
+        console.log(eventID)
+        console.log(desporto)
+        console.log(resultado)
+        console.log(descricao)
         return new Promise((resolve,reject)=>{
             this.setEstadoEvento("FIN",eventID,desporto,resultado,descricao).then(async (mes)=>{
                 for(let i = 0 ; i< mes.length ;i++){
@@ -494,11 +498,9 @@ class DBCommunication {
                                
                                 let sql='UPDATE Aposta SET Estado = "LOST" WHERE ID=?'
                                 this.db.query(sql,message[1][i].ApostaID,(err,result)=>{
-                                   
+                
                                     if(err) throw({'error':err.code});
-                                    this.delete_apostaID(message[1],i).catch((message)=>{
-                                        throw(message)
-                                    })
+                                    
                                 })
                                 
                             }
@@ -640,7 +642,7 @@ class DBCommunication {
                 }
                 else{
                     let data = JSON.parse(JSON.stringify(result)) 
-                    resolve(data)
+                    resolve(data[0])
                 }
             })
         })

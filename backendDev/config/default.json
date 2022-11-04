@@ -1,7 +1,7 @@
 {
     "API_AUTH_KEY" : "2f8603aeec2f808a4c80c4b465f187b1",
 
-    "responsePath": "/home/ganso133/uni/RAS/RASBet2022/backendDev/APICommunication/APIResponses/",
+    "responsePath": "D:/VisualStudioCode/RAS/RASBet2022/backendDev/APICommunication/APIResponses/",
 
     "update_on_startup" : false,
 

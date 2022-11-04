@@ -44,8 +44,7 @@ export function parseBet(evento,escolha){
   if(evento.Tipo == "TieEvent") desc_aposta = (escolha == 2)?"Empate":evento.Participantes[escolha];
   else desc_aposta = evento.Participantes[escolha];
 
-  var ret = {Aposta:{ApostadorID:getToken(),Odd:evento.Odds[escolha],Montante:0}
-            ,Codigo:""
+  var ret = {Aposta:{ApostadorID:getToken(),Odd:evento.Odds[escolha],Montante:0,Codigo:""}
             ,Evento:{EventoID:evento.EventoId.toString(),Desporto:"",Escolha:escolha}
             ,Desc:{Evento:Nome,Aposta:desc_aposta}};
 

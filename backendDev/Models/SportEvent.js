@@ -46,7 +46,7 @@ class SportEvent{
     }
 
     closeEvent(){
-        this.state = "CLS";
+        this.State = "CLS";
     }
 
     toDB(){
