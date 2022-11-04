@@ -394,11 +394,11 @@ function initEventLst(){
 
 function updateFUTEvents(){
     dbComms.startedEventOnDb("FUT").then((result)=>{
-        apiComms.updateFutResults(result).then(()=>{
+        apiComms.updateFutResults(result).then(async()=>{
             for (let fixture of result){
                 let event = evLst.getEventDB("FUT",fixture);
                 if (event["Estado"] == "FIN"){
-                    dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]);
                 }
             }
         });
@@ -409,11 +409,11 @@ function updateFUTEvents(){
 function updateF1Events(){ 
     dbComms.startedEventOnDb("F1").then((result)=>{
 
-        apiComms.updateF1Results(result).then(()=>{
+        apiComms.updateF1Results(result).then(async()=>{
             for (let race of result){
                 let event = evLst.getEventDB("F1",race);
                 if (event["Estado"]  == "FIN")
-                    dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]);
             }
         });
             
@@ -424,11 +424,11 @@ function updateF1Events(){
 
 function updateBSKEvents(){
     dbComms.startedEventOnDb("BSK").then((result)=>{
-        apiComms.updateBSKResults(result).then(()=>{
+        apiComms.updateBSKResults(result).then(async()=>{
             for (let game of result){
                 let event = evLst.getEventDB("BSK",game);
                 if (event["Estado"] == "FIN"){
-                    dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]);
                 }
             }
 
@@ -438,11 +438,11 @@ function updateBSKEvents(){
 
 function updateFUTPTEvents(){
     dbComms.startedEventOnDb("FUTPT").then((result)=>{
-        apiComms.updateFUTPTResults(result).then(()=>{
+        apiComms.updateFUTPTResults(result).then(async()=>{
         for (let game of result){
             let event= evLst.getEventDB("FUTPT",game);
             if (event["Estado"] == "FIN"){
-                dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
+                await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
             } 
         }
     
