@@ -15,7 +15,7 @@ export async function action({request,params}){
     const data = response.data;
     setToken(data.Token);
     setRole("apostador");
-    if(data.FRole == "apostador") setWallet(data.Balance);
+    setWallet(0);
     return response;
   })
   .catch(function (error) {

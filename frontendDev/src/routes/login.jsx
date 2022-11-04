@@ -22,10 +22,10 @@ async function login_req(data){
   return resp;
 }
 
-export default function Login() {
+export default function Login({set,flag}) {
   const navigate = useNavigate();
   const [input,setInput] = useState({});
-  const [flag,setFlag] = useState(false);
+  
 
   function handleChange({target}){
     var aux = input;
@@ -37,7 +37,7 @@ export default function Login() {
     var resp = await login_req(input);
 
     if(resp != null){
-      setFlag(true);
+      set(true);
     }
   }
 
