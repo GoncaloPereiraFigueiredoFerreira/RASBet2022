@@ -37,12 +37,24 @@ class DBCommunication {
 
     registerOnDb(apostador){
         return new Promise((resolve,reject)=>{
-            let sql= 'INSERT INTO Apostador SET ?,`Balance`= 0'
-            this.db.query(sql,apostador,(err,result)=>{
+            
+            let sql = 'SELECT * FROM Funcionario WHERE Email=?'
+            this.db.query(sql,apostador.Email,(err,result)=>{
                 if(err) {
                     reject({"error":err.code})
-                } else {
-                    resolve({"Res":"Sim"})
+                } else if(result[0]!=null){
+                    reject({"error":"Email indisponivel"})
+                    return
+                }
+                else{
+                    sql= 'INSERT INTO Apostador SET ?,`Balance`= 0'
+                    this.db.query(sql,apostador,(err,result)=>{
+                        if(err) {
+                            reject({"error":err.code})
+                        } else {
+                            resolve({"Res":"Sim"})
+                        }
+                    })
                 }
             })
         })
@@ -155,7 +167,6 @@ class DBCommunication {
                         sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
                         this.db.query(sql,[email,pass],(err,result)=>{
                                 if(err){
-                                    console.log(err) 
                                     reject({"error":err.code});}
                                 else if(!result[0]){
                                     reject({error:"Password errada"})
@@ -461,10 +472,7 @@ class DBCommunication {
     }
 
     finEventOnDb(eventID,desporto,resultado,descricao){
-        console.log(eventID)
-        console.log(desporto)
-        console.log(resultado)
-        console.log(descricao)
+        
         return new Promise((resolve,reject)=>{
             this.setEstadoEvento("FIN",eventID,desporto,resultado,descricao).then(async (mes)=>{
                 for(let i = 0 ; i< mes.length ;i++){
