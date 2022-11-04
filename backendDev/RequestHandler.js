@@ -48,6 +48,7 @@ function transactionFunction(request,response){
 
 
 function loginFunction(request,response){
+    
     let answer
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
         answer=message
