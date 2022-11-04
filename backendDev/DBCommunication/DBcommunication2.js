@@ -118,40 +118,58 @@ class DBCommunication {
     
     loginOnDb(email,pass){
         return new Promise((resolve,reject)=>{
-            //verifica se há o email na tabela funcionario e caso nao haja vai aos apostadores
-            let sql = 'SELECT Apostador.Email FROM Apostador LEFT JOIN Funcionario ON Apostador.Email = Funcionario.Email WHERE Apostador.Email = ? UNION ALL SELECT funcionario.Email FROM Apostador RIGHT JOIN Funcionario ON Apostador.Email = Funcionario.Email WHERE Funcionario.Email=?'
-            this.db.query(sql,[email,email],(err,result)=>{
+            
+            let sql='SELECT * FROM Funcionario WHERE Email=?'
+            this.db.query(sql,email,(err,result)=>{
+               
                 if(err){
+                    
                     reject({"error":err.code})
-
+                    return
                 }
                 else if(result[0]==null){
-                    reject({"error":"Email nao registado"})
-                }
-                else{
-                    sql= 'SELECT * FROM Funcionario where Email=? AND PlvPasse=? '
-                    this.db.query(sql,[email,pass],(err,result)=>{
-
-                        if(err) reject({"error":err.code})
-                        
-                        else if(!result[0]){ // devia ser length
-                            sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
-                            this.db.query(sql,[email,pass],(err,result)=>{
-                                    if(err) reject({"error":err.code});
-                                    else if(!result[0]){
-                                        reject({error:"Password errada"})
-                                    }
-                                    else{
-                                        resolve({"FRole":"apostador"})
-                                    }
-                            }) 
+                    
+                    sql='SELECT * FROM Apostador WHERE Email=?'
+                    this.db.query(sql,email,(err,result)=>{
+                        if(err){
+            
+                            reject({"error":err.code})
+                            return
                         }
-                        else{
-                            let data = JSON.parse(JSON.stringify(result))
-                            resolve({'FRole':data[0].FRole})
-                        } 
+                        else if(result[0]==null){
+                            
+                            reject({"error":"Email nao registado"})
+                            return
+                        }
                     })
                 }
+                
+                sql= 'SELECT * FROM Funcionario where Email=? AND PlvPasse=? '
+                this.db.query(sql,[email,pass],(err,result)=>{
+
+                    if(err){
+                        reject({"error":err.code})
+                        return
+                    }
+                    else if(!result[0]){ 
+                        sql= 'SELECT * FROM Apostador where Email=? AND PlvPasse=? '
+                        this.db.query(sql,[email,pass],(err,result)=>{
+                                if(err){
+                                    console.log(err) 
+                                    reject({"error":err.code});}
+                                else if(!result[0]){
+                                    reject({error:"Password errada"})
+                                }
+                                else{
+                                    resolve({"FRole":"apostador"})
+                                }
+                        }) 
+                    }
+                    else{
+                        let data = JSON.parse(JSON.stringify(result))
+                        resolve({'FRole':data[0].FRole})
+                    } 
+                })      
             })
         })
     }
