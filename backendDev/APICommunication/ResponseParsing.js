@@ -44,6 +44,10 @@ function parseFutResp(json){
     }
 }
 
+/**
+ * Function responsible for retrieving the information from the API response of a Football request 
+ * @param {JSON} json Json that contains the response from the API
+ */
 function parseFutResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");

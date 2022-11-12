@@ -32,16 +32,10 @@ class Server{
         app.post(api + "addEventOdd",reqHandler.addEventOdds);
         app.post(api + "closeEvent" ,reqHandler.closeEventFunction);
         app.post(api + "finEvent"   ,reqHandler.finEventFunction);
-        app.post(api + "suspndEvent",reqHandler.suspndEventFunction); //Deve ser removido
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
         app.post(api + "remPromocao",reqHandler.remPromocaoFunction);
-        //app.post(api + "addcodeUsed",reqHandler.addcodeUsedFunction);// deve ser removido
         app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);
         
-        
-        //Pra que???
-        app.post(api+"registerEvent",reqHandler.registerEventFunction);
-        app.post(api+"startedEvents",reqHandler.startedEventsFunction);
         // GET Methods
         app.get(api + "usedCod"     ,reqHandler.usedCodFunction);
         app.get(api + "profileInfo" ,reqHandler.profileInfoFunction);

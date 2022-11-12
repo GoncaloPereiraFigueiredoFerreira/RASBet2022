@@ -189,21 +189,6 @@ function finEventFunction(request,response){
     }
 }
 
-// Removed
-function suspndEventFunction(request,response){
-    dbComms.suspndEventOnDb(request.body.Id,function(result){
-        response.status(200).send(result)
-    })
-}
-
-// Removed
-function registerEventFunction(request,response){
-    dbComms.registerEventOnDb(request.body,function(result){
-        response.status(200).send(result)
-    })
-    //response.status(200).send(request.body)
-}
-
 
 function addPromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
@@ -345,19 +330,6 @@ function transHistFunction(request,response){
 }
 
 
-
-function startedEventsFunction(request,response){
-
-    
-    dbComms.startedEventOnDb(request.body.Desporto).then((message)=>{
-        response.status(200).send(message)
-    }).catch((message)=>{
-        response.status(400).send(message)
-    })
-}
-
-
-
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
@@ -486,9 +458,6 @@ module.exports = {
     editProfileFunction,
     closeEventFunction,
     finEventFunction,
-    suspndEventFunction,
-    registerEventFunction,
-    startedEventsFunction,
     addPromocaoFunction,
     remPromocaoFunction,
     getpromocaoFunction,

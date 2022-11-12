@@ -131,7 +131,7 @@ function initF1Events(){
   
         let req = getRequests.genF1RacesRequest(API_AUTH_KEY);
         makeRequest(req,f1Racespath,initF1Events2).catch(()=>
-        console.error("Error in the Futebol request")
+        console.error("Error in the formula one request")
       );
 
       }
@@ -176,7 +176,7 @@ function initNBAEvents(){
 
       let req = getRequests.genBasketRequest(API_AUTH_KEY,cnf.get("nba_league_id"),"2022-2023");
       makeRequest(req,nbapath,parser.parseNBAResp).catch(()=>
-      console.error("Error in the Futebol request")
+      console.error("Error in the basket request")
     );
     }
     else {
