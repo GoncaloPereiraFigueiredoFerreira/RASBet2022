@@ -97,7 +97,9 @@ function initExternalFUTEvents(){
     futpath = rspPath + "fut" + futLeagueDic[league] + "res.json";
     if (configFlag || !fs.existsSync(futpath)){
       let req = getRequests.genFutRequest(API_AUTH_KEY,futLeagueDic[league],2022);
-      makeRequest(req,futpath,parser.parseFutResp);
+      makeRequest(req,futpath,parser.parseFutResp).catch(()=>
+      console.error("Error in the Futebol request")
+    );
     }
     else {
       let json = JSON.parse(fs.readFileSync(futpath,"utf-8"));
@@ -128,7 +130,9 @@ function initF1Events(){
       if (configFlag || !fs.existsSync(f1Racespath)){
   
         let req = getRequests.genF1RacesRequest(API_AUTH_KEY);
-        makeRequest(req,f1Racespath,initF1Events2);
+        makeRequest(req,f1Racespath,initF1Events2).catch(()=>
+        console.error("Error in the Futebol request")
+      );
 
       }
       else {
@@ -150,7 +154,9 @@ function initF1Events2(jsonRaces){
     let req = getRequests.genF1DriversRequest(API_AUTH_KEY,2022);
     makeRequest(req,f1Pilotspath,(jsonPilots) =>{
         parser.parseF1Resp(jsonRaces,jsonPilots);
-    });
+    }).catch(()=>
+    console.error("Error in the Futebol request")
+  );
   }
   else{
     let jsonPilots = JSON.parse(fs.readFileSync(f1Pilotspath,"utf-8"));
@@ -169,7 +175,9 @@ function initNBAEvents(){
     if (configFlag || !fs.existsSync(nbapath)){
 
       let req = getRequests.genBasketRequest(API_AUTH_KEY,cnf.get("nba_league_id"),"2022-2023");
-      makeRequest(req,nbapath,parser.parseNBAResp);
+      makeRequest(req,nbapath,parser.parseNBAResp).catch(()=>
+      console.error("Error in the Futebol request")
+    );
     }
     else {
       let jsonNBA = JSON.parse(fs.readFileSync(nbapath,"utf-8"));
@@ -211,32 +219,52 @@ function updateFutResults(fixtures){
     }
     for (let request of fixturesLst){
       let req = getRequests.genFutResultRequest(API_AUTH_KEY,request);
-      await makeRequest(req,undefined,parser.parseFutResultResp);
+      await makeRequest(req,undefined,parser.parseFutResultResp).catch(()=>
+      console.error("Error in the futebol request")
+    );
+    }
+    resolve();
+  })
+}
+/**
+ * Updates the results of a given list of formula 1 races
+ * @param {List} races The list of ids for the races that will be updated 
+ * 
+ */
+function updateF1Results(races){
+  return new Promise(async (resolve)=>{
+    for (let race of races){
+      let req = getRequests.genRaceRankingsRequest(API_AUTH_KEY,race);
+      await makeRequest(req,undefined,parser.parseF1ResultResp).catch(()=>
+      console.error("Error in the formula one request")
+    );
     }
     resolve();
   })
 }
 
-function updateF1Results(races){
-  return new Promise(async (resolve)=>{
-    for (let race of races){
-      let req = getRequests.genRaceRankingsRequest(API_AUTH_KEY,race);
-      await makeRequest(req,undefined,parser.parseF1ResultResp);
-    }
-    resolve();
-  })
-}
+/**
+  * Updates the results of a given list of basketball events
+  * @param {List} games The list of ids for the games that will be updated
+  * 
+  */
 
 function updateBSKResults(games){
   return new Promise(async (resolve)=>{ 
   for (let game of games){
     let req = getRequests.genBasketResultRequest(API_AUTH_KEY,game);
-    await makeRequest(req,undefined,parser.parseNBAResultResp);
+    await makeRequest(req,undefined,parser.parseNBAResultResp).catch(()=>
+      console.error("Error in the basket request")
+    );
   }
   resolve();
 });
 }
 
+/**
+ * Updates the results of a given list of futebol games from the portuguese league
+ * @param {List} games List of ids of the games to be updated
+ */
 function updateFUTPTResults(games){
   return new Promise(async(resolve)=>{
     let req = getRequests.genUselessRequest();

@@ -1,3 +1,9 @@
+/**
+ * @file ResponseParsing.js
+ * 
+ * This module contains the functions that will parse the results from the API requests
+ * 
+ */
 const EventList = require("../Models/EventList");
 const TieEvent = require("../Models/TieEvent");
 const RaceEvent = require("../Models/RaceEvent");
@@ -5,6 +11,11 @@ const NoTieEvent = require("../Models/NoTieEvent");
 
 const evLst = EventList.getInstance();
 
+
+/**
+ * Function responsible for retrieving the information from the API response of a Football request 
+ * @param {JSON} json Json that contains the response from the API
+ */
 
 function parseFutResp(json){
     if (json.errors.length != 0) {

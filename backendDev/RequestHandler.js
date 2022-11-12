@@ -1,7 +1,7 @@
 const eventList = require("./Models/EventList");
 const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
-const dbComms1 = require("./DBCommunication/DBcommunication2");
+const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();

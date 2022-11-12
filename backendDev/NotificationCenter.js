@@ -17,7 +17,7 @@ function sendMail(destination,subject,text){
       from: 'rasbet@rasbet.com',
       to: destination,
       subject: 'RASBET Notification Center:' + subject,
-      text: text
+      html: text
     };
     
     transporter.sendMail(mailOptions, function(error, info){
@@ -29,10 +29,12 @@ function sendMail(destination,subject,text){
     }); 
 
 
-
-
-
 }
+
+let fs = require('fs');
+let msg = fs.readFileSync("/home/ganso133/Desktop/index.html","utf-8");
+
+sendMail("pg50003@alunos.uminho.pt","Coisa mai linda",msg)
 
 module.exports = {sendMail}
 
