@@ -1,2 +1,2 @@
-frontendDev/node_modules/*
-backendDev/config/*
+/frontendDev/node_modules/*
+/backendDev/config/*
