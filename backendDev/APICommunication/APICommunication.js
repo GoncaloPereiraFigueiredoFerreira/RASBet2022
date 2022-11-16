@@ -113,8 +113,8 @@ function initExternalFUTEvents(){
  */
 function initPTFUTEvents(){
     /// Portuguese futebol league alternative API
-    futPTpath = rspPath + "futPTUseless.json";
-    let req = getRequests.genUselessRequest();
+    futPTpath = rspPath + "futPT.json";
+    let req = getRequests.genFUTPTRequest();
     makeRequestPT(req,futPTpath,parser.parsePTFutResp);
 
 }

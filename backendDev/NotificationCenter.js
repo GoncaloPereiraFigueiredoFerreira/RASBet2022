@@ -31,7 +31,10 @@ function sendMail(destination,subject,text){
 
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 5a26ae08 (Documentation and small fixes)
 module.exports = {sendMail}
 

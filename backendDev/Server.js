@@ -34,8 +34,7 @@ class Server{
         app.post(api + "finEvent"   ,reqHandler.finEventFunction);
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
         app.post(api + "remPromocao",reqHandler.remPromocaoFunction);
-        app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);
-        
+        app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);    
         // GET Methods
         app.get(api + "usedCod"     ,reqHandler.usedCodFunction);
         app.get(api + "profileInfo" ,reqHandler.profileInfoFunction);
@@ -50,9 +49,6 @@ class Server{
         app.listen(this.port, () => {
             console.log("Server started at local host");
         })
-
-
-
     }
 
 }

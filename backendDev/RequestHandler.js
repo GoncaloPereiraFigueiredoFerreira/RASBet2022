@@ -354,6 +354,7 @@ function addEventOdds(request,response){
 
 function initEventLst(){
     dbComms.getEventsOnDb((result)=>{
+        console.log(result)
         for (let event of result){
             evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }
@@ -371,6 +372,7 @@ function updateFUTEvents(){
                 let event = evLst.getEventDB("FUT",fixture);
                 if (event["Estado"] == "FIN"){
                     await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]);
+                    // Here we should notify all the users afected by the end of that event
                 }
             }
         });
@@ -386,6 +388,7 @@ function updateF1Events(){
                 let event = evLst.getEventDB("F1",race);
                 if (event["Estado"]  == "FIN")
                     await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]);
+                    // Here we should notify all the users afected by the end of that event
             }
         });
             
@@ -401,6 +404,7 @@ function updateBSKEvents(){
                 let event = evLst.getEventDB("BSK",game);
                 if (event["Estado"] == "FIN"){
                     await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]);
+                    // Here we should notify all the users afected by the end of that event
                 }
             }
 
@@ -415,6 +419,7 @@ function updateFUTPTEvents(){
             let event= evLst.getEventDB("FUTPT",game);
             if (event["Estado"] == "FIN"){
                 await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
+                // Here we should notify all the users afected by the end of that event
             } 
         }
     

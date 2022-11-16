@@ -137,7 +137,7 @@ function genRaceRankingsRequest(api_key,race){
       };
 }
 
-function genUselessRequest(){
+function genFUTPTRequest(){
     return {
         method: 'get',
         url: 'http://ucras.di.uminho.pt/v1/games/'
@@ -151,7 +151,7 @@ module.exports = {
     genFutRequest,
     genF1RacesRequest,
     genF1DriversRequest,
-    genUselessRequest,
+    genFUTPTRequest,
     genRaceRankingsRequest,
     genFutResultRequest,
     genBasketResultRequest

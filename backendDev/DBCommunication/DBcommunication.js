@@ -18,10 +18,9 @@ class DBCommunication {
             }
             console.log('MySql Connected...')
         })
-        this.initDB("DBCommunication/bd.sql")    
-        
-        
+        this.initDB("DBCommunication/bd.sql")            
     }
+
 
     initDB(filename){
         let sqlCode = fs.readFileSync(filename).toString();
@@ -32,7 +31,6 @@ class DBCommunication {
              }
             else {console.log("Init database sql query done!") ; } 
         }));
-            
     };
 
     registerOnDb(apostador){
@@ -765,7 +763,8 @@ class DBCommunication {
                 if(err) throw err;
                 return callback(result)
             }
-            catch(err){
+            catch(err){ //preciso de voltar a ver isto
+                
                 return callback({"error":err.code})
             }
         });

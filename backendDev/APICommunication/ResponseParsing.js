@@ -67,6 +67,11 @@ function parseFutResultResp(json){
     }
 }
 
+
+/**
+ * This function is responsible for parsing and creating an instance of a new Football event as a TieEvent
+ * @param {JSON} json The json response that comes from  the API
+ */
 function parsePTFutResp(json){
     for (let match of json){
         let id = match.id;
@@ -96,7 +101,12 @@ function parsePTFutResp(json){
         //}
     }
 }
-
+/**
+ * This function parses a json API response, and given a list of games, it updates the results on those games
+ * 
+ * @param {JSON} json Json containing the API response 
+ * @param {List} games The list of ids from the games that were finnished
+ */
 function parsePTFutResultResp(json,games){
 
     for (let game of games){
@@ -124,7 +134,11 @@ function parsePTFutResultResp(json,games){
 
 
 
-
+/**
+ *  This function is responsible for parsing an API response and create a new instance of a RaceEvent
+ * @param {JSON} racesJson Json that contains the API response for a races request
+ * @param {JSON} pilotsJson Json that contains the API response for a pilots request
+ */
 function parseF1Resp(racesJson, pilotsJson){
     let pilotsNames = [];
     let pilotsPhotos = [];
@@ -157,6 +171,10 @@ function parseF1Resp(racesJson, pilotsJson){
     }
 }
 
+/**
+ * Function responsible for parsing a API response of a request for a single race 
+ * @param {JSON} json Json response that contains the results for a certain race event 
+ */
 function parseF1ResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
@@ -172,7 +190,10 @@ function parseF1ResultResp(json){
 }
 
 
-
+/**
+ * Function that is responsible for parsing the API response to a NBA request
+ * @param {JSON} nbaJson Json that contains the NS NBA events
+ */
 function parseNBAResp(nbaJson){
     if (nbaJson.errors.length != 0) {
         console.error("Errors found in json response");
@@ -205,7 +226,10 @@ function parseNBAResp(nbaJson){
     }
 }
 
-
+/**
+ * Function responsible for parsing and updating the result of a single game
+ * @param {JSON} json Json containing the requested NBA game 
+ */
 function parseNBAResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
