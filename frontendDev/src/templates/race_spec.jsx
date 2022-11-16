@@ -19,7 +19,7 @@ async function register_bet(data){
 }
 
 export default function Race({evento,sportid}){
-  let input = {sport:sportid,token:getToken(),Odds:evento.Participantes.map(()=>('1')),EventoId:evento.EventoId.toString()}; 
+  let input = {sport:sportid,token:getToken(),Odds:evento.Participantes.map((a,ind)=>(evento.Odds[ind])),EventoId:evento.EventoId.toString()}; 
 
   function handleChange({target}){
     var aux = input;
@@ -47,9 +47,12 @@ export default function Race({evento,sportid}){
             <div class="dropdown">
               <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>
               <div class="dropdown-content">
-                {test(evento.Participantes,evento.Odds).map((part,ind)=>(
-                  <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} name={ind}/></a>
-                ))}
+                {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
+                  <div key={ind.toString() + evento.Liga}>
+                    <img src={evento.Logos[ind]} style={{"height":"10vh"}} />
+                    <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*(\.\d{1,2}|)" name={ind}/></a>
+                  </div>
+                </>))}
               </div>
             </div>
             <button style={{"padding":"20px","justify-content":"center"}} type="submit">Submeter</button>

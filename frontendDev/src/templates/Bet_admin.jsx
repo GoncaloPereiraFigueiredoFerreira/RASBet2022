@@ -59,7 +59,7 @@ function Aux({evento,sport}){
 		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Cancelar Aposta</button>
 		              <div>
 		              <Form onSubmit={handleSubmit}>
-		              	<input type="text" style={{"margin":"10px"}} name="multiplier" placeholder="Super Odds" onChange={handleChange}/>
+		              	<input type="text" style={{"margin":"10px"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
 		              	<button style={{"margin":"15px"}} >Confirmar</button>
 		              </Form>
 		              </div>

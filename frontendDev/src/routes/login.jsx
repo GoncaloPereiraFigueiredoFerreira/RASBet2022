@@ -16,8 +16,8 @@ async function login_req(data){
     return true;
   })
   .catch(function (error) {
-    console.log(error);
-    return null;
+    console.log(error.response.data);
+    return error.response.data;
   });
 
   return resp;
@@ -25,7 +25,8 @@ async function login_req(data){
 
 export default function Login({set,flag}) {
   const navigate = useNavigate();
-  const [input,setInput] = useState({});
+  const [input,setInput] = useState({Email:"",PlvPasse:""});
+  const [error,setError] = useState({});
   
 
   function handleChange({target}){
@@ -36,8 +37,8 @@ export default function Login({set,flag}) {
 
   async function handleSubmit(){
     var resp = await login_req(input);
-
-    if(resp != null){
+    setError(resp);
+    if(resp == true){
       set(true);
     }
   }
@@ -62,6 +63,7 @@ export default function Login({set,flag}) {
           <input type="text" name="Email" placeholder="Email" onChange={handleChange}/>
           <input type="password" name="PlvPasse" placeholder="Palavra-passe" onChange={handleChange}/>
           <button className = "button" type="submit">Login</button> 
+          {(error.error)?<p>{error.error}</p>:null}
         </Form>
         <p>Não tem conta?</p>
         <a href='register'>Registe-se já!</a>

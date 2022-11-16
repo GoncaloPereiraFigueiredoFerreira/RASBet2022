@@ -15,7 +15,7 @@ async function register_bet(data){
 }
 
 export default function Empate({evento,sportid}){
-  let input = {sport:sportid,token:getToken(),Odds:[1,1,1],EventoId:evento.EventoId.toString()};
+  let input = {sport:sportid,token:getToken(),Odds:[evento.Odds[0],evento.Odds[1],evento.Odds[2]],EventoId:evento.EventoId.toString()};
 
   function handleChange({target}){
     var aux = input;
@@ -41,9 +41,9 @@ export default function Empate({evento,sportid}){
             </div>
             <div class="drawmatchodds">
 	            <Form onSubmit={handleSubmit}>
-	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
 	              <button style={{"padding":"20px","justify-content":"center"}} type="submit">Submeter</button>  
 	            </Form>
             </div>

@@ -55,7 +55,12 @@ export default function Perfil(props){
 	}
 
 	function handleChange({target}){
-		input[target.name] = target.value;
+		if(target.value != ""){
+			input[target.name] = target.value;
+		}
+		else{
+			delete input[target.name];
+		}
 		setInput(input);
 	}
 
@@ -74,7 +79,7 @@ export default function Perfil(props){
 	          <p>Morada:</p>
 	          <input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 	          <p>Telemovel:</p>
-	          <input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel"/>
+	          <input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d"/>
           	<button className = "button" type="submit" style={{"margin-right":"30vh","margin-left":"30vh","width":"40%"}}>Save</button>
           </Form>
         </div>

@@ -61,6 +61,12 @@ export function getDate(){
 
 }
 
+export function getDate_min(){
+  const data = new Date();
+  return  (data.getFullYear()-18).toString().padStart(4,'0') + "-" + data.getMonth().toString().padStart(2,'0') + "-" + data.getDay().toString().padStart(2,'0');
+}
+
+
 export function parseDate(data){
   return `'${data.slice(0,10)} ${data.slice(11,19)}'`
 }

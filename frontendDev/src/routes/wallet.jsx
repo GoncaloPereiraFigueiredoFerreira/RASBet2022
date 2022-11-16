@@ -67,7 +67,7 @@ export default function Wallet({set}) {
             <p>Wallet</p>
             <p>Montante:{}</p>
             <Form>
-              <input style={{"width":"30%"}}type="text" name="Valor" placeholder='Montante a depositar' onChange={handleChange}/>
+              <input style={{"width":"30%"}}type="text" name="Valor" placeholder='Montante a depositar' pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
               <button style={{"margin":"10px"}} onClick={()=>handleSubmit_DP()}>+</button>
               <button style={{"margin":"10px"}} onClick={()=>handleSubmit_LV()}>-</button>
             </Form>

@@ -229,7 +229,7 @@ export default function Sport({set}){
 							<button style={{"margin":"3px"}} type="subit">Aplicar</button>
 						</Form>
 						<Form onSubmit={handleSubmit}>
-							<input type="value" placeholder='Aposta' name="valor" onChange={handleChange}/>
+							<input type="value" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
 							<button style={{"margin":"3px"}} type="subit">Submeter</button>
 						</Form>
 					</div>
@@ -282,7 +282,7 @@ export default function Sport({set}){
 		              ))}
 		              <Form onSubmit={handleSubmit}>
 		              	<input type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-		              	<input type="value" placeholder='valor' name="Valor" onChange={handleChange}/>
+		              	<input type="value" placeholder='valor' name="Valor" pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
 		              	<button style={{"margin":"3px"}} type="subit">Submeter</button>
 		              </Form>
 		            </div>
