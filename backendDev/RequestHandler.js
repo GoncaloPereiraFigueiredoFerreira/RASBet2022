@@ -94,7 +94,13 @@ function registerBetFunction(request,response){
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
             answer['Balance']=balanco
+            
             response.status(200).send(answer)
+          //  for(let i = 0 ; i< request.body.Eventos.length; i++){
+          //      evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Aposta.Escolha[i]);
+          //  }
+           
+
         }).catch((e)=>{
            
             if(e.message){
@@ -354,7 +360,6 @@ function addEventOdds(request,response){
 
 function initEventLst(){
     dbComms.getEventsOnDb((result)=>{
-        console.log(result)
         for (let event of result){
             evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }

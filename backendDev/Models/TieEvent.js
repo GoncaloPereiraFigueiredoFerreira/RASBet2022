@@ -2,6 +2,23 @@ const SportEvent = require("./SportEvent");
 
 class TieEvent extends SportEvent{
 
+    /**
+     * 
+     * @param {string} sport Name of the sport
+     * @param {string} league Name of the league
+     * @param {string} id Identifier of the event
+     * @param {string} description Description of the event
+     * @param {number} result Winner of the event
+     * @param {string} state Current state of the event
+     * @param {string} datetime Date and time of the event
+     * @param {string} team1 Name of the home team
+     * @param {string} team2 Name of the away team
+     * @param {string} logo1 URL with the logo of the home team
+     * @param {string} logo2 URL with the logo of the away team
+     * @param {number} suggestOdds1 Suggested inital odds for home team
+     * @param {number} suggestOdds2 Suggested inital odds for away team
+     * @param {number} sugestOddsTie Suggested inital odds for a draw
+     */
     constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2,suggestOdds1,suggestOdds2,sugestOddsTie){  
         super(sport,league,id,description,result,state,datetime);
         this.Team1 = team1;
@@ -16,11 +33,14 @@ class TieEvent extends SportEvent{
         this.SugestedOddsTie = sugestOddsTie;
     }
 
-
-    changeOdds(Odds1,Odds2,OddsDraw){
-        this.Odds1 = Odds1;
-        this.Odds2 = Odds2;
-        this.OddsDraw = OddsDraw;
+    /**
+     * Change the odds for the different outcomes 
+     * @param {List} Odds List of odds 
+     */
+    changeOdds(Odds){
+        this.Odds1 = Odds[0];
+        this.Odds2 = Odds[1];
+        this.OddsDraw = Odds[2];
     }
 
     superOdds(multiplier){

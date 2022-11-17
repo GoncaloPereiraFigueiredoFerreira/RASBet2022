@@ -148,7 +148,7 @@ function parseF1Resp(racesJson, pilotsJson){
     }
     else{
         for (let pilot of pilotsJson.response){
-            pilotsNames.push(pilot.driver.name);
+            pilotsNames.push(pilot.team.name + "-" +  pilot.driver.name);
             pilotsPhotos.push(pilot.driver.image);
         }
         for (let race of racesJson.response){

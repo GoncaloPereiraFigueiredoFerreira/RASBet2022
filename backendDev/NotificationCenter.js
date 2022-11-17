@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 
 
-function sendMail(destination,subject,text){
+function sendMail(destination,subject,text,html){
 
     var transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -17,7 +17,8 @@ function sendMail(destination,subject,text){
       from: 'rasbet@rasbet.com',
       to: destination,
       subject: 'RASBET Notification Center:' + subject,
-      html: text
+      html: html,
+      text: text
     };
     
     transporter.sendMail(mailOptions, function(error, info){

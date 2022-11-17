@@ -20,6 +20,12 @@ class SessionHandler{
         }
     }
 
+    /**
+     * Adds a new user session
+     * @param {string} email Email of the user 
+     * @param {string} role Role of the user
+     * @returns Returns a token
+     */
     addUser(email,role){
         let hash = sha1(email+12+email+13)
         this.sessions[hash] = {"Email": email, "Role":role };
