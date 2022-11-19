@@ -108,12 +108,11 @@ class EventList{
      * @returns Returns true if the odds were added correctly
      */
      updateOddBet(sport,id,money,choice){
-        odds = [];
+        let odds = [];
         if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState() == "BET"){
                 if (this.eventList[sport][id] instanceof RaceEvent || this.eventList[sport][id] instanceof NoTieEvent || this.eventList[sport][id] instanceof TieEvent){
                     odds = this.eventList[sport][id].getOdds();
-                    console.log(odds);
-                    for (i=0; i<odds.length;i++){
+                    for (let i=0; i<odds.length;i++){
                         if (i != choice) odds[i]+=money*BETODDREL;
                         else if (odds[i]>1) odds[i]-=money*BETODDREL;
                     }
@@ -250,9 +249,8 @@ class EventList{
      * @returns REturns a list of odds
      */
     getOdds(sport,id){
-        if (this.eventList[sport][id] != undefined){
-            
-            return this.eventList[sport][id].getOdds();;
+        if (this.eventList[sport][id] != undefined){  
+            return this.eventList[sport][id].getOdds();
         }
         else return null;
     }

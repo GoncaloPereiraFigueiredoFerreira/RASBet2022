@@ -105,7 +105,7 @@ function registerBetFunction(request,response){
         }).catch((e)=>{
            
             if(e.message){
-                
+                console.error(e);
                 response.status(400).send({'error':e.message})
             }
             else{
