@@ -96,9 +96,10 @@ function registerBetFunction(request,response){
             answer['Balance']=balanco
             
             response.status(200).send(answer)
-          //  for(let i = 0 ; i< request.body.Eventos.length; i++){
-          //      evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Aposta.Escolha[i]);
-          //  }
+
+          for(let i = 0 ; i< request.body.Eventos.length; i++){
+              evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
+         }
            
 
         }).catch((e)=>{
