@@ -17,6 +17,7 @@ class EventList{
 
     constructor(){
         this.eventList = {};
+        this.leagues ={};
     }
 
     /**
@@ -38,8 +39,10 @@ class EventList{
     addEventFromAPI(event){
         if (this.eventList[event.getSport()] == undefined) {
             this.eventList[event.getSport()] = {};
+            this.leagues[event.getSport()] = [];
         }
         this.eventList[event.getSport()][event.getID()] = event;
+        if (!this.leagues[event.getSport()].includes(event.getLeague()))  this.leagues[event.getSport()].push(event.getLeague());
     }
 
     /**
@@ -56,8 +59,11 @@ class EventList{
     addEventFromDB(sport,league,id,description,result,state,datetime){
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
+            this.leagues[sport] = [];
         }
         this.eventList[sport][id] = new SportEvent(sport,league,id,description,result,state,datetime);
+        if (!this.leagues[sport].includes(league))  this.leagues[sport].push(league);
+        
     }
 
     /**
@@ -131,12 +137,8 @@ class EventList{
         let lst = [];
         for(let match in this.eventList[sport]){
             if (this.eventList[sport][match].getState() == "NODD") {
-                if (this.eventList[sport][match] instanceof TieEvent){
-                    lst.push(this.eventList[sport][match].toJsonV2());
-                }
-                else{
-                    lst.push(this.eventList[sport][match].toJson()); 
-                }
+                lst.push(this.eventList[sport][match].toJson()); 
+            
             }
         }
         return lst.sort((a,b)=>{
@@ -292,6 +294,12 @@ class EventList{
         else return null;
     }
     
+    getLeagues(sport){
+        if (this.leagues[sport] != undefined){
+            return this.leagues[sport];
+        }
+        else return null;
+    }
     
 
 }

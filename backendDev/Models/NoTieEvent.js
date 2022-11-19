@@ -15,14 +15,16 @@ class NoTieEvent extends SportEvent{
      * @param {string} team2 Name of the away team
      * @param {string} logo1 Url to the logo of the home team
      * @param {string} logo2 URL to the logo of the away team
+     * @param {string} odds1 Odds of the home team winning
+     * @param {string} odds1 Odds of the away team winning
      */
-    constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2){
+    constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2,odds1,odds2){
         
         super(sport,league,id,description,result,state,datetime);
         this.Team1 = team1;
         this.Team2 = team2;
-        this.Odds1 = 1;
-        this.Odds2 = 1;
+        this.Odds1 = odds1;
+        this.Odds2 = odds2;
         this.Logo1 = logo1;
         this.Logo2 = logo2;
     }

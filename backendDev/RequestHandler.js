@@ -339,10 +339,18 @@ function transHistFunction(request,response){
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
     if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
-        response.status(200).send(evLst.getBETEvents(request.query.sport));
+        response.status(200).send(
+            {
+                "EventList": evLst.getBETEvents(request.query.sport),
+                "Leagues": evLst.getLeagues(request.query.sport)
+            });
     }
     else if (user[1] == 'Special' ){// Especialista
-        response.status(200).send(evLst.getNODDEvents(request.query.sport));
+        response.status(200).send(
+            {
+                "EventList": evLst.getNODDEvents(request.query.sport),
+                "Leagues": evLst.getLeagues(request.query.sport)
+            });
     }
     else  response.status(404).send("Not found");
     

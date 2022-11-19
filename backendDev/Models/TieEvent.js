@@ -15,22 +15,19 @@ class TieEvent extends SportEvent{
      * @param {string} team2 Name of the away team
      * @param {string} logo1 URL with the logo of the home team
      * @param {string} logo2 URL with the logo of the away team
-     * @param {number} suggestOdds1 Suggested inital odds for home team
-     * @param {number} suggestOdds2 Suggested inital odds for away team
-     * @param {number} sugestOddsTie Suggested inital odds for a draw
+     * @param {string} odds1 Initial Odds of winning for home team for event
+     * @param {string} odds2 Initial Odds of winning for away team for event
+     * @param {string} oddsDraw Initial Odds of a draw for event
      */
-    constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2,suggestOdds1,suggestOdds2,sugestOddsTie){  
+    constructor(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2,odds1,odds2,oddsDraw){  
         super(sport,league,id,description,result,state,datetime);
         this.Team1 = team1;
         this.Team2 = team2;
-        this.Odds1 = 1;
-        this.Odds2 = 1;
-        this.OddsDraw = 1;
+        this.Odds1 = odds1;
+        this.Odds2 = odds2;
+        this.OddsDraw = oddsDraw;
         this.Logo1 = logo1;
         this.Logo2 = logo2;
-        this.SugestedOdds1 = suggestOdds1;
-        this.SugestedOdds2 = suggestOdds2;
-        this.SugestedOddsTie = sugestOddsTie;
     }
 
     /**
@@ -43,6 +40,10 @@ class TieEvent extends SportEvent{
         this.OddsDraw = Odds[2];
     }
 
+    /**
+     * Apply the super odds promotion to the event
+     * @param {number} multiplier Multiplier for the odds
+     */
     superOdds(multiplier){
         this.Odds1 = this.Odds1 * multiplier;
         this.Odds2 = this.Odds2 * multiplier;
@@ -50,10 +51,18 @@ class TieEvent extends SportEvent{
         this.SuperOdds = true;
     }
 
+    /**
+     * 
+     * @returns Returns a list with 3 odds, home win, away win and draw, respectively
+     */
     getOdds(){
         return [this.Odds1,this.Odds2,this.OddsDraw];
     }
 
+    /**
+     * 
+     * @returns Returns a json object containing info about this instance of the class tie event
+     */
     toJson(){
         
         return{
@@ -67,18 +76,10 @@ class TieEvent extends SportEvent{
             "SuperOdds" : this.SuperOdds
         }
     }
-    toJsonV2(){
-        return{
-            "Tipo": "TieEvent",
-            "EventoId" : this.Id,
-            "Liga" : this.League,
-            "Participantes" : [this.Team1,this.Team2],
-            "Odds" : [this.SugestedOdds1,this.SugestedOdds2,this.SugestedOddsTie],
-            "Logos": [this.Logo1,this.Logo2],
-            "Data" : this.DateTime,
-            "SuperOdds" : this.SuperOdds
-        }
-    }
+    /**
+     * 
+     * @returns Returns a list of participants, first the home team and then the away team
+     */
     getParticipants(){
         return  [this.Team1,this.Team2];
     }
