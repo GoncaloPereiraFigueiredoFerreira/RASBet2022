@@ -41,9 +41,9 @@ export default function Empate({evento,sportid}){
             </div>
             <div class="drawmatchodds">
 	            <Form onSubmit={handleSubmit}>
-	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
+	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
 	              <button style={{"padding":"20px","justify-content":"center"}} type="submit">Submeter</button>  
 	            </Form>
             </div>

@@ -50,7 +50,7 @@ export default function Race({evento,sportid}){
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div key={ind.toString() + evento.Liga}>
                     <img src={evento.Logos[ind]} style={{"height":"10vh"}} />
-                    <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*(\.\d{1,2}|)" name={ind}/></a>
+                    <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" name={ind}/></a>
                   </div>
                 </>))}
               </div>

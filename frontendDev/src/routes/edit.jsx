@@ -79,7 +79,7 @@ export default function Perfil(props){
 	          <p>Morada:</p>
 	          <input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 	          <p>Telemovel:</p>
-	          <input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d"/>
+	          <input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d{9}" title="São necessário 9 números"/>
           	<button className = "button" type="submit" style={{"margin-right":"30vh","margin-left":"30vh","width":"40%"}}>Save</button>
           </Form>
         </div>

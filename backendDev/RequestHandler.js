@@ -95,11 +95,11 @@ function registerBetFunction(request,response){
         }).then((balanco)=>{
             answer['Balance']=balanco
             
-            response.status(200).send(answer)
-
           for(let i = 0 ; i< request.body.Eventos.length; i++){
               evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
          }
+            response.status(200).send(answer)
+
            
 
         }).catch((e)=>{
