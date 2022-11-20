@@ -12,7 +12,10 @@ function dummyFunction(request,response){
     response.status(200).send("Dummy here! But connection worked!")
 }
 
-
+/**
+ * Function that deals with a http request to register an account in the database
+ * 
+ */
 function registerFunction(request,response){
 
     dbComms.registerOnDb(request.body).then((message)=>{
@@ -26,7 +29,9 @@ function registerFunction(request,response){
     
 }
 
-
+/**
+ * Function that deals with a http request to make a transaction 
+ */
 function transactionFunction(request,response){
     
     let user =  sessionHandler.verifyUser(request.body.ApostadorID)
@@ -46,7 +51,9 @@ function transactionFunction(request,response){
 }
 
 
-
+/**
+ * function that deals with a http request to check if the given credentials are in the database
+ */
 function loginFunction(request,response){
     
     let answer
@@ -68,7 +75,9 @@ function loginFunction(request,response){
 }
 
 
-
+/**
+ * Function that deals with a http request to register a bet
+ */
 function registerBetFunction(request,response){
     let list=[]
     for(let i = 0 ; i< request.body.Eventos.length; i++){
@@ -77,9 +86,11 @@ function registerBetFunction(request,response){
     let answer
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
     if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
+        
         request.body.Aposta.ApostadorID= user[0]
         
         dbComms.usedCodOnDb(request.body.Aposta.ApostadorID,request.body.Aposta.Codigo).then((message)=>{
+           
             if(message.Res=="Sim"){ 
               
                 throw new Error("Codigo promocional ja utilizado")
@@ -90,7 +101,6 @@ function registerBetFunction(request,response){
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
         }).then((message)=>{
             
-            answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
             answer['Balance']=balanco
@@ -120,7 +130,9 @@ function registerBetFunction(request,response){
 }
 
 
-
+/**
+ * Function that deals with a http request to edit a profile of an account
+ */
 function editProfileFunction(request,response){
     list=""
     let size = Object.keys(request.body).length-1
@@ -160,7 +172,9 @@ function editProfileFunction(request,response){
 
 
 
-
+/**
+ * Function that deals with a http request to close an event
+ */
 function closeEventFunction(request,response){
     
     let user = sessionHandler.verifyUser(request.body.Token)
@@ -180,6 +194,9 @@ function closeEventFunction(request,response){
     }
 }
 
+/**
+ * Function that deals with a http request to finalize an event
+ */
 function finEventFunction(request,response){
 
     let user = sessionHandler.verifyUser(request.body.Token)
@@ -196,7 +213,9 @@ function finEventFunction(request,response){
     }
 }
 
-
+/**
+ * Function that deals with a http request to add a promocional code to the database
+ */
 function addPromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
     
@@ -212,6 +231,9 @@ function addPromocaoFunction(request,response){
     }
 }
 
+/**
+ * Function that deals with a http request to remove a promocional code from the database
+ */
 function remPromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.Token)
     
@@ -227,6 +249,9 @@ function remPromocaoFunction(request,response){
     }
 }
 
+/**
+ * Function that deals with a http request to get all existing promocional codes in the database
+ */
 function getpromocaoFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.Token)
     
@@ -243,6 +268,9 @@ function getpromocaoFunction(request,response){
     }
 }
 
+/**
+ * Function that deals with a http request to check if a given better already used a given promocional code
+ */
 function usedCodFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
@@ -262,7 +290,9 @@ function usedCodFunction(request,response){
     }
 }
 
-
+/**
+ * Function that deals with a http request to get the profile of a given account
+ */
 function profileInfoFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     
@@ -281,17 +311,41 @@ function profileInfoFunction(request,response){
 
 }
 
+/**
+ * Function that deals with a http request to get the bet history of a given better
+ */
+// function betHistoryFunction(request,response){
+//     let user = sessionHandler.verifyUser(request.query.ApostadorID)
+//     let answer
+
+//     if(user[0] && user[1]=='apostador'){
+
+//         dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
+//             answer=message
+
+//             return dbComms.walletOnDb(user[0])
+//         }).then((balance)=>{
+//             response.status(200).send({'lista':answer,'Balance':balance})
+//         }).catch((message)=>{
+//             response.status(400).send(message)
+//         })
+//     }
+//     else{
+//         response.status(400).send('Permission denied')
+//     }
+// }
+
 
 function betHistoryFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
-   
-    if(user[0] && user[1]=='apostador'){
 
+    if(user[0] && user[1]=='apostador'){
+        
         dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
-            
+         
             for(let i =0 ; i<message.length;i++){
-               
+            
                 await dbComms.betHistoryOnDb2(message[i].ID).then((dados_jogos)=>{
                     message[i]['Jogos']=dados_jogos
                     if(dados_jogos.length>1){
@@ -301,7 +355,7 @@ function betHistoryFunction(request,response){
                 })
             }
             answer=message
-            
+         
             return dbComms.walletOnDb(user[0])
         }).then((balance)=>{
             response.status(200).send({'lista':answer,'Balance':balance})
@@ -315,7 +369,9 @@ function betHistoryFunction(request,response){
 }
 
 
-
+/**
+ * Function that deals with a http request to get the transaction history of a given better
+ */
 function transHistFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
     let answer
