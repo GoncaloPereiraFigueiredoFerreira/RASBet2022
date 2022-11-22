@@ -115,7 +115,13 @@ class SportEvent{
         return this.SuperOdds;
     }
 
-
+    /**
+     * 
+     * @returns Returns the date and time of the event
+     */
+    getDate(){
+        return this.DateTime;
+    }
 }
 
 module.exports = SportEvent;

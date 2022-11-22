@@ -293,6 +293,11 @@ class EventList{
         else return null;
     }
     
+    /**
+     * Returns the leagues with sport events
+     * @param {string} sport 
+     * @returns A list of strings representing the leagues
+     */
     getLeagues(sport){
         if (this.leagues[sport] != undefined){
             return this.leagues[sport];
@@ -300,6 +305,23 @@ class EventList{
         else return [];
     }
     
+    /**
+     * Removes the PastEvents from the backend
+     * @param {string} sport Sport from which to delete all past event
+     */
+    removePastEvents(sport){
+        let lst = [];
+        for (let event of Object.values(this.eventList[sport])){
+            let date = event.getDate();
+            if (Date.parse(date) < Date.now()){
+                lst.push(event.getID());
+            }
+        }
+        for (let id of lst){
+            delete this.eventList[sport][id];
+        }
+        
+    }
 
 }
 

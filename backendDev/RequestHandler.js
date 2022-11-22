@@ -395,7 +395,15 @@ function transHistFunction(request,response){
 
 function returnEventList(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
-    if (user[1] == 'apostador' || user[1] == 'Admin' ) {// Apostador e Administrador
+    if (user[1]== 'Admin'){
+        let lst = evLst.getBETEvents(request.query.sport).concat( evLst.getNODDEvents(request.query.sport));
+        response.status(200).send(
+            {
+                "EventList": lst,
+                "Leagues": evLst.getLeagues(request.query.sport)
+            });
+    }
+    else if (user[1] == 'apostador') {
         response.status(200).send(
             {
                 "EventList": evLst.getBETEvents(request.query.sport),
@@ -419,12 +427,16 @@ function addEventOdds(request,response){
         let flag = evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
         if (flag) response.status(200).send("Odds for event " + request.body.EventoId+ "were added");
         else response.status(404).send("Event not found");
+    }    
+    else{
+        response.status(400).send('Permission denied')
     }
 }
 
 
 function initEventLst(){
     dbComms.getEventsOnDb((result)=>{
+        console.log(result)
         for (let event of result){
             evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }
@@ -436,6 +448,7 @@ function initEventLst(){
 
 
 function updateFUTEvents(){
+    return new Promise((resolve,reject)=>{
     dbComms.startedEventOnDb("FUT").then((result)=>{
         apiComms.updateFutResults(result).then(async()=>{
             for (let fixture of result){
@@ -445,12 +458,15 @@ function updateFUTEvents(){
                     // Here we should notify all the users afected by the end of that event
                 }
             }
+            resolve();
         });
     });
+});
 }
 
 
 function updateF1Events(){ 
+    return new Promise((resolve,reject)=>{
     dbComms.startedEventOnDb("F1").then((result)=>{
 
         apiComms.updateF1Results(result).then(async()=>{
@@ -460,14 +476,17 @@ function updateF1Events(){
                     await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]);
                     // Here we should notify all the users afected by the end of that event
             }
+            resolve();
         });
             
 
     });
+});
 }
 
 
 function updateBSKEvents(){
+    return new Promise((resolve,reject)=>{
     dbComms.startedEventOnDb("BSK").then((result)=>{
         apiComms.updateBSKResults(result).then(async()=>{
             for (let game of result){
@@ -477,35 +496,56 @@ function updateBSKEvents(){
                     // Here we should notify all the users afected by the end of that event
                 }
             }
-
+            resolve();
         });
     })
+});
 }
 
 function updateFUTPTEvents(){
-    dbComms.startedEventOnDb("FUTPT").then((result)=>{
-        apiComms.updateFUTPTResults(result).then(async()=>{
-        for (let game of result){
-            let event= evLst.getEventDB("FUTPT",game);
-            if (event["Estado"] == "FIN"){
-                await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
-                // Here we should notify all the users afected by the end of that event
-            } 
-        }
-    
+    return new Promise((resolve,reject)=>{
+        dbComms.startedEventOnDb("FUTPT").then((result)=>{
+            apiComms.updateFUTPTResults(result).then(async()=>{
+            for (let game of result){
+                let event= evLst.getEventDB("FUTPT",game);
+                if (event["Estado"] == "FIN"){
+                    await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
+                    // Here we should notify all the users afected by the end of that event
+                } 
+            }
+            resolve();
+        })
     })
-})
+    })
+
 }
+
+function updateResults(){
+    return new Promise((resolve,reject)=>{
+        updateFUTEvents().then(() => evLst.removePastEvents("FUT"))
+        updateF1Events().then(() =>evLst.removePastEvents("F1"))
+        updateBSKEvents().then(() =>evLst.removePastEvents("BSK"))
+        updateFUTPTEvents().then(() =>evLst.removePastEvents("FUTPT"));
+        resolve();
+    });
+
+}
+
 
 
 
 
 function updateEvents(request,response){
-    updateFUTEvents();
-    updateF1Events();
-    updateBSKEvents();
-    updateFUTPTEvents();
-    response.sendStatus(200)
+    let user = sessionHandler.verifyUser(request.query.token);
+    console.log(request.body.token)
+    if (user[1] == "Admin" || true){
+        updateResults();    
+        apiComms.updateEventLst();
+        response.sendStatus(200);     
+    }
+    else{
+        response.status(400).send('Permission denied')
+    }
 }
 
 
@@ -515,6 +555,8 @@ function activateSuperOdds(request,response){
         let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
         if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
         else response.status(404).send("Event not found");
+    }else{
+        response.status(400).send('Permission denied')
     }
 }
 
