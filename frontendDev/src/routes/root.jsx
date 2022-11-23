@@ -9,7 +9,7 @@ export default function Root({wallet,setWallet}) {
   const token = getToken();
 
   async function refresh(){
-    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/'}) 
+    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/',params:{"token":getToken()}}) 
       .then(function (response) {
         console.log(response);
         const data = response.data;
