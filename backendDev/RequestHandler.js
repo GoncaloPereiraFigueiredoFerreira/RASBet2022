@@ -3,6 +3,7 @@ const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
 const dbComms1 = require("./DBCommunication/DBcommunication");
 const dbComms = new dbComms1();
+const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
 const notifcationCenter = require("./NotificationCenter");
 
@@ -10,21 +11,6 @@ const notifcationCenter = require("./NotificationCenter");
 function dummyFunction(request,response){
     response.status(200).send("Dummy here! But connection worked!")
 }
-
-let WALLET_RESP = undefined;
-let NOTIFY_RESP = undefined;
-
-function sendNotification(response,json){
-    const headers = {
-        'Content-Type': 'text/event-stream',
-        'Connection': 'keep-alive', 
-        'Cache-Control': 'no-cache'
-    };
-    response.writeHead(200,headers);
-    const data = `data: ${JSON.stringify(ret)}\n\n`;
-    response.write(data);
-}
-
 
 /**
  * Function that deals with a http request to register an account in the database
@@ -35,8 +21,7 @@ function registerFunction(request,response){
     dbComms.registerOnDb(request.body).then((message)=>{
         return dbComms.walletOnDb(request.body.Email)
     }).then((message)=>{
-        response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador',response),"Balance":message})
-
+        response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador'),"Balance":message})
     }).catch((message)=>{
         response.status(400).send(message)
     })
@@ -49,14 +34,13 @@ function registerFunction(request,response){
  */
 function transactionFunction(request,response){
     
-    let user =  this.sessionHandler.verifyUser(request.body.ApostadorID)
+    let user =  sessionHandler.verifyUser(request.body.ApostadorID)
     if(user[0] && user[1]=='apostador'){
         request.body.ApostadorID= user[0]
         dbComms.transactionOnDb(request.body).then((message)=>{
             return dbComms.walletOnDb(user[0])
         }).then((message)=>{
             response.status(200).send({'Balance':message})
-            this.sessionHandler.updateWallet(request.body.ApostadorID,message);
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -75,7 +59,7 @@ function loginFunction(request,response){
     let answer
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
         answer=message
-        answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole,response)
+        answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
         if(message.FRole=='apostador'){
             return dbComms.walletOnDb(request.body.Email)
         }
@@ -95,7 +79,6 @@ function loginFunction(request,response){
  * Function that deals with a http request to register a bet
  */
 function registerBetFunction(request,response){
-    //Ordem deveria tar diferente
     let list=[]
     for(let i = 0 ; i< request.body.Eventos.length; i++){
         list.push(evLst.toDb(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID))
@@ -113,7 +96,6 @@ function registerBetFunction(request,response){
                 throw new Error("Codigo promocional ja utilizado")
             }
             return dbComms.registerEventOnDb(list)
-
         }).then((message)=>{
             
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
@@ -555,7 +537,8 @@ function updateResults(){
 
 function updateEvents(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
-    if (user[1] == "Admin"){
+    console.log(request.body.token)
+    if (user[1] == "Admin" || true){
         updateResults();    
         apiComms.updateEventLst();
         response.sendStatus(200);     
