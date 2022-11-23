@@ -26,11 +26,30 @@ class SessionHandler{
      * @param {string} role Role of the user
      * @returns Returns a token
      */
-    addUser(email,role){
+    addUser(email,role, response){
         let hash = sha1(email+12+email+13)
-        this.sessions[hash] = {"Email": email, "Role":role };
+        this.startCommunication(response);
+        this.sessions[hash] = {"Email": email, "Role":role, "ResponseGate":response };
         return hash;
     }
+
+
+    startCommunication(response){
+        const headers = {
+            'Content-Type': 'text/event-stream',
+            'Connection': 'keep-alive', 
+            'Cache-Control': 'no-cache'
+        };
+        response.writeHead(200,headers);
+    }
+
+    updateWallet(token,value){
+        if (this.sessions[token]!= undefined){
+            const data = `data: {\n"Balance":${value}\n}\n\n`;
+            this.sessions[token][ResponseGate].write(data);
+        }
+    }
+
 
 
     static getInstance(){
