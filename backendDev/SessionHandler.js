@@ -28,10 +28,26 @@ class SessionHandler{
      */
     addUser(email,role){
         let hash = sha1(email+12+email+13)
-        this.sessions[hash] = {"Email": email, "Role":role };
+        this.sessions[hash] = {"Email": email, "Role":role, "Gate":undefined};
         return hash;
     }
 
+
+    addGate(token,gate){
+        this.sessions[token]["Gate"] = gate;
+    }
+
+    closeConnection(token){
+        //removes from token from sessions
+        delete this.sessions[token]
+    }
+
+    sendNotification(token,info){
+        if (this.sessions[token] != undefined){
+          const data = `data: ${JSON.stringify(info)}\n\n`;
+          this.sessions[token]["Gate"].write(data);
+        }
+    }
 
     static getInstance(){
         if (instance == undefined){

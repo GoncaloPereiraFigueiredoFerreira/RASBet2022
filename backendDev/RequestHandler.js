@@ -38,9 +38,8 @@ function transactionFunction(request,response){
     if(user[0] && user[1]=='apostador'){
         request.body.ApostadorID= user[0]
         dbComms.transactionOnDb(request.body).then((message)=>{
-            return dbComms.walletOnDb(user[0])
-        }).then((message)=>{
-            response.status(200).send({'Balance':message})
+            response.status(200);
+            this.sessionHandler.sendNotification({'Balance':dbComms.walletOnDb(user[0])});
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -565,6 +564,23 @@ function getOdds(request,response){
 }
 
 
+
+function eventHandler(request,response){
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+      };
+      response.writeHead(200, headers);
+      let token = request.query.token;
+      this.sessionHandler.addGate(token)
+
+      request.on('close', () => {
+          this.sessionHandler.closeConnection(token);
+      });
+}
+
+
 module.exports = {
     initEventLst,
     dummyFunction,
@@ -586,6 +602,7 @@ module.exports = {
     returnEventList,
     activateSuperOdds,
     getOdds,
-    addEventOdds
+    addEventOdds,
+    eventHandler
     
 }
