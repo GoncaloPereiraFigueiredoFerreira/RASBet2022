@@ -1,15 +1,38 @@
 import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "react-router-dom";
 import Login from "./login";
 import axios from "axios";
+import { useEffect,useState } from "react";
 
-import {getToken,getWallet,getRole} from "../utils"
+import {getToken,getWallet,getRole,setWallet as set} from "../utils"
 
 export default function Root({wallet,setWallet}) {
   const navigation = useNavigate();
   const token = getToken();
+  const [ listening, setListening ] = useState(false);
+  const [ myWallet,setMy ] = useState({Valor:getWallet()});
+
+  useEffect( () => {
+    console.log(getRole(),listening);
+    if (getRole() == "apostador" && !listening) {
+      console.log("ola");
+      const events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
+      console.log(events);
+
+      events.onmessage = (event) => {
+        const parsedData = JSON.parse(event.data);
+        console.log(parsedData);
+
+        setMy({Valor:parsedData.Balance});
+        set(parsedData.Balance);
+      };
+
+
+      setListening(true);
+    }
+  },[listening]);
 
   async function refresh(){
-    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/'}) 
+    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/',params:{"token":getToken()}}) 
       .then(function (response) {
         console.log(response);
         const data = response.data;

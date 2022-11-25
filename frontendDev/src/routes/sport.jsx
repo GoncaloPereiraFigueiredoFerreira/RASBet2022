@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {useLoaderData,Form} from 'react-router-dom';
 import axios from "axios"	
 
-import {getToken,getRole,getDate,setWallet} from "../utils"
+import {getToken,getRole,getDate,setWallet,getWallet} from "../utils"
 
 import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
@@ -58,7 +58,7 @@ export async function loader({params}){
 	var ret = await axios({method:'GET',url:'http://localhost:8080/api/eventList/',params:{"token":token,"sport":params.sportid}}) 
 	  .then(function (response) {
 	    console.log(response);
-	    const data = {sportid:(params.sportid)?params.sportid:"FUT",sport:response.data};
+	    const data = {sportid:(params.sportid)?params.sportid:"FUT",sport:response.data.EventList,ligas:response.data.Leagues};
 	    return data;
 	  })
 	  .catch(function (error) {
@@ -85,7 +85,7 @@ async function getCods(){
 
 
 export default function Sport({set}){
-	const {sportid,sport,cods} = useLoaderData();
+	const {sportid,sport,cods,ligas} = useLoaderData();
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
 	const [input,setInput] = useState({});
@@ -197,11 +197,8 @@ export default function Sport({set}){
 					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
 						Competições</p>
 					<div className="competitions">
-						<button className='comp-button' style={{"border":"0px"}}>lIGA</button>
-						<button className='comp-button' style={{"border":"0px"}}>espahnola</button>
-						<button className='comp-button' style={{"border":"0px"}}>world cup</button>
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
 					</div>
-				
 				</div>
 				<div className="betpage">
 					<Bet data={sport} addBet={addBet}/>
@@ -240,8 +237,8 @@ export default function Sport({set}){
 							<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 							<button style={{'margin-left':'5%','width':'30%','background-color':'red','color':'white'}} type="subit">Aplicar</button>
 						</Form>
-						<Form onSubmit={handleSubmit} style={{'margin':'1vh'}}>
-							<input type="value" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" onChange={handleChange} style={{'width':'60%'}}/>
+						<Form onSubmit={handleSubmit}>
+							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'width':'60%'}}/>
 							<p style={{'display':'inline','margin-left':'5%'}}>Cota: aqui</p>
 							<button style={{"margin":"3px",'width':'50%','margin-left':'20%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
 						</Form>
@@ -254,16 +251,15 @@ export default function Sport({set}){
 	if(role == "Special")
 		return(<>  
 		<div className="sidebar" id="Leftbar">
-			<input type="text" name="searchbar" placeholder="Procure por um jogo"
-			style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}/>
-			
-			<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
-				Competições</p>
-			<div className="competitions">
-				<button style={{"border":"0px"}}>lIGA</button>
-			</div>
-				
-		</div>
+		<input type="text" name="searchbar" placeholder="Procure por um jogo"
+					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
+					
+					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
+						Competições</p>
+					<div className="competitions">
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
+					</div>
+        </div>
 		<div className="betpage-spec">
 			<Bet_spec data={sport} tipo={sportid}/>
 		</div></>
@@ -284,17 +280,16 @@ export default function Sport({set}){
 
 		return(
 			<>
-				<div className="sidebar" id="Leftbar">
-					<input type="text" name="searchbar" placeholder="Procure por um jogo"
-					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}/>
+	        <div className="sidebar" id="Leftbar">
+			<input type="text" name="searchbar" placeholder="Procure por um jogo"
+					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
 					
 					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
 						Competições</p>
 					<div className="competitions">
-						<button style={{"border":"0px"}}>lIGA</button>
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
 					</div>
-				
-				</div>
+        	</div>
 				<div className="betpage">
 					<Bet_admin data={sport} sport={sportid}/>
 				</div>
@@ -311,7 +306,7 @@ export default function Sport({set}){
 		              ))}
 		              <Form onSubmit={handleSubmit}>
 		              	<input type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-		              	<input type="value" placeholder='valor' name="Valor" pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+		              	<input type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
 		              	<button style={{"margin":"3px"}} type="subit">Submeter</button>
 		              </Form>
 		            </div>

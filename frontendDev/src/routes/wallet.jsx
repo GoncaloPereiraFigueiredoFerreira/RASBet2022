@@ -14,8 +14,8 @@ export default function Wallet({set}) {
       .then(function (response) {
         console.log(response);
         const data = response.data;
-        setWallet(data.Balance);
-        set({Valor:data.Balance});
+        //setWallet(data.Balance);
+        //set({Valor:data.Balance});
       })
       .catch(function (error) {
         console.log(error);
@@ -29,8 +29,8 @@ export default function Wallet({set}) {
       .then(function (response) {
         console.log(response);
         const data = response.data;
-        setWallet(data.Balance);
-        set({Valor:data.Balance});
+        //setWallet(data.Balance);
+        //set({Valor:data.Balance});
       })
       .catch(function (error) {
         console.log(error);

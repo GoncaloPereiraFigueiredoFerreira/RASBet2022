@@ -17,6 +17,7 @@ class EventList{
 
     constructor(){
         this.eventList = {};
+        this.leagues ={};
     }
 
     /**
@@ -38,8 +39,10 @@ class EventList{
     addEventFromAPI(event){
         if (this.eventList[event.getSport()] == undefined) {
             this.eventList[event.getSport()] = {};
+            this.leagues[event.getSport()] = [];
         }
         this.eventList[event.getSport()][event.getID()] = event;
+        if (!this.leagues[event.getSport()].includes(event.getLeague()))  this.leagues[event.getSport()].push(event.getLeague());
     }
 
     /**
@@ -56,8 +59,11 @@ class EventList{
     addEventFromDB(sport,league,id,description,result,state,datetime){
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
+            this.leagues[sport] = [];
         }
         this.eventList[sport][id] = new SportEvent(sport,league,id,description,result,state,datetime);
+        if (!this.leagues[sport].includes(league))  this.leagues[sport].push(league);
+        
     }
 
     /**
@@ -102,11 +108,11 @@ class EventList{
      * @returns Returns true if the odds were added correctly
      */
      updateOddBet(sport,id,money,choice){
-        odds = [];
+        let odds = [];
         if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState() == "BET"){
                 if (this.eventList[sport][id] instanceof RaceEvent || this.eventList[sport][id] instanceof NoTieEvent || this.eventList[sport][id] instanceof TieEvent){
                     odds = this.eventList[sport][id].getOdds();
-                    for (i=0; i<odds.length;i++){
+                    for (let i=0; i<odds.length;i++){
                         if (i != choice) odds[i]+=money*BETODDREL;
                         else if (odds[i]>1) odds[i]-=money*BETODDREL;
                     }
@@ -131,12 +137,8 @@ class EventList{
         let lst = [];
         for(let match in this.eventList[sport]){
             if (this.eventList[sport][match].getState() == "NODD") {
-                if (this.eventList[sport][match] instanceof TieEvent){
-                    lst.push(this.eventList[sport][match].toJsonV2());
-                }
-                else{
-                    lst.push(this.eventList[sport][match].toJson()); 
-                }
+                lst.push(this.eventList[sport][match].toJson()); 
+            
             }
         }
         return lst.sort((a,b)=>{
@@ -247,9 +249,8 @@ class EventList{
      * @returns REturns a list of odds
      */
     getOdds(sport,id){
-        if (this.eventList[sport][id] != undefined){
-            
-            return this.eventList[sport][id].getOdds();;
+        if (this.eventList[sport][id] != undefined){  
+            return this.eventList[sport][id].getOdds();
         }
         else return null;
     }
@@ -292,7 +293,35 @@ class EventList{
         else return null;
     }
     
+    /**
+     * Returns the leagues with sport events
+     * @param {string} sport 
+     * @returns A list of strings representing the leagues
+     */
+    getLeagues(sport){
+        if (this.leagues[sport] != undefined){
+            return this.leagues[sport];
+        }
+        else return [];
+    }
     
+    /**
+     * Removes the PastEvents from the backend
+     * @param {string} sport Sport from which to delete all past event
+     */
+    removePastEvents(sport){
+        let lst = [];
+        for (let event of Object.values(this.eventList[sport])){
+            let date = event.getDate();
+            if (Date.parse(date) < Date.now()){
+                lst.push(event.getID());
+            }
+        }
+        for (let id of lst){
+            delete this.eventList[sport][id];
+        }
+        
+    }
 
 }
 

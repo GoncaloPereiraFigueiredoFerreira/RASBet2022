@@ -43,7 +43,8 @@ class Server{
         app.get(api + "eventList"   ,reqHandler.returnEventList);
         app.get(api + "updateOdds"  ,reqHandler.getOdds);
         app.get(api + "update"      ,reqHandler.updateEvents);
-        app.get(api + "getpromocoes",reqHandler.getpromocaoFunction)
+        app.get(api + "getpromocoes",reqHandler.getpromocaoFunction);
+        app.get(api + "events", reqHandler.eventHandler);
 
         // Start Server
         app.listen(this.port, () => {

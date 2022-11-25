@@ -15,11 +15,12 @@ class RaceEvent extends SportEvent{
      * @param {List} pilotsPhotos List of urls for each pilots face
      * @param {string} circuit Name of the circuit
      * @param {string} circuitPhoto Url for the circuit photo
+     * @param {List} playerOdds List of odds for each contestant
      */
-    constructor(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto){
+    constructor(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto,playerOdds){
         
         super(sport,league,id,description,result,state,datetime);
-        this.PlayerOdds = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+        this.PlayerOdds = playerOdds;
         this.Pilots = pilots;
         this.PilotsPht = pilotsPhotos;
         this.Circuit = circuit;

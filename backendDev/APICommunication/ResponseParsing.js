@@ -20,7 +20,9 @@ const evLst = EventList.getInstance();
 function parseFutResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(json.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
+        return false;
     }
     else{
         for (let match of json.response){
@@ -33,14 +35,15 @@ function parseFutResp(json){
             let logo2 = match.teams.away.logo;
             
             let event = evLst.getEvent("FUT",id);
-            if (event != undefined){
-                evLst.addEventFromAPI(new TieEvent("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,-1,-1,-1));
+            if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
+                evLst.addEventFromAPI(new TieEvent("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1,1));
             }
             else{
-                let e = new TieEvent("FUT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,-1,-1,-1);
+                let e = new TieEvent("FUT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1,1);
                 evLst.addEventFromAPI(e);
             }
         }
+        return true;
     }
 }
 
@@ -51,7 +54,9 @@ function parseFutResp(json){
 function parseFutResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(json.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
+        return false;
     }
     else{
         for (let match of json.response){
@@ -64,6 +69,7 @@ function parseFutResultResp(json){
             }
             if (result != -1)  evLst.updateWinner("FUT",id,result,"("+match.goals.home+")"+match.teams.home.name+ " - " + match.teams.away.name+"("+match.goals.away+")");    
         }
+        return true;
     }
 }
 
@@ -91,8 +97,8 @@ function parsePTFutResp(json){
             }
 
             let event = evLst.getEvent("FUTPT",id);
-            if (event != undefined){
-                evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie));
+            if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
+                evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined),sOdds1,sOdds2,sOddsTie);
             }
             else{
                 let e = new TieEvent("FUTPT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
@@ -100,6 +106,7 @@ function parsePTFutResp(json){
             }
         //}
     }
+    return true;
 }
 /**
  * This function parses a json API response, and given a list of games, it updates the results on those games
@@ -144,7 +151,9 @@ function parseF1Resp(racesJson, pilotsJson){
     let pilotsPhotos = [];
     if (racesJson.errors.length != 0 || pilotsJson.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(racesJson.errors)
+        console.log(pilotsJson.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let pilot of pilotsJson.response){
@@ -156,14 +165,14 @@ function parseF1Resp(racesJson, pilotsJson){
             let date = race.date;
             let circuit = race.competition.name;
             let circuitPhoto = race.circuit.image;
-
+            let playerOdds = []; for (let i=0; i<pilotsNames.length; ++i) playerOdds.push(1);
 
             let event = evLst.getEvent("F1",id);
-            if (event != undefined){
-                evLst.addEventFromAPI(new RaceEvent("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto));
+            if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
+                evLst.addEventFromAPI(new RaceEvent("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds));
             }
             else{
-                let e = new RaceEvent("F1","World F1 Competition",id,circuit,-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto);
+                let e = new RaceEvent("F1","World F1 Competition",id,circuit,-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
                 evLst.addEventFromAPI(e);
             }
         }
@@ -178,7 +187,8 @@ function parseF1Resp(racesJson, pilotsJson){
 function parseF1ResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(json.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         let id = json.response[0].race.id;
@@ -197,7 +207,8 @@ function parseF1ResultResp(json){
 function parseNBAResp(nbaJson){
     if (nbaJson.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(nbaJson.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         for (let game of nbaJson.response){
@@ -212,11 +223,11 @@ function parseNBAResp(nbaJson){
 
 
                 let event = evLst.getEvent("BSK",id);
-                if (event != undefined){
-                    evLst.addEventFromAPI(new NoTieEvent("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2));
+                if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
+                    evLst.addEventFromAPI(new NoTieEvent("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1));
                 }
                 else{
-                    let e = new NoTieEvent("BSK",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2);
+                    let e = new NoTieEvent("BSK",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1);
                     evLst.addEventFromAPI(e);
                 }
 
@@ -233,7 +244,8 @@ function parseNBAResp(nbaJson){
 function parseNBAResultResp(json){
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
-        json.errors.map(x=> console.error(JSON.stringify(x)));
+        console.log(json.errors)
+        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else{
         let id = json.response[0].id;
