@@ -55,7 +55,8 @@ export default function Root({wallet,setWallet}) {
         <nav>
           <ul>
             <li>
-              <img src='logo.png' style={{'width':'fit-content','height':'3vh'}} class = "button" onClick={()=>{navigation('/');}}/>
+              <img src='logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'3vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
+              <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
             </li>
             <li>
               <Link to='/sport/FUT'>
@@ -83,7 +84,7 @@ export default function Root({wallet,setWallet}) {
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh'}}/>
+              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
               <div class="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -91,9 +92,21 @@ export default function Root({wallet,setWallet}) {
               </div>
             </div>:null}
            
-            <li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation('login')}}>ir para login</button></li>
-            {(getRole() == "apostador")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{navigation(`wallet/${token}`)}}>Carteira: {wallet.Valor} </button></li>:null}
-            {(getRole() == "Admin")?<li style={{"float":"right","padding":"14px"}}><button onClick={()=>{refresh();}}>Refresh</button></li>:null}
+            <li style={{"float":"right","padding":"1vh",'width':'auto','height':'auto'}}>
+              <button onClick={()=>{navigation('login')}}>Ir para login</button>
+            </li>
+            {(getRole() == "apostador")?
+              <li style={{"float":"right","padding":"1vh"}}>
+                <button onClick={()=>{navigation(`wallet/${token}`)}}>
+                  Carteira: {wallet.Valor}
+                </button>
+              </li>:null}
+            {(getRole() == "Admin")?
+              <li style={{"float":"right","padding":"1vh"}}>
+                <button onClick={()=>{refresh();}}>
+                  Refresh
+                </button>
+              </li>:null}
           </ul>
         </nav>
       </header>

@@ -25,22 +25,25 @@ export default function HistT() {
 
   return (
     <>
-      <div className = "box">
-        <div className = "loginbox">
+      <div className = "box" style={{'margin-top':'2vh','padding-top':'3vh'}}>
+        <div className = "loginbox" >
           <div className='bemvindo'>
             <p>Histórico de Transaçoes</p>
           </div>
-          {list.lista.map((elem)=>(
-          <div className="bet-element" id="Simples" key={elem.ID}>
-            <div>
-                <p>Montante:{elem.Valor}</p>
-                <p>Meio:{elem.Tipo}</p> 
-                <p>Data:{parseDate(elem.DataTr)}</p>               
-            </div>
-
-          </div>
-          ))}
-        
+            <table>
+            <tr>
+              <th style={{'font-size':'large'}}>Montante</th>
+              <th style={{'font-size':'large'}}>Tipo</th>
+              <th style={{'font-size':'large'}}>Data</th>
+            </tr>
+            {list.lista.map((elem)=>(
+            <tr id="Simples" key={elem.ID}>
+              <th style={{'font-weight':'normal'}}>{elem.Valor}</th>
+              <th style={{'font-weight':'normal'}}>{elem.Tipo}</th> 
+              <th style={{'font-weight':'normal'}}>{parseDate(elem.DataTr)}</th>               
+            </tr>
+            ))}
+          </table>
         </div>
       </div>
     </>
