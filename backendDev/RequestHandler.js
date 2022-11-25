@@ -1,7 +1,7 @@
 const eventList = require("./Models/EventList");
 const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
-const dbComms1 = require("./DBCommunication/DBcommunication");
+const dbComms1 = require("./DBCommunication/DBcommunication2");
 const dbComms = new dbComms1();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
@@ -18,10 +18,9 @@ function dummyFunction(request,response){
  */
 function registerFunction(request,response){
 
-    dbComms.registerOnDb(request.body).then((message)=>{
-        return dbComms.walletOnDb(request.body.Email)
-    }).then((message)=>{
-        response.status(200).send({"Token":sessionHandler.addUser(request.body.Email,'apostador'),"Balance":message})
+    dbComms.registerOnDb(request.body).then(()=>{
+        let token=sessionHandler.addUser(request.body.Email,'apostador')
+        response.status(200).send({"Token":token})
     }).catch((message)=>{
         response.status(400).send(message)
     })
@@ -37,7 +36,7 @@ function transactionFunction(request,response){
     let user =  sessionHandler.verifyUser(request.body.ApostadorID)
     if(user[0] && user[1]=='apostador'){
         request.body.ApostadorID= user[0]
-        dbComms.transactionOnDb(request.body).then((message)=>{
+        dbComms.transactionOnDb(request.body).then(()=>{
             response.status(200);
             this.sessionHandler.sendNotification({'Balance':dbComms.walletOnDb(user[0])});
         }).catch((message)=>{
@@ -55,20 +54,14 @@ function transactionFunction(request,response){
  */
 function loginFunction(request,response){
     
-    let answer
+    
     dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message)=>{
-        answer=message
-        answer['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
-        if(message.FRole=='apostador'){
-            return dbComms.walletOnDb(request.body.Email)
-        }
-        else return 0
         
-    }).then((balanco)=>{
-        answer['Balance']=balanco
-        response.status(200).send(answer)
-    }).catch((message3)=>{
-        response.status(400).send(message3)
+        message['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
+        response.status(200).send(message)
+
+    }).catch((message)=>{
+        response.status(400).send(message)
     })
 
 }
@@ -92,34 +85,26 @@ function registerBetFunction(request,response){
            
             if(message.Res=="Sim"){ 
               
-                throw new Error("Codigo promocional ja utilizado")
+                return Promise.reject({"error":"Codigo promocional ja utilizado"})
             }
             return dbComms.registerEventOnDb(list)
-        }).then((message)=>{
+        }).then(()=>{
             
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
-        }).then((message)=>{
+        }).then(()=>{
             
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
             answer['Balance']=balanco
             
-          for(let i = 0 ; i< request.body.Eventos.length; i++){
-              evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
-         }
+            for(let i = 0 ; i< request.body.Eventos.length; i++){
+                evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
+            }
             response.status(200).send(answer)
 
-           
-
         }).catch((e)=>{
-           
-            if(e.message){
-                console.error(e);
-                response.status(400).send({'error':e.message})
-            }
-            else{
-                response.status(400).send(e)
-            }
+        
+            response.status(400).send(e)
         })
         
     }
@@ -152,14 +137,11 @@ function editProfileFunction(request,response){
     }
 
     let user = sessionHandler.verifyUser(request.body.ApostadorID)
-    let answer
+    
     if(user[0] && user[1]=='apostador'){
         dbComms.editProfileOnDb(list,user[0]).then((message)=>{
-            answer=message
-            return dbComms.walletOnDb(user[0])
-        }).then((balance)=>{
-            answer['Balance']=balance
-            response.status(200).send(answer)
+            
+            response.status(200).send(message)
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -272,14 +254,11 @@ function getpromocaoFunction(request,response){
  */
 function usedCodFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
-    let answer
+   
     if(user[0] && user[1]=='apostador'){
         dbComms.usedCodOnDb(user[0],request.query.Codigo).then((message)=>{
-            answer=message
-            return dbComms.walletOnDb(user[0])
-        }).then((balance)=>{
-            answer['Balance']=balance
-            response.status(200).send(answer)
+            
+            response.status(200).send(message)
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -313,15 +292,43 @@ function profileInfoFunction(request,response){
 /**
  * Function that deals with a http request to get the bet history of a given better
  */
+function betHistoryFunction(request,response){
+    let user = sessionHandler.verifyUser(request.query.ApostadorID)
+    
+    if(user[0] && user[1]=='apostador'){
+        dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
+            
+            response.status(200).send({'lista':message})
+        }).catch((message)=>{
+            response.status(400).send(message)
+        })
+    }
+    else{
+        response.status(400).send('Permission denied')
+    }
+}
+
+
 // function betHistoryFunction(request,response){
 //     let user = sessionHandler.verifyUser(request.query.ApostadorID)
 //     let answer
 
 //     if(user[0] && user[1]=='apostador'){
-
+        
 //         dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
+         
+//             for(let i =0 ; i<message.length;i++){
+            
+//                 await dbComms.betHistoryOnDb2(message[i].ID).then((dados_jogos)=>{
+//                     message[i]['Jogos']=dados_jogos
+//                     if(dados_jogos.length>1){
+//                         message[i]['Aridade']="Multipla"
+//                     }
+//                     else message[i]['Aridade']="Simples"
+//                 })
+//             }
 //             answer=message
-
+         
 //             return dbComms.walletOnDb(user[0])
 //         }).then((balance)=>{
 //             response.status(200).send({'lista':answer,'Balance':balance})
@@ -335,52 +342,16 @@ function profileInfoFunction(request,response){
 // }
 
 
-function betHistoryFunction(request,response){
-    let user = sessionHandler.verifyUser(request.query.ApostadorID)
-    let answer
-
-    if(user[0] && user[1]=='apostador'){
-        
-        dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
-         
-            for(let i =0 ; i<message.length;i++){
-            
-                await dbComms.betHistoryOnDb2(message[i].ID).then((dados_jogos)=>{
-                    message[i]['Jogos']=dados_jogos
-                    if(dados_jogos.length>1){
-                        message[i]['Aridade']="Multipla"
-                    }
-                    else message[i]['Aridade']="Simples"
-                })
-            }
-            answer=message
-         
-            return dbComms.walletOnDb(user[0])
-        }).then((balance)=>{
-            response.status(200).send({'lista':answer,'Balance':balance})
-        }).catch((message)=>{
-            response.status(400).send(message)
-        })
-    }
-    else{
-        response.status(400).send('Permission denied')
-    }
-}
-
-
 /**
  * Function that deals with a http request to get the transaction history of a given better
  */
 function transHistFunction(request,response){
     let user = sessionHandler.verifyUser(request.query.ApostadorID)
-    let answer
     if(user[0] && user[1]=='apostador'){
         
         dbComms.transHistOnDb(user[0]).then((message)=>{
-            answer=message
-            return dbComms.walletOnDb(user[0])
-        }).then((balance)=>{
-            response.status(200).send({'lista':answer,'Balance':balance})
+            
+            response.status(200).send({'lista':message})
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -434,14 +405,15 @@ function addEventOdds(request,response){
 
 
 function initEventLst(){
-    dbComms.getEventsOnDb((result)=>{
+    dbComms.getEventsOnDb().then((result)=>{
         console.log(result)
         for (let event of result){
             evLst.addEventFromDB(event.Desporto,event.Liga,event.ID,event.Descricao,event.Resultado,event.Estado,event.DataEvent);
         }
         apiComms.initEventLst();
-    });
-    
+    }).catch((e)=>{
+        console.log(e)
+    })
 }
 
 
@@ -574,7 +546,6 @@ function eventHandler(request,response){
       response.writeHead(200, headers);
       let token = request.query.token;
       this.sessionHandler.addGate(token)
-
       request.on('close', () => {
           this.sessionHandler.closeConnection(token);
       });
