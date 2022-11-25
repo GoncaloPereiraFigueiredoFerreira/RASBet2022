@@ -184,15 +184,21 @@ export default function Sport({set}){
 		function rmBet(aposta){
 			var napostas = {...apostas};
 			napostas.simples = (apostas.simples && apostas.simples.Evento.EventoID == aposta.Evento.EventoID && apostas.simples.Evento.Escolha == aposta.Evento.Escolha)?null:aposta;
-			napostas.mult = apostas.mult.filter((e)=>{console.log(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha);if(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha) return aposta});
+			napostas.mult = apostas.mult.filter((e)=>{console.log(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha);if(e.Evento.EventoID != aposta.Evento.EventoID || e.Evento.Escolha != aposta.Evento.Escolha) return aposta});
 			setApostas(napostas);			
 		}
 
 		return(
 			<>
 				<div className="sidebar" id="Leftbar">
-					<p style={{"padding":"5px"}}>Competiçoes</p>
-					{ligas.map((i,ind)=>(<button key={ind}>{i}</button>))}
+					<input type="text" name="searchbar" placeholder="Procure por um jogo"
+					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
+					
+					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
+						Competições</p>
+					<div className="competitions">
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
+					</div>
 				</div>
 				<div className="betpage">
 					<Bet data={sport} addBet={addBet}/>
@@ -202,36 +208,39 @@ export default function Sport({set}){
 
 					<div className="betbox" id="Simples">
 						<div>
-							<button style={state?{"width":"45%","margin":"3px","backgroundColor":"red"}:{"width":"45%","margin":"3px"}} onClick={()=>(setState(true))}>Simples</button>
-							<button style={state?{"width":"45%","margin":"3px"}:{"width":"45%","margin":"3px","backgroundColor":"red"}} onClick={()=>(setState(false))}>Multiplas</button>
+							<button className='bet-type-button' style={state?{'font-weight':'bold','border-bottom':'2px solid gray'}:{'border-bottom':'1px solid lightgray'}} onClick={()=>(setState(true))}>Simples</button>
+							<button className='bet-type-button' style={state?{'float':'right','border-bottom':'1px solid lightgray'}:{'font-weight':'bold','float':'right','border-bottom':'2px solid gray'}} onClick={()=>(setState(false))}>Multiplas</button>
 						</div>
 						  	{state?(<>	
 						  		{apostas.simples?(
 							  		<div className="bet">
-										<p>{apostas.simples.Desc.Evento}</p>
-										<p>Bet: {apostas.simples.Desc.Aposta}</p>
-										<p>Odd: {apostas.simples.Aposta.Odd}</p>
-										<button style={{"margin":"3px"}} onClick={()=>(rmBet(apostas.simples))}>Cancelar</button>				              	
+										<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
+										<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray'}}>
+											{apostas.simples.Desc.Evento}</p>
+										<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black'}}>
+											Resultado: {apostas.simples.Desc.Aposta} {apostas.simples.Aposta.Odd}</p>	              	
 							  		</div>):null
 						  		}
 							</>):(<>
 
 					  	{apostas.mult.map((evento)=>(
 							<div className="bet" key={"a_"+evento.Evento.EventoID+evento.Evento.Escolha}>
-								<p>{evento.Desc.Evento}</p>
-								<p>Bet: {evento.Desc.Aposta}</p>
-								<p>Odd: {evento.Aposta.Odd}</p>
-								<button style={{"margin":"3px"}} onClick={()=>(rmBet(evento))}>Cancelar</button>
+								<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
+								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray'}}>
+									{evento.Desc.Evento}</p>
+								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black'}}>
+									Resultado: {evento.Desc.Aposta} {evento.Aposta.Odd}</p>	 
 							</div>
 					  	))}</>)}
-						<Form onSubmit={handleSubmit_cod}>
+						<Form onSubmit={handleSubmit_cod} style={{'margin':'1vh'}}>
 							{(input.check)?<img src="check.png"/>:null}
-							<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS}/>
-							<button style={{"margin":"3px"}} type="subit">Aplicar</button>
+							<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
+							<button style={{'margin-left':'5%','width':'30%','background-color':'red','color':'white'}} type="subit">Aplicar</button>
 						</Form>
 						<Form onSubmit={handleSubmit}>
-							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange}/>
-							<button style={{"margin":"3px"}} type="subit">Submeter</button>
+							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'width':'60%'}}/>
+							<p style={{'display':'inline','margin-left':'5%'}}>Cota: aqui</p>
+							<button style={{"margin":"3px",'width':'50%','margin-left':'20%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
 						</Form>
 					</div>
 				</div>
@@ -242,8 +251,14 @@ export default function Sport({set}){
 	if(role == "Special")
 		return(<>  
 		<div className="sidebar" id="Leftbar">
-            <p style={{"padding":"5px"}}>Competiçoes</p>
-            {ligas.map((i,ind)=>(<button key={ind}>{i}</button>))}
+		<input type="text" name="searchbar" placeholder="Procure por um jogo"
+					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
+					
+					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
+						Competições</p>
+					<div className="competitions">
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
+					</div>
         </div>
 		<div className="betpage-spec">
 			<Bet_spec data={sport} tipo={sportid}/>
@@ -266,8 +281,14 @@ export default function Sport({set}){
 		return(
 			<>
 	        <div className="sidebar" id="Leftbar">
-    	        <p style={{"padding":"5px"}}>Competiçoes</p>
-    	        {ligas.map((i,ind)=>(<button key={ind}>{i}</button>))}
+			<input type="text" name="searchbar" placeholder="Procure por um jogo"
+					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
+					
+					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
+						Competições</p>
+					<div className="competitions">
+						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
+					</div>
         	</div>
 				<div className="betpage">
 					<Bet_admin data={sport} sport={sportid}/>

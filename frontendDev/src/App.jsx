@@ -26,8 +26,7 @@ function App(){
 	    element: <Root wallet={wallet} setWallet={setWallet}/>,
 	    errorElement: <ErrorPage />,
 	    children: [
-	      //{ index: true, element: (getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>},
-	      { index: true, element: <Navigate to="sport/FUTPT"/>},
+	      { index: true, element: (getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>},
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,

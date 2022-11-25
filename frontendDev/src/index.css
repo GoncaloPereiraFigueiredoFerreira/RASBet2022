@@ -112,7 +112,8 @@ li a {
   color: black;
   text-align: center;
   font-size:x-large; 
-  padding: 14px 24px;
+  padding: 1vh 2vh;
+  height: 7vh;
   text-decoration: none;
 }
 
@@ -127,8 +128,8 @@ li a:hover{
 .dropbtn {
   background-color: #4CAF50;
   color: white;
-  padding: 16px;
-  font-size: 16px;
+  padding: 1vh;
+  font-size: 1vh;
   border: none;
   cursor: pointer;
 }
@@ -158,6 +159,7 @@ li a:hover{
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  
 }
 
 /* Change color of dropdown links on hover */
@@ -181,31 +183,33 @@ li a:hover{
   content: "";
   display: table;
   clear: both;
+  background-color: lightgray;
 }
 
 .sidebar{
   width: 20%;
   height: 100%;
-  background-color: white;
+  background-color: lightgray;
   color: black;
   display: block;
   float: left;
+  padding:5px;
 }
 
 .betzone{
   width: 20%;
   height: 100%;
-  background-color: white;
+  background-color: lightgray;
   color: black;
   display: block;
-  float:left
+  float:left;
 }
 
 .betpage{
   width: 60%;
   height: 100%;
   padding: 10px;
-  background-color: white;
+  background-color: lightgray;
   color: black;
   display: block;
   float:left;
@@ -216,7 +220,7 @@ li a:hover{
   width: 80%;
   height: 100%;
   padding: 10px;
-  background-color: white;
+  background-color: lightgray;
   color: black;
   display: block;
   float:left;
@@ -225,11 +229,11 @@ li a:hover{
 
 .bet-element{
   display: flex;
-  margin:20px;
-  margin-right: 10%;
-  margin-left: 10%;
+  margin:2vh;
+  margin-right: 3vh;
+  margin-left: 3vh;
   padding: 10px;
-  background-color: lightsalmon;
+  background-color: white;
   border-radius: 10px;
 }
 
@@ -256,25 +260,30 @@ li a:hover{
   margin-left: 5%;
   margin-right: auto;
   float:left;
+
 }
 
 .betbox{
   display: flex;
   flex-direction: column;
+
   margin:20px;
   margin-right: 5%;
   margin-left: 0%;
-  padding-top: 10px;
-  background-color: burlywood;
-  border-radius: 10px;
+
+  /*padding-right: 1vh;
+  padding-left: 1vh;*/
+
+  background-color: white;
+  border: 0px solid gray;
+  border-radius: 20px;
+
+  overflow: hidden;
+  height: auto;
   /*position: sticky;*/
-  overflow-y:auto;
+  /*overflow-y:auto;*/
 }
 
-.bet{
-  background-color: grey;
-  margin: 5px;
-}
 
 #overlay {
   position: fixed;
@@ -288,4 +297,65 @@ li a:hover{
   background-color: rgba(0,0,0,0.5);
   z-index: 2;
   cursor: pointer;
+}
+
+.competitions{
+  
+  border-radius: 2vh;
+  border: 2px solid grey;
+  width: 95%;
+  height: auto;
+  color: #000;
+  background-color: white;
+  display: block;
+  margin: 1vh;
+
+}
+
+.bet{
+  background-color: white;
+  border: 1px solid lightgray;
+  margin: 1vh;
+  margin-bottom: 0;
+}
+
+
+.comp-button {
+  background-color: white;
+  border-radius: 2vh;
+  border: 0 solid white;
+  border-bottom: 2px solid gray;
+  box-shadow:none;
+  color: black;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor:auto;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.bet-type-button {
+  background-color: white;
+  border-radius: 0;
+  border: 0 solid white;
+  box-shadow:none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor:auto;
+  width: 50%;
+  margin-bottom: 2px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

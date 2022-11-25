@@ -50,7 +50,8 @@ export default function Login({set,flag}) {
     <>
 
     <div className="logo">
-    <img src="logo" id="logologin"/>
+      <img src='logo.png' style={{'width':'fit-content','height':'6vh','margin':'1vh'}}/>
+      <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
     </div>
 
     <div className="box">
@@ -70,7 +71,7 @@ export default function Login({set,flag}) {
       </div>
 
       <div className = "loginimg">
-        <img src="loginimage.jpg" id="loginimage"/>
+        <img src="logoimage.png" id="loginimage"/>
       </div>
       
       

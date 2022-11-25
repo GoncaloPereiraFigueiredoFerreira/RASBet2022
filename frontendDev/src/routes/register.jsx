@@ -23,7 +23,6 @@ export async function action(data){
     return error.response.data;
   });
   
-
   return resp;
 }
 
@@ -47,15 +46,17 @@ export default function Register({set,flag}) {
     }
   }
 
-  useEffect(()=>{if(flag){set(false);navigate('/')}});
+  useEffect(()=>{if(flag){set(false);navigate('/sport/FUTPT')}});
   return (
     <>
-      <h1>Página de registo de utilizador</h1>
-
+      <div className="logo">
+        <img src='logo.png' style={{'width':'fit-content','height':'6vh','margin':'1vh'}}/>
+        <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
+      </div>
       <div className = "box">
         <div className = "loginbox">
           <div className='bemvindo'>
-            <p>Bem Vindo</p>
+            <p>Registo</p>
           </div>
 
           <Form onSubmit={handleSubmit}>
@@ -81,7 +82,7 @@ export default function Register({set,flag}) {
           </Form>
         </div>
         <div className = "loginimg">
-          <img src="loginimage.jpg" id="loginimage"/>
+          <img src="logoimage.png" id="loginimage"/>
         </div>
       </div>
     </>
