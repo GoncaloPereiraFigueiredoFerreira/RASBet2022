@@ -65,7 +65,7 @@ function App(){
 	  {
         path: "/register",
         action: registerAction,
-        element: <Register/>,   
+        element: <Register set={setFlag} flag={flag}/>,   
 	   }
 	]);
 
