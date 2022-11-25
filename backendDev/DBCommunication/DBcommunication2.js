@@ -331,22 +331,29 @@ class DBCommunication {
      */
     closeEventOnDb(eventID,desporto){
         return new Promise((resolve,reject)=>{
+            let toNotify=[]
             this.setEstadoEvento("CLS",eventID,desporto).then(async (message)=>{
+                
                 for(let i = 0 ; i< message.length ;i++){
                     await this.mysqlQuery('SELECT Estado FROM Aposta WHERE ID=?',message[i].ApostaID).then((result)=>{
                         if(result[0].Estado=='PEN'){
-                            this.mysqlQuery('UPDATE Aposta SET Estado = "CLS" WHERE ID=?',message[i].ApostaID).then(()=>{
+                            return this.mysqlQuery('UPDATE Aposta SET Estado = "CLS" WHERE ID=?',message[i].ApostaID).then(()=>{
                                 return this.mysqlQuery('Select Montante,ApostadorID FROM Aposta WHERE ID=?',message[i].ApostaID)
                             }).then((result)=>{
+                               
+                                toNotify.push([result[0].ApostadorID,`A aposta com ID ${message[i].ApostaID} foi fechada`])
                                 let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-
                                 return this.transactionOnDb({"ApostadorID":result[0].ApostadorID,"Valor":(result[0].Montante),"Tipo":"Refund","DataTr":today})
                             }).catch((e)=>{return Promise.reject(e)})
                         }
-                    })
+                    }).catch((e)=>{return Promise.reject(e)})
+                   
                 }
-            }).then(resolve({'Res':'evento closed'})
-            ).catch((message)=>{
+                
+            }).then(()=>{
+                
+                resolve({'Res':'evento closed','toNotify':toNotify})
+            }).catch((message)=>{
                 reject(message)
             })
         })
@@ -363,21 +370,22 @@ class DBCommunication {
     finEventOnDb(eventID,desporto,resultado,descricao){
         
         return new Promise((resolve,reject)=>{
+            let toNotify=[]
             this.setEstadoEvento("FIN",eventID,desporto,resultado,descricao).then(async(mes)=>{
                 for(let i = 0 ; i< mes.length ;i++){
                     await this.mysqlQuery('SELECT Estado FROM Aposta WHERE ID=?',mes[i].ApostaID).then((result)=>{
                         if(result[0].Estado=='PEN'){
-                            this.mysqlQuery('SELECT Escolha FROM Aposta_Evento WHERE ApostaID=? AND EventoID = ? AND Desporto = ?',[mes[i].ApostaID,eventID,desporto]).then((message)=>{
+                            return this.mysqlQuery('SELECT Escolha FROM Aposta_Evento WHERE ApostaID=? AND EventoID = ? AND Desporto = ?',[mes[i].ApostaID,eventID,desporto]).then((message)=>{
                                 if(message[0].Escolha==resultado){
                                     
-                                    this.mysqlQuery('SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"',mes[i].ApostaID).then((m)=>{
+                                    return this.mysqlQuery('SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"',mes[i].ApostaID).then((m)=>{
                                         if(m.length==0){
                                             
-                                            this.mysqlQuery('UPDATE Aposta SET Estado = "WON" WHERE ID=?',mes[i].ApostaID).then(()=>{
+                                            return this.mysqlQuery('UPDATE Aposta SET Estado = "WON" WHERE ID=?',mes[i].ApostaID).then(()=>{
                                                
                                                 return this.mysqlQuery('Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                             }).then((m)=>{
-                                                
+                                                toNotify.push([m[0].ApostadorID,`Parabéns ganhou a aposta com ID ${mes[i].ApostaID}!!`])
                                                 let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
                                                 return this.transactionOnDb({"ApostadorID":m[0].ApostadorID,"Valor":(m[0].Montante)*(m[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today})
                                             }).catch((e)=>{
@@ -390,7 +398,15 @@ class DBCommunication {
                                     })
                                 }
                                 else{
-                                    return this.mysqlQuery('UPDATE Aposta SET Estado = "LOST" WHERE ID=?',mes[i].ApostaID)
+                                    
+                                    return this.mysqlQuery('UPDATE Aposta SET Estado = "LOST" WHERE ID=?',mes[i].ApostaID).then(()=>{
+                                        return this.mysqlQuery('SELECT ApostadorID FROM Aposta WHERE ID=?',mes[i].ApostaID)
+                                    }).then((message)=>{
+                                        toNotify.push([message[i].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
+                                    }).catch((e)=>{
+                                        return Promise.reject(e)
+                                    })
+                                    
                                 }
                             }).catch((e)=>{
                                 return Promise.reject(e)
@@ -399,7 +415,7 @@ class DBCommunication {
                     })
                 }    
             }).then(()=>{
-                resolve({'Res':'Evento finalizado'})
+                resolve({'Res':'Evento finalizado','toNotify':toNotify})
             }).catch((e)=>{
                 reject(e)
             })
@@ -510,7 +526,7 @@ class DBCommunication {
                         let resposta=[]
                         for(let i = 0; i< data.length;i++){
                             await this.mysqlQuery('SELECT * FROM Evento WHERE Desporto=? AND ID=?',[data[i].Desporto,data[i].EventoID]).then((msg)=>{
-                                console.log(msg)
+                                
                                 msg[0]['Escolha']=data[i].Escolha
                                 resposta.push(msg[0])
                             }).catch((e)=>{

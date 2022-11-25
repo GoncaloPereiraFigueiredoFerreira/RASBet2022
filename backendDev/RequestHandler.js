@@ -36,10 +36,11 @@ function transactionFunction(request,response){
     let user = sessionHandler.verifyUser(request.body.ApostadorID);
     if(user[0] && user[1]=='apostador'){
         request.body.ApostadorID = user[0]
-        dbComms.transactionOnDb(request.body).then((message)=>{
+        dbComms.transactionOnDb(request.body).then(()=>{
             return dbComms.walletOnDb(user[0])
         }).then((message)=>{
             sessionHandler.sendNotification(token,{'Balance':message});
+            response.status(200)
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -92,12 +93,12 @@ function registerBetFunction(request,response){
         }).then(()=>{
             
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
-        }).then(()=>{
-            
+        }).then((message)=>{
+            answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
+           
             answer['Balance']=balanco
-            
             for(let i = 0 ; i< request.body.Eventos.length; i++){
                 evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
             }
@@ -163,9 +164,14 @@ function closeEventFunction(request,response){
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message)=>{
-          
+           
             evLst.closeEvent(request.body.Evento.Desporto,request.body.Evento.EventoID);
-            response.status(200).send(message)
+            
+            for(tuple of message.toNotify){
+                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+            }
+            response.status(200).send({'Res':message.Res})
             
         }).catch((message)=>{
             response.status(400).send(message)
@@ -185,7 +191,12 @@ function finEventFunction(request,response){
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
         dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto,request.body.Evento.Resultado,"descricao mudada").then((message)=>{
-            response.status(200).send(message)
+            for(tuple of message.toNotify){
+                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+            }
+            
+            response.status(200).send({'Res':message.Res})
         }).catch((message)=>{
             response.status(400).send(message)
         }) 
@@ -310,38 +321,6 @@ function betHistoryFunction(request,response){
 }
 
 
-// function betHistoryFunction(request,response){
-//     let user = sessionHandler.verifyUser(request.query.ApostadorID)
-//     let answer
-
-//     if(user[0] && user[1]=='apostador'){
-        
-//         dbComms.betHistoryOnDb(user[0]).then(async(message)=>{
-         
-//             for(let i =0 ; i<message.length;i++){
-            
-//                 await dbComms.betHistoryOnDb2(message[i].ID).then((dados_jogos)=>{
-//                     message[i]['Jogos']=dados_jogos
-//                     if(dados_jogos.length>1){
-//                         message[i]['Aridade']="Multipla"
-//                     }
-//                     else message[i]['Aridade']="Simples"
-//                 })
-//             }
-//             answer=message
-         
-//             return dbComms.walletOnDb(user[0])
-//         }).then((balance)=>{
-//             response.status(200).send({'lista':answer,'Balance':balance})
-//         }).catch((message)=>{
-//             response.status(400).send(message)
-//         })
-//     }
-//     else{
-//         response.status(400).send('Permission denied')
-//     }
-// }
-
 
 /**
  * Function that deals with a http request to get the transaction history of a given better
@@ -426,7 +405,12 @@ function updateFUTEvents(){
             for (let fixture of result){
                 let event = evLst.getEventDB("FUT",fixture);
                 if (event["Estado"] == "FIN"){
-                    await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]).then((message)=>{
+                        for(tuple of message.toNotify){
+                            console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                            //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                        }
+                    });
                     // Here we should notify all the users afected by the end of that event
                 }
             }
@@ -445,7 +429,12 @@ function updateF1Events(){
             for (let race of result){
                 let event = evLst.getEventDB("F1",race);
                 if (event["Estado"]  == "FIN")
-                    await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]).then((message)=>{
+                        for(tuple of message.toNotify){
+                            console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                            //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                        }
+                    });
                     // Here we should notify all the users afected by the end of that event
             }
             resolve();
@@ -464,7 +453,12 @@ function updateBSKEvents(){
             for (let game of result){
                 let event = evLst.getEventDB("BSK",game);
                 if (event["Estado"] == "FIN"){
-                    await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]).then((message)=>{
+                        for(tuple of message.toNotify){
+                            console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                            //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                        }
+                    });
                     // Here we should notify all the users afected by the end of that event
                 }
             }
@@ -481,7 +475,12 @@ function updateFUTPTEvents(){
             for (let game of result){
                 let event= evLst.getEventDB("FUTPT",game);
                 if (event["Estado"] == "FIN"){
-                    await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]);
+                    await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]).then((message)=>{
+                        for(tuple of message.toNotify){
+                            console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                            //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                        }
+                    });
                     // Here we should notify all the users afected by the end of that event
                 } 
             }
