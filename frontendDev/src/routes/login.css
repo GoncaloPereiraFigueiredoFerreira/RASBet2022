@@ -1,11 +1,9 @@
-*/*
+
 .logo{
-    margin: auto;
-    padding: auto;
-    float: left;
-    overflow: hidden;
+    display:block;
 }
-*/
+
+
 #logo img{
     object-fit: contain;
     width: 100px;
@@ -29,6 +27,7 @@
         border-radius: 12px;
         padding: 5%;
         margin: 5%;
+        margin-top: 0;
             
 
         background-color: white;
@@ -46,7 +45,8 @@
         border-radius: 12px;
         padding: 5%;
         margin: 5%;
-            
+        margin-top: 0;
+
 
         background-color: white;
     }

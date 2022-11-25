@@ -68,7 +68,7 @@ export default function Perfil(props){
 
 	return(
 	 <>
-      <div className = "box">
+      <div className = "box" style={{'margin':'25%','margin-top':'2vh','padding-top':'3vh'}}>
         <div className = "loginbox">
           <div className='bemvindo'>
             <p>Perfil</p>
@@ -80,7 +80,7 @@ export default function Perfil(props){
 	          <input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 	          <p>Telemovel:</p>
 	          <input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d"/>
-          	<button className = "button" type="submit" style={{"margin-right":"30vh","margin-left":"30vh","width":"40%"}}>Save</button>
+          	<button className = "button" type="submit" style={{'display': 'flex','justify-content': 'center','align-items': 'center'}}>Save</button>
           </Form>
         </div>
       </div>
