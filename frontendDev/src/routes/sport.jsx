@@ -84,11 +84,11 @@ async function getCods(){
 }
 
 export default function Sport({set}){
-	const {sportid,sport,cods,ligas} = useLoaderData();
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
 	const [input,setInput] = useState({});
 	const [filter,setFilter] = useState({"name":"","ligas":new Set([])})
+	const {sportid,sport,cods,ligas} = useLoaderData();
 
 	function sidebar(){
 

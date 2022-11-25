@@ -12,7 +12,6 @@ export default function Root({wallet,setWallet}) {
   const [ myWallet,setMy ] = useState({Valor:getWallet()});
 
   useEffect( () => {
-    console.log(getRole(),listening);
     if (getRole() == "apostador" && !listening) {
       console.log("ola");
       const events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
@@ -46,8 +45,10 @@ export default function Root({wallet,setWallet}) {
       }); 
   }
 
-  const money = getWallet();
-  if(money != wallet.Valor) setWallet({Valor:getWallet()})
+  if(getRole() == "apostador"){
+    const money = getWallet();
+    if(money != wallet.Valor) setWallet({Valor:getWallet()})
+  }
 
   return (
     <>
@@ -55,36 +56,36 @@ export default function Root({wallet,setWallet}) {
         <nav>
           <ul>
             <li>
-              <img src='logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'3vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
+              <img src='/logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'3vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
               <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
             </li>
             <li>
               <Link to='/sport/FUT'>
-              <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
               Futebol
               </Link>
             </li>
             <li>
               <Link to='/sport/FUTPT'>
-              <img src='football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
               FutebolPT
               </Link>
             </li>
             <li>
               <Link to='/sport/F1'>
-              <img src='formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
               Formula 1
               </Link>
             </li>
             <li>
               <Link to='/sport/BSK'>
-              <img src='basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
               Basquetebol</Link>
             </li>
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
+              <img src='/perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
               <div class="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
