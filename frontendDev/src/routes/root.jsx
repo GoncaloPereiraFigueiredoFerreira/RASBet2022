@@ -22,8 +22,10 @@ export default function Root({wallet,setWallet}) {
         const parsedData = JSON.parse(event.data);
         console.log(parsedData);
 
-        setMy({Valor:parsedData.Balance});
-        set(parsedData.Balance);
+        if(parsedData.Balance){
+          setMy({Valor:parsedData.Balance});
+          set(parsedData.Balance);
+        }
       };
 
 

@@ -184,7 +184,7 @@ export default function Sport({set}){
 		function rmBet(aposta){
 			var napostas = {...apostas};
 			napostas.simples = (apostas.simples && apostas.simples.Evento.EventoID == aposta.Evento.EventoID && apostas.simples.Evento.Escolha == aposta.Evento.Escolha)?null:aposta;
-			napostas.mult = apostas.mult.filter((e)=>{console.log(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha);if(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha) return aposta});
+			napostas.mult = apostas.mult.filter((e)=>{console.log(e.Evento.EventoID != aposta.Evento.EventoID && e.Evento.Escolha != aposta.Evento.Escolha);if(e.Evento.EventoID != aposta.Evento.EventoID || e.Evento.Escolha != aposta.Evento.Escolha) return aposta});
 			setApostas(napostas);			
 		}
 

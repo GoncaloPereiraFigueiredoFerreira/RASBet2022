@@ -26,7 +26,7 @@ export async function action({request,params}){
 
   console.log("register:",flag);
   if(flag){
-    return redirect("/");
+    return redirect("/sport/FUTPT");
   }
 }
 
