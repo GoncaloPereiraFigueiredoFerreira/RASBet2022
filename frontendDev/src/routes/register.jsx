@@ -24,7 +24,7 @@ export async function action({request,params}){
   });
   
 
-  console.log(flag);
+  console.log("register:",flag);
   if(flag){
     return redirect("/");
   }

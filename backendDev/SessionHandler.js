@@ -46,6 +46,7 @@ class SessionHandler{
         if (this.sessions[token] != undefined){
           const data = `data: ${JSON.stringify(info)}\n\n`;
           this.sessions[token]["Gate"].write(data);
+          this.sessions[token]["Gate"].flush()
         }
     }
 
