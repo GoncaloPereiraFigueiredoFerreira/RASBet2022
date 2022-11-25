@@ -40,6 +40,7 @@ function transactionFunction(request,response){
             return dbComms.walletOnDb(user[0])
         }).then((message)=>{
             sessionHandler.sendNotification(token,{'Balance':message});
+            response.sendStatus(200);
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -546,8 +547,7 @@ function eventHandler(request,response,next){
       };
 
       response.writeHead(200, headers);
-      const data = `data: ${JSON.stringify({"Balance":0})}\n\n`;
-      response.write(data);
+      response.flushHeaders();
       let token = request.query.token;
       sessionHandler.addGate(token,response);
       request.on('close', () => {

@@ -13,7 +13,7 @@ import HistT, {loader as histTLoader} from './routes/histT.jsx'
 import Wallet from './routes/wallet.jsx'
 
 import Login,{action as loginAction} from './routes/login.jsx'
-import Register,{action as registerAction} from './routes/register.jsx'
+import Register from './routes/register.jsx'
 
 import {getRole} from "./utils"
 
@@ -64,7 +64,6 @@ function App(){
 	  },
 	  {
         path: "/register",
-        action: registerAction,
         element: <Register set={setFlag} flag={flag}/>,   
 	   }
 	]);

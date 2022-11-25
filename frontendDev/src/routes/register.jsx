@@ -5,9 +5,7 @@ import './login.css'
 
 import {setToken,setRole,setWallet,getDate_min} from "../utils"
 
-
-export async function action(data){
- 
+async function register_req(data){
   console.log(data);
   var resp = await axios({method:'POST',url:'http://localhost:8080/api/register/',data:data}) 
   .then(function (response) {
@@ -15,14 +13,14 @@ export async function action(data){
     const data = response.data;
     setToken(data.Token);
     setRole("apostador");
-    setWallet(0);
+    if(data.FRole == "apostador") setWallet(0);
     return true;
   })
   .catch(function (error) {
     console.log(error.response.data);
     return error.response.data;
   });
-  
+
   return resp;
 }
 
@@ -39,14 +37,17 @@ export default function Register({set,flag}) {
   } 
 
   async function handleSubmit(){
-    var resp = await action(input);
-    setError(resp);
+    let resp = await register_req(input);
+
     if(resp == true){
       set(true);
     }
+    else{
+      setError(resp);
+    }
   }
 
-  useEffect(()=>{if(flag){set(false);navigate('/sport/FUTPT')}});
+  useEffect(()=>{if(flag){set(false);navigate('/')}});
   return (
     <>
       <div className="logo">

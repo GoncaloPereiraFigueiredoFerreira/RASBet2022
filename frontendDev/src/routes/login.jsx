@@ -6,7 +6,7 @@ import {setToken,setRole,setWallet} from "../utils"
 
 async function login_req(data){
   console.log(data);
-  var resp = axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
+  var resp = await axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
   .then(function (response) {
     console.log(response);
     const data = response.data;
@@ -37,9 +37,11 @@ export default function Login({set,flag}) {
 
   async function handleSubmit(){
     var resp = await login_req(input);
-    setError(resp);
     if(resp == true){
       set(true);
+    }
+    else{
+      setError(resp);
     }
   }
 

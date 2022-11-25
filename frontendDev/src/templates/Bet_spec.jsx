@@ -8,6 +8,19 @@ function aux(evento,tipo){
 	else if(evento.Tipo == "NoTieEvent") return (<SemEmpate evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
 }
 
+function check(filter,evento){
+	let ret = true;
+	if (filter.ligas.size > 0){
+		ret = filter.ligas.has(evento.Liga); 
+	}
+	if(ret && filter.name != ""){
+		let str = evento.Participantes.join();
+		str = str + evento.Liga + evento.Data;
+		ret = (str.search(filter.name) >= 0)? true:false;
+	}
+	return ret;
+}
+
 export default function Bet(props){
-	return (<>{props.data.map((evento,ind)=>(aux(evento,props.tipo)))}</>);
+	return (<>{props.data.map((evento,ind)=>((check(props.filter,evento))?aux(evento,props.tipo):null))}</>);
 }

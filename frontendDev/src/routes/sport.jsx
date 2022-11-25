@@ -83,12 +83,30 @@ async function getCods(){
 	return ret;
 }
 
-
 export default function Sport({set}){
 	const {sportid,sport,cods,ligas} = useLoaderData();
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
 	const [input,setInput] = useState({});
+	const [filter,setFilter] = useState({"name":"","ligas":new Set([])})
+
+	function sidebar(){
+
+		return(
+		<div className="sidebar" id="Leftbar">
+			<input type="text" name="name" placeholder="Procure por um jogo" 
+			onChange={({target})=>{let nfilter={...filter};nfilter.name=target.value;setFilter(nfilter);}}
+			style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
+			
+			<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
+				Competições</p>
+			<div className="competitions">
+				{ligas.map((i,ind)=>(<button className='comp-button' 
+				style={{"border":"0px","backgroundColor":(filter.ligas.has(i)?"Red":"Grey")}} key={ind} 
+				onClick={()=>{let nfilter={...filter};(nfilter.ligas.has(i))?nfilter.ligas.delete(i):nfilter.ligas.add(i);setFilter(nfilter)}}>{i}</button>))}
+			</div>
+	  </div>);
+	 }
 
 	const role = getRole();
 
@@ -190,18 +208,9 @@ export default function Sport({set}){
 
 		return(
 			<>
-				<div className="sidebar" id="Leftbar">
-					<input type="text" name="searchbar" placeholder="Procure por um jogo"
-					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
-					
-					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
-						Competições</p>
-					<div className="competitions">
-						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
-					</div>
-				</div>
+				{sidebar()}
 				<div className="betpage">
-					<Bet data={sport} addBet={addBet}/>
+					<Bet data={sport} addBet={addBet} filter={filter}/>
 				</div>
 				
 				<div className="betzone" id="Rightbar">
@@ -250,18 +259,9 @@ export default function Sport({set}){
 
 	if(role == "Special")
 		return(<>  
-		<div className="sidebar" id="Leftbar">
-		<input type="text" name="searchbar" placeholder="Procure por um jogo"
-					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
-					
-					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
-						Competições</p>
-					<div className="competitions">
-						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
-					</div>
-        </div>
+		{sidebar()}
 		<div className="betpage-spec">
-			<Bet_spec data={sport} tipo={sportid}/>
+			<Bet_spec data={sport} tipo={sportid} filter={filter}/>
 		</div></>
 				);
 
@@ -280,18 +280,9 @@ export default function Sport({set}){
 
 		return(
 			<>
-	        <div className="sidebar" id="Leftbar">
-			<input type="text" name="searchbar" placeholder="Procure por um jogo"
-					style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh",'width':'95%'}}/>
-					
-					<p style={{"margin-left":"1vh","border-radius":"10px","margin":"1vh"}}>
-						Competições</p>
-					<div className="competitions">
-						{ligas.map((i,ind)=>(<button className='comp-button' style={{"border":"0px"}} key={ind}>{i}</button>))}
-					</div>
-        	</div>
+	      {sidebar()}
 				<div className="betpage">
-					<Bet_admin data={sport} sport={sportid}/>
+					<Bet_admin data={sport} sport={sportid} filter={filter}/>
 				</div>
 				
 				<div className="betzone" id="Rightbar">
