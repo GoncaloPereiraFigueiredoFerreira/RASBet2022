@@ -12,7 +12,6 @@ async function login_req(data){
     const data = response.data;
     setToken(data.Token);
     setRole(data.FRole);
-    if(data.FRole == "apostador") setWallet(data.Balance);
     return true;
   })
   .catch(function (error) {

@@ -13,7 +13,6 @@ async function register_req(data){
     const data = response.data;
     setToken(data.Token);
     setRole("apostador");
-    if(data.FRole == "apostador") setWallet(0);
     return true;
   })
   .catch(function (error) {
