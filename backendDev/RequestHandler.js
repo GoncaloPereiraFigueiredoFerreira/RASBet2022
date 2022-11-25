@@ -32,13 +32,14 @@ function registerFunction(request,response){
  * Function that deals with a http request to make a transaction 
  */
 function transactionFunction(request,response){
-    
-    let user =  sessionHandler.verifyUser(request.body.ApostadorID)
+    let token = request.body.ApostadorID;
+    let user = sessionHandler.verifyUser(request.body.ApostadorID);
     if(user[0] && user[1]=='apostador'){
-        request.body.ApostadorID= user[0]
-        dbComms.transactionOnDb(request.body).then(()=>{
-            response.status(200);
-            this.sessionHandler.sendNotification({'Balance':dbComms.walletOnDb(user[0])});
+        request.body.ApostadorID = user[0]
+        dbComms.transactionOnDb(request.body).then((message)=>{
+            return dbComms.walletOnDb(user[0])
+        }).then((message)=>{
+            sessionHandler.sendNotification(token,{'Balance':message});
         }).catch((message)=>{
             response.status(400).send(message)
         })
@@ -537,17 +538,20 @@ function getOdds(request,response){
 
 
 
-function eventHandler(request,response){
+function eventHandler(request,response,next){
     const headers = {
         'Content-Type': 'text/event-stream',
         'Connection': 'keep-alive',
         'Cache-Control': 'no-cache'
       };
+
       response.writeHead(200, headers);
+      const data = `data: ${JSON.stringify({"Balance":0})}\n\n`;
+      response.write(data);
       let token = request.query.token;
-      this.sessionHandler.addGate(token)
+      sessionHandler.addGate(token,response);
       request.on('close', () => {
-          this.sessionHandler.closeConnection(token);
+          sessionHandler.closeConnection(token);
       });
 }
 
