@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getToken,setWallet,parseDate} from  "../utils"
+import {getToken,parseDate} from  "../utils"
 import {useLoaderData} from 'react-router-dom';
 
 export async function loader({params}){
@@ -10,7 +10,6 @@ export async function loader({params}){
       .then(function (response) {
         console.log("response",response);
         const data = response.data;
-        setWallet(data.Balance);
         return data;
       })
       .catch(function (error) {

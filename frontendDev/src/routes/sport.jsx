@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {useLoaderData,Form} from 'react-router-dom';
 import axios from "axios"	
 
-import {getToken,getRole,getDate,setWallet,getWallet} from "../utils"
+import {getToken,getRole,getDate,getWallet} from "../utils"
 
 import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
@@ -117,8 +117,6 @@ export default function Sport({set}){
 		  .then(function (response) {
 		    console.log("response",response);
 		    const data = response.data;
-		    setWallet(data.Balance);
-		    set({Valor:data.Balance});
 		  })
 		  .catch(function (error) {
 		    console.log(error);
@@ -138,7 +136,7 @@ export default function Sport({set}){
 		}
 
 		function handleSubmit(){
-			if(window.confirm("Deseja apostar?")){
+			if((apostas.simples != null || apostas.mult.length > 0) && window.confirm("Deseja apostar?")){
 				if(state){
 					var ret = null;
 					var data = apostas.simples;

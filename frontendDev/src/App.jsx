@@ -19,18 +19,17 @@ import {getRole} from "./utils"
 
 function App(){
 	const [flag,setFlag] = useState(false);
-	const [wallet,setWallet] = useState({Valor:0});
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
-	    element: <Root wallet={wallet} setWallet={setWallet}/>,
+	    element: <Root/>,
 	    errorElement: <ErrorPage />,
 	    children: [
 	      { index: true, element: (getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>},
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,
-	      	element: <Sport set={setWallet}/>,
+	      	element: <Sport />,
 	      },
 	      {
 	      	path: "perfil/:perfilid",
@@ -54,7 +53,7 @@ function App(){
 	      },
 	      {
 	      	path: "wallet/:perfilid",
-	      	element: <Wallet set={setWallet}/>,
+	      	element: <Wallet />,
 	      }
 	    ],
 	  },

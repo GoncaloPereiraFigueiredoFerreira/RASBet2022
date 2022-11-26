@@ -5,7 +5,7 @@ import { useEffect,useState } from "react";
 
 import {getToken,getWallet,getRole,setWallet as set} from "../utils"
 
-export default function Root({wallet,setWallet}) {
+export default function Root() {
   const navigation = useNavigate();
   const token = getToken();
   const [ listening, setListening ] = useState(false);
@@ -13,9 +13,9 @@ export default function Root({wallet,setWallet}) {
 
   useEffect( () => {
     if (getRole() == "apostador" && !listening) {
-      console.log("ola");
       const events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
-      console.log(events);
+
+      events.onerror = (error) => {console.log("error sse:",error);}
 
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
@@ -47,7 +47,7 @@ export default function Root({wallet,setWallet}) {
 
   if(getRole() == "apostador"){
     const money = getWallet();
-    if(money != wallet.Valor) setWallet({Valor:getWallet()})
+    if(money != myWallet.Valor) setMy({Valor:getWallet()})
   }
 
   return (
@@ -99,7 +99,7 @@ export default function Root({wallet,setWallet}) {
             {(getRole() == "apostador")?
               <li style={{"float":"right","padding":"1vh"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
-                  Carteira: {wallet.Valor}
+                  Carteira: {myWallet.Valor}
                 </button>
               </li>:null}
             {(getRole() == "Admin")?

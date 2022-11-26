@@ -1,7 +1,7 @@
 import {Form} from "react-router-dom"
 import {useState} from "react"
 import axios from "axios"
-import {getDate,getToken,setWallet} from "../utils"
+import {getDate,getToken} from "../utils"
 
 export default function Wallet({set}) {
     const [input,setInput] = useState({Valor:0});

@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react'
 import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
-import {setToken,setRole,setWallet} from "../utils"
+import {setToken,setRole} from "../utils"
 
 async function login_req(data){
   console.log(data);

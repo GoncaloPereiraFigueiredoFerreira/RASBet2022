@@ -3,7 +3,7 @@ import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
 
-import {setToken,setRole,setWallet,getDate_min} from "../utils"
+import {setToken,setRole,getDate_min} from "../utils"
 
 async function register_req(data){
   console.log(data);

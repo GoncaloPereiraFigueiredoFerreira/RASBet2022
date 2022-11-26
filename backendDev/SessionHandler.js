@@ -34,15 +34,18 @@ class SessionHandler{
 
 
     addGate(token,gate){
+        console.log("create");
         this.sessions[token]["Gate"] = gate;
     }
 
     closeConnection(token){
+        console.log("close");
         //removes from token from sessions
-        delete this.sessions[token]
+        //delete this.sessions[token]
     }
 
     sendNotification(token,info){
+        console.log("send");
         if (this.sessions[token] != undefined){
           const data = `data: ${JSON.stringify(info)}\n\n`;
           this.sessions[token]["Gate"].write(data);

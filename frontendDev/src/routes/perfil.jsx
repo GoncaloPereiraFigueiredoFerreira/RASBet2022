@@ -1,7 +1,7 @@
 import {useLoaderData,useNavigate,Form} from 'react-router-dom';
 import axios from "axios"
 import Login from "./login"
-import {getToken,getRole,getWallet,setWallet,parseDate} from "../utils"
+import {getToken,getRole,getWallet,parseDate} from "../utils"
 
 export async function loader({params}){
 	const token = params.perfilid;
@@ -26,7 +26,6 @@ export default function Perfil(props){
 
 	console.log(perfil);
 
-	setWallet(perfil.Balance);
 
 	//if(!perfil){return navigate("/login");}
 	return(
