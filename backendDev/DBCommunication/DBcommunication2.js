@@ -399,7 +399,8 @@ class DBCommunication {
                                     return this.mysqlQuery('UPDATE Aposta SET Estado = "LOST" WHERE ID=?',mes[i].ApostaID).then(()=>{
                                         return this.mysqlQuery('SELECT ApostadorID FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                     }).then((message)=>{
-                                        toNotify.push([message[i].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
+                                        for (let i in message)
+                                            toNotify.push([message[i].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
                                     }).catch((e)=>{
                                         return Promise.reject(e)
                                     })
@@ -570,6 +571,7 @@ class DBCommunication {
     startedEventOnDb(desporto){
         let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
         return new Promise((resolve,reject)=>{
+            let ids =[];
             this.mysqlQuery('SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"',[desporto,today]).then((result)=>{
                 for(let i =0;i < result.length;i++){
                     ids.push(result[i].ID)

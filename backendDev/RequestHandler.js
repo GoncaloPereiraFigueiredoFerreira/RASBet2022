@@ -102,7 +102,7 @@ function registerBetFunction(request,response){
             for(let i = 0 ; i< request.body.Eventos.length; i++){
                 evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
             }
-            sessionHandler.sendNotification(token,balanco);
+            sessionHandler.sendNotification(token,{"Balance":balanco});
             response.sendStatus(200);
 
         }).catch((e)=>{
@@ -160,7 +160,7 @@ function editProfileFunction(request,response){
  * Function that deals with a http request to close an event
  */
 function closeEventFunction(request,response){
-    
+
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
@@ -175,7 +175,7 @@ function closeEventFunction(request,response){
 
                 // Notify wallet
                 let token = sessionHandler.getToken(tuple[0]);
-                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,info);});
+                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
             }
             response.status(200).send({'Res':message.Res})
             
@@ -192,7 +192,6 @@ function closeEventFunction(request,response){
  * Function that deals with a http request to finalize an event
  */
 function finEventFunction(request,response){
-
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
@@ -203,7 +202,7 @@ function finEventFunction(request,response){
 
                 // Notify wallet
                 let token = sessionHandler.getToken(tuple[0]);
-                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,info);});
+                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                 
             }
             
@@ -378,7 +377,7 @@ function returnEventList(request,response){
                 "Leagues": evLst.getLeagues(request.query.sport)
             });
     }
-    else  response.status(404).send("Not found");
+    //else  response.status(404).send("Not found");
     
 }
 
@@ -420,6 +419,9 @@ function updateFUTEvents(){
                         for(tuple of message.toNotify){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                            let token = sessionHandler.getToken(tuple[0]);
+                            dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -444,6 +446,8 @@ function updateF1Events(){
                         for(tuple of message.toNotify){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                            let token = sessionHandler.getToken(tuple[0]);
+                            dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -468,6 +472,8 @@ function updateBSKEvents(){
                         for(tuple of message.toNotify){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                            let token = sessionHandler.getToken(tuple[0]);
+                            dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -490,6 +496,8 @@ function updateFUTPTEvents(){
                         for(tuple of message.toNotify){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                            let token = sessionHandler.getToken(tuple[0]);
+                            dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event

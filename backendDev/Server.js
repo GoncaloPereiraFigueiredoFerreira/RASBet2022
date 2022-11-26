@@ -31,7 +31,7 @@ class Server{
         app.post(api + "editProfile",reqHandler.editProfileFunction);
         app.post(api + "addEventOdd",reqHandler.addEventOdds);
         app.post(api + "closeEvent" ,reqHandler.closeEventFunction);
-        app.post(api + "finEvent"   ,reqHandler.finEventFunction);
+        //app.post(api + "finEvent"   ,reqHandler.finEventFunction);
         app.post(api + "addPromocao",reqHandler.addPromocaoFunction);
         app.post(api + "remPromocao",reqHandler.remPromocaoFunction);
         app.post(api + "superOdds"  ,reqHandler.activateSuperOdds);    
