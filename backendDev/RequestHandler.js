@@ -6,6 +6,7 @@ const dbComms = new dbComms1();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
 const notifcationCenter = require("./NotificationCenter");
+const { sendStatus } = require("express/lib/response");
 
 
 function dummyFunction(request,response){
@@ -79,6 +80,7 @@ function registerBetFunction(request,response){
     }
     let answer
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
+    let token = request.body.Aposta.ApostadorID;
     if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
         
         request.body.Aposta.ApostadorID= user[0]
@@ -94,15 +96,14 @@ function registerBetFunction(request,response){
             
             return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
         }).then((message)=>{
-            answer=message
             return dbComms.walletOnDb(user[0])
         }).then((balanco)=>{
-           
-            answer['Balance']=balanco
+                 
             for(let i = 0 ; i< request.body.Eventos.length; i++){
                 evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
             }
-            response.status(200).send(answer)
+            sessionHandler.sendNotification(token,balanco);
+            response.sendStatus(200);
 
         }).catch((e)=>{
         
@@ -169,7 +170,12 @@ function closeEventFunction(request,response){
             
             for(tuple of message.toNotify){
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                //Send email
                 //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+
+                // Notify wallet
+                let token = sessionHandler.getToken(tuple[0]);
+                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,info);});
             }
             response.status(200).send({'Res':message.Res})
             
@@ -194,6 +200,11 @@ function finEventFunction(request,response){
             for(tuple of message.toNotify){
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                 //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+
+                // Notify wallet
+                let token = sessionHandler.getToken(tuple[0]);
+                dbComms.walletOnDb(tuple[0]).then((info)=>{sessionHandler.sendNotification(token,info);});
+                
             }
             
             response.status(200).send({'Res':message.Res})
@@ -508,8 +519,7 @@ function updateResults(){
 
 function updateEvents(request,response){
     let user = sessionHandler.verifyUser(request.query.token);
-    console.log(request.body.token)
-    if (user[1] == "Admin" || true){
+    if (user[1] == "Admin" ){
         updateResults();    
         apiComms.updateEventLst();
         response.sendStatus(200);     
@@ -538,19 +548,19 @@ function getOdds(request,response){
 
 
 function eventHandler(request,response,next){
-    const headers = {
-        'Content-Type': 'text/event-stream',
-        'Connection': 'keep-alive',
-        'Cache-Control': 'no-cache'
-      };
-
-      response.writeHead(200, headers);
-      response.flushHeaders();
-      let token = request.query.token;
-      sessionHandler.addGate(token,response);
-      request.on('close', () => {
-          sessionHandler.closeConnection(token);
-      });
+    let token = request.query.token;
+    let user = sessionHandler.verifyUser(token);
+    if (user[1] == "apostador"){
+        response.setHeader('Content-Type', 'text/event-stream');
+        response.setHeader('Connection', 'keep-alive');
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('X-Accel-Buffering', 'no');
+        response.setHeader('Access-Control-Allow-Origin', "*");
+        sessionHandler.addGate(token,response);
+        request.on('close', () => {
+            sessionHandler.closeConnection(token);
+        });
+    }
 }
 
 

@@ -32,6 +32,14 @@ class SessionHandler{
         return hash;
     }
 
+    getToken(email){
+        for (let [key, value] of Object.entries(this.sessions)){
+            if (value.Email == email){
+                return key;
+            }
+        }
+        return undefined;
+    }
 
     addGate(token,gate){
         console.log("create");
