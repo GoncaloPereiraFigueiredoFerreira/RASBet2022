@@ -377,7 +377,7 @@ function returnEventList(request,response){
                 "Leagues": evLst.getLeagues(request.query.sport)
             });
     }
-    //else  response.status(404).send("Not found");
+    else  response.status(404).send("Not found");
     
 }
 

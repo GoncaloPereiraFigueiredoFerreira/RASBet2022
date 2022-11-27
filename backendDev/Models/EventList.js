@@ -32,18 +32,82 @@ class EventList{
         return instance;
     }
 
-    /**
-     * Adds an event provinient from the API
-     * @param {SportEvent} event Event to be added
-     */
-    addEventFromAPI(event){
-        if (this.eventList[event.getSport()] == undefined) {
-            this.eventList[event.getSport()] = {};
-            this.leagues[event.getSport()] = [];
+
+    /** 
+     * Adds a event to the event list where a draw is not a possible outcome
+    * @param {string} sport Name of the sport
+    * @param {string} league Name of the league
+    * @param {string} id Identifier of the event
+    * @param {string} description Description of the event
+    * @param {number} result Result of the event (0 if home won and 1 if away won)
+    * @param {string} state State of the event
+    * @param {string} datetime Starting datetime of the event
+    * @param {string} team1 Name of the home team
+    * @param {string} team2 Name of the away team
+    * @param {string} logo1 Url to the logo of the home team
+    * @param {string} logo2 URL to the logo of the away team
+    * @param {string} odds1 Odds of the home team winning
+    * @param {string} odds1 Odds of the away team winning
+    */
+    addNoTieEventFromAPI(sport,id,league,description,result,state,datetime,team1, team2,logo1, logo2,odds1,odds2){
+        if (this.eventList[sport] == undefined) {
+            this.eventList[sport] = {};
+            this.leagues[sport] = [];
         }
-        this.eventList[event.getSport()][event.getID()] = event;
-        if (!this.leagues[event.getSport()].includes(event.getLeague()))  this.leagues[event.getSport()].push(event.getLeague());
+        this.eventList[sport][id] = new NoTieEvent(sport,league,id,description,result,state,datetime,team1,team2,logo1,logo2,odds1,odds2);
+        if (!this.leagues[sport].includes(league))this.leagues[sport].push(league);
     }
+
+    /**
+     * Adds a event to the event list where a draw is a possible outcome
+     * @param {string} sport Name of the sport
+     * @param {string} league Name of the league
+     * @param {string} id Identifier of the event
+     * @param {string} description Description of the event
+     * @param {number} result Winner of the event
+     * @param {string} state Current state of the event
+     * @param {string} datetime Date and time of the event
+     * @param {string} team1 Name of the home team
+     * @param {string} team2 Name of the away team
+     * @param {string} logo1 URL with the logo of the home team
+     * @param {string} logo2 URL with the logo of the away team
+     * @param {string} odds1 Initial Odds of winning for home team for event
+     * @param {string} odds2 Initial Odds of winning for away team for event
+     * @param {string} oddsDraw Initial Odds of a draw for event
+     */
+    addTieEventFromAPI(sport,league,id,description,result,state,datetime, team1, team2,logo1, logo2,odds1,odds2,oddsDraw){
+        if (this.eventList[sport] == undefined) {
+            this.eventList[sport] = {};
+            this.leagues[sport] = [];
+        }
+        this.eventList[sport][id] = new TieEvent(sport,league,id,description,result,state,datetime,team1,team2,logo1,logo2,odds1,odds2,oddsDraw);
+        if (!this.leagues[sport].includes(league))this.leagues[sport].push(league);
+    }
+
+    /**
+     * Adds a race event to the event list
+     * @param {string} sport Name of the sport
+     * @param {string} league Name of the league
+     * @param {string} id Identifier of the event
+     * @param {string} description String that contains the description of the event
+     * @param {number} result Result of the event (-1 if it hasnt finished or the index of the winner pilot)
+     * @param {string} state State of the event
+     * @param {string} datetime Date and time of the event
+     * @param {List} pilots List of names of the pilots participating in the race
+     * @param {List} pilotsPhotos List of urls for each pilots face
+     * @param {string} circuit Name of the circuit
+     * @param {string} circuitPhoto Url for the circuit photo
+     * @param {List} playerOdds List of odds for each contestant
+     */
+    addRaceEventFromAPI(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto,playerOdds){
+        if (this.eventList[sport] == undefined) {
+            this.eventList[sport] = {};
+            this.leagues[sport] = [];
+        }
+        this.eventList[sport][id] = new RaceEvent(sport,league,id,description,result,state, datetime, pilots,pilotsPhotos, circuit,circuitPhoto,playerOdds);
+        if (!this.leagues[sport].includes(league))this.leagues[sport].push(league);
+    }
+
 
     /**
      * Adds an event from the DB
