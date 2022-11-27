@@ -3,7 +3,7 @@ import { useRouteError } from "react-router-dom";
 export default function ErrorPage() {
   const error = useRouteError();
   console.error(error);
-  sessionStorage.clear()
+  //sessionStorage.clear()
 
   return (
     <>
@@ -13,7 +13,7 @@ export default function ErrorPage() {
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
-      <a href='/'>Regressar ao login</a>
+      <button onClick={()=>(sessionStorage.clear())}> <a href='/'>Regressar ao login</a> </button>  
     </div>
     </>
   );
