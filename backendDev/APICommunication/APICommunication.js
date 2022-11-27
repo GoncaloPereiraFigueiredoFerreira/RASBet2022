@@ -78,8 +78,8 @@ function fetchPTFootballEvents(){
     let futPTpath = rspPath + "futPT.json";
     let req = getRequests.genFUTPTRequest();
     makeRequest(req,(json) => {
-        parser.parsePTFutResp(json);
-        fs.writeFileSync(futpath, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
+      let noErrors =parser.parsePTFutResp(json);
+      if (noErrors) fs.writeFileSync(futpath, JSON.stringify(response.data), { flag: 'w+' }, () =>{});
     })
     .catch((error)=>{
         if (fs.existsSync(futPTpath)){
@@ -104,8 +104,8 @@ function fetchF1Events(startUp){
     if ( !existsFile || (configFlag && startUp)  || !startUp){
         let req = getRequests.genF1RacesRequest(API_AUTH_KEY);
         makeRequest(req,(json) =>{
-            fetchF1Events2(startUp,json);
-            if (!existsFile && json.errors.length != 0) fs.writeFile(f1Racespath, JSON.stringify(json), { flag: 'w+' }, () =>{});
+          let noErrors =fetchF1Events2(startUp,json);
+          if (!existsFile && noErrors) fs.writeFile(f1Racespath, JSON.stringify(json), { flag: 'w+' }, () =>{});
         }).catch((error)=>console.log("Error in f1 events fetch. Startup: ", startUp));;
     }
     else{

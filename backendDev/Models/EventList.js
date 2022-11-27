@@ -49,7 +49,7 @@ class EventList{
     * @param {string} odds1 Odds of the home team winning
     * @param {string} odds1 Odds of the away team winning
     */
-    addNoTieEventFromAPI(sport,id,league,description,result,state,datetime,team1, team2,logo1, logo2,odds1,odds2){
+    addNoTieEventFromAPI(sport,league,id,description,result,state,datetime,team1, team2,logo1, logo2,odds1,odds2){
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
             this.leagues[sport] = [];
