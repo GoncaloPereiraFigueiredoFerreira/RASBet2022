@@ -5,7 +5,7 @@ function test (part,odds){
   return ret;
 }
 
-export default function Race({evento,addAposta}){
+export default function Race({evento,addAposta,escolhas}){
   return(
   		<div class="bet-element" key={evento.EventoId.toString()}>
           <div class="racematch">
@@ -18,7 +18,7 @@ export default function Race({evento,addAposta}){
         <div class="dropdown">
           <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>
           <div class="dropdown-content">
-              {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button onClick={()=>(addAposta(parseBet(evento,ind)))}>{elem}</button>))}
+              {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button style={{"backgroundColor":(escolhas.includes(ind))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,ind)))}>{elem}</button>))}
           </div>
         </div>
       </div>

@@ -208,7 +208,7 @@ export default function Sport({set}){
 			<>
 				{sidebar()}
 				<div className="betpage">
-					<Bet data={sport} addBet={addBet} filter={filter}/>
+					<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state}/>
 				</div>
 				
 				<div className="betzone" id="Rightbar">
