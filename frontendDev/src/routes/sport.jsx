@@ -133,7 +133,6 @@ export default function Sport({set}){
 				let ninput = {...input};
 		    ninput[target.name] = (target.value != "")?parseInt(target.value):0;
 		    setInput(ninput);
-		    console.log(input);
 		} 
 		function handleChangeCodS({target}){
 			input[target.name] = target.value;
