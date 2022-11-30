@@ -4,12 +4,9 @@
  * This module contains the functions that will parse the results from the API requests
  * 
  */
-const EventList = require("../Models/EventList");
-const TieEvent = require("../Models/TieEvent");
-const RaceEvent = require("../Models/RaceEvent");
-const NoTieEvent = require("../Models/NoTieEvent");
- 
- const evLst = EventList.getInstance(); 
+
+import {EventList} from "../Models/EventList";
+const evLst:IEventList = EventList.getInstance(); 
  
  /**
   * Function responsible for retrieving the information from the API response of a Football request 
@@ -20,26 +17,20 @@ const NoTieEvent = require("../Models/NoTieEvent");
      if (json.errors.length != 0) {
          console.error("Errors found in json response");
          console.log(json.errors)
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
          return false;
      }
      else{
          for (let match of json.response){
-             let id = match.fixture.id;
-             let date = match.fixture.date;
-             let league = match.league.name;
-             let team1 = match.teams.home.name;
-             let team2 = match.teams.away.name;
-             let logo1 = match.teams.home.logo;
-             let logo2 = match.teams.away.logo;
-             
-             let event = evLst.getEvent("FUT",id);
-             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                 evLst.addTieEventFromAPI("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1,1);
-             }
-             else{
-                 evLst.addTieEventFromAPI("FUT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1,1);
-             }
+            let id = match.fixture.id;
+            let date = match.fixture.date;
+            let league = match.league.name;
+            let team1 = match.teams.home.name;
+            let team2 = match.teams.away.name;
+            let logo1 = match.teams.home.logo;
+            let logo2 = match.teams.away.logo;
+
+            evLst.addTieEventFromAPI("FUT",league,id,date,team1,team2,logo1,logo2,1,1,1);
+
          }
          return true;
      }
@@ -53,7 +44,6 @@ const NoTieEvent = require("../Models/NoTieEvent");
      if (json.errors.length != 0) {
          console.error("Errors found in json response");
          console.log(json.errors)
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
          return false;
      }
      else{
@@ -93,14 +83,7 @@ const NoTieEvent = require("../Models/NoTieEvent");
                  else if(outcomes.name == team2) sOdds2 = outcomes.price;
                  else if(outcomes.name == "Draw") sOddsTie = outcomes.price;
              }
- 
-             let event = evLst.getEvent("FUTPT",id);
-             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                 evLst.addTieEventFromAPI("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie);
-             }
-             else{
-                 evLst.addTieEventFromAPI("FUTPT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
-             }
+            evLst.addTieEventFromAPI("FUTPT",league,id,date,team1,team2,"","",sOdds1,sOdds2,sOddsTie);
          //}
      }
      return true;
@@ -152,7 +135,6 @@ const NoTieEvent = require("../Models/NoTieEvent");
          console.log(racesJson.errors)
          console.log(pilotsJson.errors)
          return false;
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
      }
      else{
          for (let pilot of pilotsJson.response){
@@ -160,19 +142,12 @@ const NoTieEvent = require("../Models/NoTieEvent");
              pilotsPhotos.push(pilot.driver.image);
          }
          for (let race of racesJson.response){
-             let id = race.id;
-             let date = race.date;
-             let circuit = race.competition.name;
-             let circuitPhoto = race.circuit.image;
-             let playerOdds = []; for (let i=0; i<pilotsNames.length; ++i) playerOdds.push(1);
- 
-             let event = evLst.getEvent("F1",id);
-             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                 evLst.addRaceEventFromAPI("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
-             }
-             else{
-                 evLst.addRaceEventFromAPI("F1","World F1 Competition",id,circuit,-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
-             }
+            let id = race.id;
+            let date = race.date;
+            let circuit = race.competition.name;
+            let circuitPhoto = race.circuit.image;
+            let playerOdds = []; for (let i=0; i<pilotsNames.length; ++i) playerOdds.push(1);
+            evLst.addRaceEventFromAPI("F1","World F1 Competition",id,date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
          }
         return true;
  
@@ -187,7 +162,6 @@ const NoTieEvent = require("../Models/NoTieEvent");
      if (json.errors.length != 0) {
          console.error("Errors found in json response");
          console.log(json.errors)
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
          return false;
      }
      else{
@@ -209,30 +183,19 @@ const NoTieEvent = require("../Models/NoTieEvent");
      if (nbaJson.errors.length != 0) {
          console.error("Errors found in json response");
          console.log(nbaJson.errors)
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
          return false;
      }
      else{
          for (let game of nbaJson.response){
              if (game.status.short == "NS"){
-                 let id = game.id;
-                 let date = game.date;
-                 let league = "NBA";
-                 let team1 = game.teams.home.name;
-                 let team2 = game.teams.away.name;
-                 let logo1 = game.teams.home.logo;
-                 let logo2 = game.teams.away.logo;
- 
- 
-                 let event = evLst.getEvent("BSK",id);
-                 if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                     evLst.addNoTieEventFromAPI("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1);
-                 }
-                 else{
-                     evLst.addNoTieEventFromAPI("BSK",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1);
-                 }
- 
- 
+                let id = game.id;
+                let date = game.date;
+                let league = "NBA";
+                let team1 = game.teams.home.name;
+                let team2 = game.teams.away.name;
+                let logo1 = game.teams.home.logo;
+                let logo2 = game.teams.away.logo;
+                evLst.addNoTieEventFromAPI("BSK",league,id,date,team1,team2,logo1,logo2,1,1)
              }
          }
          return true;
@@ -248,7 +211,6 @@ const NoTieEvent = require("../Models/NoTieEvent");
          console.error("Errors found in json response");
          console.log(json.errors)
          return false;
-         //json.errors.map(x=> console.error(JSON.stringify(x)));
      }
      else{
          let id = json.response[0].id;

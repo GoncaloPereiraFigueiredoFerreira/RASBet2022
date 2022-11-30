@@ -1,14 +1,13 @@
 
     export class SportEvent{
-        Sport: string;
-        League: string;
-        Id: string;
-        Description: string;
-        Result: number;
-        State: string;
-        DateTime: string;
-        SuperOdds: boolean;
-        description: any;
+        private Sport: string;
+        private League: string;
+        private Id: string;
+        private Description: string;
+        private Result: number;
+        private State: string;
+        private DateTime: string;
+        private SuperOdds: boolean;
         /**
          * @param {string} sport Name of the sport
          * @param {string} league Name of the league
@@ -34,8 +33,8 @@
          * @param {number} result Result of the event
          * @param {string} description New description the event
          */
-        updateWinner(result:number,description:string){
-            this.description = description;
+        updateWinner(result:number,description:string):void{
+            this.Description = description;
             this.Result = result;
             this.State = "FIN";
         }
@@ -136,4 +135,4 @@
 
     }
 
-module.exports=SportEvent;
+module.exports = SportEvent;

@@ -43,7 +43,7 @@ export class DBCommunication implements IDBCommunication{
      * @param {any} args list of arguments in the query
      * @returns error or result
      */
-    mysqlQuery(sql: string,args: any){
+    private mysqlQuery(sql: string,args: any){
         return new Promise((resolve,reject)=>{
             this.db.query(sql,args,(err: { code: any; },result: any)=>{
                 if(err){

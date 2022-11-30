@@ -8,6 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DBCommunication = void 0;
 const mysql = require('mysql');
 const fs = require('fs');
 const EventList = require('../Models/EventList');
@@ -564,4 +566,4 @@ class DBCommunication {
         });
     }
 }
-module.exports = DBCommunication;
+exports.DBCommunication = DBCommunication;

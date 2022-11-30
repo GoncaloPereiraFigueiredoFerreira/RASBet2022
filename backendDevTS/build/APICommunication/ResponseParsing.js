@@ -1,17 +1,14 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseNBAResultResp = exports.parseNBAResp = exports.parseF1ResultResp = exports.parseF1Resp = exports.parsePTFutResultResp = exports.parsePTFutResp = exports.parseFutResultResp = exports.parseFutResp = void 0;
 /**
  * @file ResponseParsing.js
  *
  * This module contains the functions that will parse the results from the API requests
  *
  */
-const EventList = require("../Models/EventList");
-const TieEvent = require("../Models/TieEvent");
-const RaceEvent = require("../Models/RaceEvent");
-const NoTieEvent = require("../Models/NoTieEvent");
-const evLst = EventList.getInstance();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseNBAResultResp = exports.parseNBAResp = exports.parseF1ResultResp = exports.parseF1Resp = exports.parsePTFutResultResp = exports.parsePTFutResp = exports.parseFutResultResp = exports.parseFutResp = void 0;
+const EventList_1 = require("../Models/EventList");
+const evLst = EventList_1.EventList.getInstance();
 /**
  * Function responsible for retrieving the information from the API response of a Football request
  * @param {JSON} json Json that contains the response from the API
@@ -32,13 +29,7 @@ function parseFutResp(json) {
             let team2 = match.teams.away.name;
             let logo1 = match.teams.home.logo;
             let logo2 = match.teams.away.logo;
-            let event = evLst.getEvent("FUT", id);
-            if (event != undefined && !(event instanceof RaceEvent) && !(event instanceof NoTieEvent) && !(event instanceof TieEvent)) {
-                evLst.addTieEventFromAPI("FUT", league, id, event.getDescription(), event.getResult(), event.getState(), date, team1, team2, logo1, logo2, 1, 1, 1);
-            }
-            else {
-                evLst.addTieEventFromAPI("FUT", league, id, team1 + "-" + team2, -1, "NODD", date, team1, team2, logo1, logo2, 1, 1, 1);
-            }
+            evLst.addTieEventFromAPI("FUT", league, id, date, team1, team2, logo1, logo2, 1, 1, 1);
         }
         return true;
     }
@@ -97,13 +88,7 @@ function parsePTFutResp(json) {
             else if (outcomes.name == "Draw")
                 sOddsTie = outcomes.price;
         }
-        let event = evLst.getEvent("FUTPT", id);
-        if (event != undefined && !(event instanceof RaceEvent) && !(event instanceof NoTieEvent) && !(event instanceof TieEvent)) {
-            evLst.addTieEventFromAPI("FUTPT", league, id, event.getDescription(), event.getResult(), event.getState(), date, team1, undefined, undefined, sOdds1, sOdds2, sOddsTie);
-        }
-        else {
-            evLst.addTieEventFromAPI("FUTPT", league, id, team1 + "-" + team2, -1, "NODD", date, team1, team2, undefined, undefined, sOdds1, sOdds2, sOddsTie);
-        }
+        evLst.addTieEventFromAPI("FUTPT", league, id, date, team1, team2, "", "", sOdds1, sOdds2, sOddsTie);
         //}
     }
     return true;
@@ -167,13 +152,7 @@ function parseF1Resp(racesJson, pilotsJson) {
             let playerOdds = [];
             for (let i = 0; i < pilotsNames.length; ++i)
                 playerOdds.push(1);
-            let event = evLst.getEvent("F1", id);
-            if (event != undefined && !(event instanceof RaceEvent) && !(event instanceof NoTieEvent) && !(event instanceof TieEvent)) {
-                evLst.addRaceEventFromAPI("F1", "World F1 Competition", id, event.getDescription(), event.getResult(), event.getState(), date, pilotsNames, pilotsPhotos, circuit, circuitPhoto, playerOdds);
-            }
-            else {
-                evLst.addRaceEventFromAPI("F1", "World F1 Competition", id, circuit, -1, "NODD", date, pilotsNames, pilotsPhotos, circuit, circuitPhoto, playerOdds);
-            }
+            evLst.addRaceEventFromAPI("F1", "World F1 Competition", id, date, pilotsNames, pilotsPhotos, circuit, circuitPhoto, playerOdds);
         }
         return true;
     }
@@ -221,13 +200,7 @@ function parseNBAResp(nbaJson) {
                 let team2 = game.teams.away.name;
                 let logo1 = game.teams.home.logo;
                 let logo2 = game.teams.away.logo;
-                let event = evLst.getEvent("BSK", id);
-                if (event != undefined && !(event instanceof RaceEvent) && !(event instanceof NoTieEvent) && !(event instanceof TieEvent)) {
-                    evLst.addNoTieEventFromAPI("BSK", league, id, event.getDescription(), event.getResult(), event.getState(), date, team1, team2, logo1, logo2, 1, 1);
-                }
-                else {
-                    evLst.addNoTieEventFromAPI("BSK", league, id, team1 + "-" + team2, -1, "NODD", date, team1, team2, logo1, logo2, 1, 1);
-                }
+                evLst.addNoTieEventFromAPI("BSK", league, id, date, team1, team2, logo1, logo2, 1, 1);
             }
         }
         return true;

@@ -6,8 +6,8 @@
  */
 
 /// Required Modules
-const axios       = require('axios');
-const fs          = require('fs');
+import axios from 'axios';
+import fs from 'fs';
 const cnf         = require('config');
 import getRequests = require("./Requests");
 import parser      = require("./ResponseParsing");
@@ -18,7 +18,6 @@ const API_AUTH_KEY = cnf.get("API_AUTH_KEY");
 
 /// Path where the json response files will be stored
 const rspPath = cnf.get("responsePath");
-// TODO: Should check if path actually exists
 
 /**
  * Function responsible for sending a http request
@@ -34,7 +33,7 @@ const rspPath = cnf.get("responsePath");
             console.error("Error found in the request response.\n")
             reject();
           }
-          else{
+          else{      
             callback(response.data);
             resolve();
           }})
@@ -60,7 +59,7 @@ const rspPath = cnf.get("responsePath");
             makeRequest(req,(json:any)=>{
                 let noErrors = parser.parseFutResp(json);
                 if (!existsFile && noErrors) fs.writeFile(futpath, JSON.stringify(json.data), { flag: 'w+' }, () =>{});
-            }).catch((error)=>console.log("Error in footbal events fetch. Startup: ", startUp));
+            }).catch((error)=>console.log("Error in footbal events fetch. Startup: ", startUp, "\nErrors:",error));
         }
         else
         { 
@@ -106,7 +105,7 @@ function fetchF1Events(startUp:boolean){
         makeRequest(req,(json:any) =>{
           fetchF1Events2(startUp,json);
           if (!existsFile) fs.writeFile(f1Racespath, JSON.stringify(json), { flag: 'w+' }, () =>{});
-        }).catch((error)=>console.log("Error in f1 events fetch. Startup: ", startUp));;
+        }).catch((error)=>console.log("Error in f1 events fetch. Startup: ", startUp));
     }
     else{
         let json = JSON.parse(fs.readFileSync(f1Racespath,"utf-8"));
