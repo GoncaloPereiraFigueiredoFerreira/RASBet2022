@@ -30,8 +30,8 @@ export default function SemEmpate({evento,sportid}){
   }
 
 	return(
-		 <div class="bet-element">
-            <div class="drawmatch">
+		 <div className="bet-element">
+            <div className="drawmatch">
               <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
               <div>
                 <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
@@ -39,7 +39,7 @@ export default function SemEmpate({evento,sportid}){
               </div>
               <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
             </div>
-            <div class="drawmatchodds">
+            <div className="drawmatchodds">
 	            <Form onSubmit={handleSubmit}>
 	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
 	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>

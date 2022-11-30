@@ -11,7 +11,7 @@ import Root,{ loader as rootLoader,action as rootAction} from './routes/root.jsx
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+
     <App/>
-  </React.StrictMode>
+
 );

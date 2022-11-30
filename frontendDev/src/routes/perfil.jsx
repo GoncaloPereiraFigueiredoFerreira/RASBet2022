@@ -30,7 +30,7 @@ export default function Perfil(props){
 	//if(!perfil){return navigate("/login");}
 	return(
 	 <>
-      <div className = "box" style={{'margin':'25%','margin-top':'2vh','padding-top':'3vh'}}>
+      <div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
         <div className = "loginbox">
           <div className='bemvindo'>
             <p>Perfil</p>
@@ -43,7 +43,7 @@ export default function Perfil(props){
           <p>Morada:{perfil.Morada}</p>
           <p>Telemovel:{perfil.Telemovel}</p>
 
-          <button className = "button" type="submit" style={{'display': 'flex','justify-content': 'center','align-items': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
+          <button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
         </div>
       </div>
     </>

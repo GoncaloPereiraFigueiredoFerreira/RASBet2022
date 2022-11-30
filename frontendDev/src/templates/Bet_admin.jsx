@@ -56,7 +56,7 @@ function Aux({evento,sport}){
 		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>:null}
 		            </div>
 		            <div className="drawmatchodds">
-		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Cancelar Aposta</button>
+		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);/*window.location.reload(false);*/}}}>Cancelar Aposta</button>
 		              <div>
 		              <Form onSubmit={handleSubmit}>
 		              	<input type="text" style={{"margin":"10px"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>

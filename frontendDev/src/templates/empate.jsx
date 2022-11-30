@@ -13,9 +13,9 @@ export default function Empate({evento,addAposta,escolhas}){
 		              <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		            </div>
 		            <div className="drawmatchodds">
-		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>
-		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(2))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2]}</button>
-		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(1))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1]}</button>
+		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
+		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(2))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2].toFixed(2)}</button>
+		              <button style={{"margin":"15px","backgroundColor":(escolhas.includes(1))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
 		            </div>
 	          	</div>
 	);
