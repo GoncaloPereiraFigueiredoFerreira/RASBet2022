@@ -35,8 +35,8 @@ export default function Race({evento,sportid}){
 
 
   return(
-  		<div class="bet-element">
-            <div class="racematch">
+  		<div className="bet-element">
+            <div className="racematch">
               <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px"}}/>
               <div>
                 <p>{evento.Liga}</p>
@@ -44,9 +44,9 @@ export default function Race({evento,sportid}){
               </div>
             </div>
           <Form onSubmit={handleSubmit}>
-            <div class="dropdown">
+            <div className="dropdown">
               <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>
-              <div class="dropdown-content">
+              <div className="dropdown-content">
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div key={ind.toString() + evento.Liga}>
                     <img src={evento.Logos[ind]} style={{"height":"10vh"}} />

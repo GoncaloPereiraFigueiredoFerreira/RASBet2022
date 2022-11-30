@@ -56,7 +56,7 @@ export default function Root() {
         <nav>
           <ul>
             <li>
-              <img src='/logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'3vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
+              <img src='/logo.png' className = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'3vh',"marginTop":"1vh","marginLeft":"1vh","backgroundColor":"darkgreen"}}/>
               <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
             </li>
             <li>
@@ -85,8 +85,8 @@ export default function Root() {
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='/perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
-              <div class="dropdown-content">
+              <img src='/perfil.png' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
+              <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
                 <Link to={`histA/${token}`}>Histórico Apostas</Link>
