@@ -1,13 +1,14 @@
 const eventList = require("./Models/EventList");
 const evLst = eventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication")
-const dbComms1 = require("./DBCommunication/DBCommunication");
-const dbComms = new dbComms1();
+import {DBCommunication} from "./DBCommunication/DBCommunication";
+const dbComms = new DBCommunication();
 const e = require("express");
 const sessionHandler = require("./SessionHandler").getInstance();
 const notifcationCenter = require("./NotificationCenter");
 const { sendStatus } = require("express/lib/response");
 
+import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBCommunication/DBclasses';
 
 function dummyFunction(request:any,response:any){
     response.status(200).send("Dummy here! But connection worked!")
@@ -19,8 +20,11 @@ function dummyFunction(request:any,response:any){
  */
 function registerFunction(request:any,response:any){
 
-    dbComms.registerOnDb(request.body).then(()=>{
-        let token=sessionHandler.addUser(request.body.Email,'apostador')
+    let apostador = new Apostador(request.body)
+    apostador.Balance=0
+    
+    dbComms.registerOnDb(apostador).then(()=>{
+        let token=sessionHandler.addUser(apostador.Email,'apostador')
         response.status(200).send({"Token":token})
     }).catch((message:any)=>{
         response.status(400).send(message)
@@ -33,13 +37,17 @@ function registerFunction(request:any,response:any){
  * Function that deals with a http request to make a transaction 
  */
 function transactionFunction(request:any,response:any){
-    let token = request.body.ApostadorID;
-    let user = sessionHandler.verifyUser(request.body.ApostadorID);
+
+    let transacao = new Transacao(request.body)
+
+    let token = transacao.ApostadorID;
+    let user = sessionHandler.verifyUser(transacao.ApostadorID);
+
     if(user[0] && user[1]=='apostador'){
-        request.body.ApostadorID = user[0]
-        dbComms.transactionOnDb(request.body).then(()=>{
+        transacao.ApostadorID = user[0]
+        dbComms.transactionOnDb(transacao).then(()=>{
             return dbComms.walletOnDb(user[0])
-        }).then((message:any)=>{
+        }).then((message:number)=>{
             sessionHandler.sendNotification(token,{'Balance':message});
             response.sendStatus(200);
         }).catch((message:any)=>{
@@ -57,10 +65,12 @@ function transactionFunction(request:any,response:any){
  */
 function loginFunction(request:any,response:any){
     
-    
-    dbComms.loginOnDb(request.body.Email,request.body.PlvPasse).then((message:any)=>{
+    let Email= request.body.Email
+    let PlvPasse= request.body.PlvPasse
+
+    dbComms.loginOnDb(Email,PlvPasse).then((message:any)=>{
         
-        message['Token']=sessionHandler.addUser(request.body.Email,message.FRole)
+        message['Token']=sessionHandler.addUser(Email,message.FRole)
         response.status(200).send(message)
 
     }).catch((message:any)=>{
@@ -74,18 +84,22 @@ function loginFunction(request:any,response:any){
  * Function that deals with a http request to register a bet
  */
 function registerBetFunction(request:any,response:any){
-    let list:object[]=[]
+
+    let list:Evento[]=[]
+    let aposta = new Aposta(request.body.Aposta)
+    let Eventos = request.body.Eventos
+
     for(let i = 0 ; i< request.body.Eventos.length; i++){
-        list.push(evLst.toDb(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID))
+        list.push(new Evento(evLst.toDb(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID)))
     }
-    let answer
-    let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID)
-    let token = request.body.Aposta.ApostadorID;
+    
+    let user = sessionHandler.verifyUser(aposta.ApostadorID)
+    let token = aposta.ApostadorID;
     if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
         
-        request.body.Aposta.ApostadorID= user[0]
+        aposta.ApostadorID= user[0]
         
-        dbComms.usedCodOnDb(request.body.Aposta.ApostadorID,request.body.Aposta.Codigo).then((message:any)=>{
+        dbComms.usedCodOnDb(aposta.ApostadorID,aposta.Codigo).then((message:any)=>{
            
             if(message.Res=="Sim"){ 
               
@@ -94,13 +108,13 @@ function registerBetFunction(request:any,response:any){
             return dbComms.registerEventOnDb(list)
         }).then(()=>{
             
-            return  dbComms.registerBetOnDb(request.body.Aposta,request.body.Eventos,request.body.Aposta.Codigo)
-        }).then((message:any)=>{
+            return  dbComms.registerBetOnDb(aposta,Eventos,aposta.Codigo)
+        }).then(()=>{
             return dbComms.walletOnDb(user[0])
         }).then((balanco:number)=>{
                  
             for(let i = 0 ; i< request.body.Eventos.length; i++){
-                evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,request.body.Aposta.Montante,request.body.Eventos[i].Escolha);
+                evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,aposta.Montante,request.body.Eventos[i].Escolha);
             }
             sessionHandler.sendNotification(token,{"Balance":balanco});
             response.sendStatus(200);
@@ -161,12 +175,15 @@ function editProfileFunction(request:any,response:any){
  */
 function closeEventFunction(request:any,response:any){
 
+    let EventoID= request.body.Evento.EventoID
+    let Desporto= request.body.Evento.Desporto
+
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
-        dbComms.closeEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto).then((message:any)=>{
+        dbComms.closeEventOnDb(EventoID,Desporto).then((message:any)=>{
            
-            evLst.closeEvent(request.body.Evento.Desporto,request.body.Evento.EventoID);
+            evLst.closeEvent(Desporto,EventoID);
             
             for(let tuple of message.toNotify){
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
@@ -175,12 +192,21 @@ function closeEventFunction(request:any,response:any){
 
                 // Notify wallet
                 let token = sessionHandler.getToken(tuple[0]);
-                dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+             
+                return dbComms.walletOnDb(tuple[0]).then((info:number)=>{
+                   
+                    sessionHandler.sendNotification(token,{"Balance":info});
+                }).catch((e)=>{
+                    
+                    return Promise.reject(e)
+                });
             }
             response.status(200).send({'Res':message.Res})
             
         }).catch((message:any)=>{
+            
             response.status(400).send(message)
+
         }) 
     }
     else{
@@ -192,10 +218,16 @@ function closeEventFunction(request:any,response:any){
  * Function that deals with a http request to finalize an event
  */
 function finEventFunction(request:any,response:any){
+
+    let EventoID = request.body.Evento.EventoID
+    let Desporto = request.body.Evento.Desporto
+    let Resultado = request.body.Evento.Resultado
+    let Descricao = 'nova descricao'
+
     let user = sessionHandler.verifyUser(request.body.Token)
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
-        dbComms.finEventOnDb(request.body.Evento.EventoID,request.body.Evento.Desporto,request.body.Evento.Resultado,"descricao mudada").then((message:any)=>{
+        dbComms.finEventOnDb(EventoID,Desporto,Resultado,Descricao).then((message:any)=>{
             for(let tuple of message.toNotify){
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                 //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
@@ -221,9 +253,9 @@ function finEventFunction(request:any,response:any){
  */
 function addPromocaoFunction(request:any,response:any){
     let user = sessionHandler.verifyUser(request.body.Token)
-    
+    let promocao = new Promocao(request.body.Promocao)
     if(user[0] && user[1]=='Admin'){
-        dbComms.addPromocaoOnDb(request.body.Promocao).then((message:any)=>{
+        dbComms.addPromocaoOnDb(promocao).then((message:any)=>{
             response.status(200).send(message)
         }).catch((message:any)=>{
             response.status(400).send(message)
@@ -260,7 +292,7 @@ function getpromocaoFunction(request:any,response:any){
     
     if(user[0] && user[1]=='Admin'){
         
-        dbComms.getpromocaoOnDb().then((message:any)=>{
+        dbComms.getPromocaoOnDb().then((message:any)=>{
             response.status(200).send(message)
         }).catch((message:any)=>{
             response.status(400).send(message)
