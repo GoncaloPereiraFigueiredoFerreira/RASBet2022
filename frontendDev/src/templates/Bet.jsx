@@ -1,6 +1,9 @@
+import {useState} from "react"
+
 import Race from "./race"
 import Empate from "./empate"
 import SemEmpate from "./sem_empate"
+import NPags from "./NPags"
 
 function aux(evento,addAposta,ind,escolhas){
 	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
@@ -22,7 +25,7 @@ function check(filter,evento){
 }
 
 export default function Bet(props){
-	
+
 	function selecionados(evento){
 		let ret;
 
@@ -36,5 +39,16 @@ export default function Bet(props){
 		return ret
 	}
 
-	return (<>{props.data.map((evento,ind)=>((check(props.filter,evento))?aux(evento,props.addBet,ind,selecionados(evento)):null))}</>);
+	const elem = 4;
+	const [page,setPage] = useState(0);
+
+
+	const filter = props.data.filter((evento)=>(check(props.filter,evento))); 
+	const array = filter.slice(page * elem,(page+1) * (elem));
+
+	return (
+		<>
+			{array.map((evento,ind)=>(aux(evento,props.addBet,ind,selecionados(evento))))}
+			<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
+		</>);
 }

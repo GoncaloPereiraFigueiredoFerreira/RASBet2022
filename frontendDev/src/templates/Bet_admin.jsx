@@ -1,6 +1,9 @@
+import {useState} from "react"
+
 import axios from "axios"
 import {getToken,parseDate} from "../utils"
 import {Form} from "react-router-dom"
+import NPags from "./NPags"
 
 async function cancelar_aposta(evento,sport){
 	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId,Desporto:sport}};
@@ -56,7 +59,7 @@ function Aux({evento,sport}){
 		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>:null}
 		            </div>
 		            <div className="drawmatchodds">
-		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);/*window.location.reload(false);*/}}}>Cancelar Aposta</button>
+		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Cancelar Aposta</button>
 		              <div>
 		              <Form onSubmit={handleSubmit}>
 		              	<input type="text" style={{"margin":"10px"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
@@ -83,5 +86,15 @@ function check(filter,evento){
 
 
 export default function Bet(props){
-	return(<>{props.data.map((evento,ind)=>((check(props.filter,evento))?<Aux evento={evento} sport={props.sport}key={ind.toString()}/>:null))}</>);
+	const elem = 4;
+	const [page,setPage] = useState(0);
+
+	const filter = props.data.filter((evento)=>(check(props.filter,evento))); 
+	const array = filter.slice(page * elem,(page+1) * (elem));
+
+	return(
+		<>
+		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport}key={ind.toString()}/>))}
+		<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
+		</>);
 }

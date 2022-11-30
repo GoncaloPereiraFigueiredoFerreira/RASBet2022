@@ -209,10 +209,14 @@ export default function Sport({set}){
 			setApostas(napostas);			
 		}
 
+
 		return(
 			<>
 				{sidebar()}
 				<div className="betpage">
+					<div>
+						<p>{()=>{let m = [];for(let i = 0;(i < sport.size /40);i++){m.push(i)};return m;}}</p>
+					</div>
 					<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state}/>
 				</div>
 				
