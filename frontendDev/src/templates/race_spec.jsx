@@ -23,7 +23,7 @@ export default function Race({evento,sportid}){
 
   function handleChange({target}){
     var aux = input;
-    input.Odds[parseInt(target.name)] = target.value;
+    input.Odds[parseInt(target.name)] = parseInt(target.value);
     input = input;
     console.log(input);
   } 
