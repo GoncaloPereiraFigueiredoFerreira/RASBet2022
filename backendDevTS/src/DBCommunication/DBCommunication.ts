@@ -49,6 +49,12 @@ export class DBCommunication implements IDBCommunication{
         return new Promise((resolve,reject)=>{
             this.db.query(sql,args,(err: { code: any; },result: any)=>{
                 if(err){
+                    if(err.code=='ER_DUP_ENTRY'){
+                        reject({'error':'Valor(es) inserido(s) não permitido(s)'})
+                    }
+                    else if(err.code=='ER_BAD_NULL_ERROR'){
+                        reject({'error':'Certifique-se que os campos estão todos preenchidos'})
+                    }
                     reject({'error':err.code})
                 }
                 else{
