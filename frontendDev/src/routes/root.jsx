@@ -21,7 +21,7 @@ export default function Root() {
         const parsedData = JSON.parse(event.data);
         console.log(parsedData);
 
-        if(parsedData.Balance){
+        if(parsedData.Balance !== undefined){
           setMy({Valor:parsedData.Balance});
           set(parsedData.Balance);
         }
