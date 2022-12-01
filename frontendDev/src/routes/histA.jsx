@@ -29,14 +29,14 @@ export default function HistA() {
           <div className='bemvindo'>
             <p>Histórico de Apostas</p>
           </div>
-          <table>
+          <table style={{"fontSize":"calc(5px + 0.5vw)"}}>
             <tr>
-              <th style={{'fontSize':'large'}}>Tipo</th>
-              <th style={{'fontSize':'large'}}>Campeonato:Jogo</th>
-              <th style={{'fontSize':'large'}}>Montante</th>
-              <th style={{'fontSize':'large'}}>Data</th>
-              <th style={{'fontSize':'large'}}>Estado</th>
-              <th style={{'fontSize':'large'}}>Odd</th>
+              <th>Tipo</th>
+              <th>Campeonato:Jogo</th>
+              <th>Montante</th>
+              <th>Data</th>
+              <th>Estado</th>
+              <th>Odd</th>
             </tr>
           {list.map((evento)=>(
 

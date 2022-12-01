@@ -52,7 +52,7 @@ export default function Root() {
 
   const width = window.innerWidth;
   
-  if(width>1400){
+  if(width>1000){
    return (
     <>
       <header>
@@ -118,39 +118,38 @@ export default function Root() {
     </>
   );   
   }
-  else if(width>1000){
+  else if(width<1000){
     return (
      <>
        <header>
          <nav>
            <ul>
-             <li>
+           <li>
                <img src='/logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'5vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
                <p style={{'display':'inline','width':'fit-content',"color":"gold",'text-align': 'center','vertical-align': 'middle'}}> RASBet</p>        
              </li>
-             <li>
-               <Link to='/sport/FUT'>
-               <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
-               Futebol
-               </Link>
-             </li>
-             <li>
-               <Link to='/sport/FUTPT'>
-               <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
-               FutebolPT
-               </Link>
-             </li>
-             <li>
-               <Link to='/sport/F1'>
-               <img src='/formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
-               Formula 1
-               </Link>
-             </li>
-             <li>
-               <Link to='/sport/BSK'>
-               <img src='/basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
-               Basquetebol</Link>
-             </li>
+
+            <div className="dropdown" style={{"float":"left"}}>
+                <div className="dropbtn">Desportos</div>
+                <div class="dropdown-content">
+                  <Link to={`/sport/FUT`}>               
+                    <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    Futebol
+                  </Link>
+                  <Link to={`/sport/FUTPT`}>               
+                    <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    FutebolPT
+                  </Link>
+                  <Link to={`/sport/F1`}>               
+                    <img src='/formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    Formula 1
+                  </Link>                  
+                  <Link to={`/sport/FUTBSK`}>               
+                    <img src='/basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    Basquetebol
+                  </Link>
+                </div>
+              </div>
  
              {(getRole() == "apostador")?
              <div className="dropdown">

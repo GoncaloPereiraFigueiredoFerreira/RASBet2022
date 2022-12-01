@@ -13,6 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: calc(10px + 0.5vw);
 }
 
 code {
@@ -31,7 +32,6 @@ body {
 textarea,
 input,
 button {
-  font-size: 1rem;
   font-family: inherit;
   border: none;
   border-radius: 8px;
@@ -117,6 +117,7 @@ li a {
   padding: 1vh 2vh;
   height: 7vh;
   text-decoration: none;
+  
 }
 
 li a:hover{
@@ -128,12 +129,19 @@ li a:hover{
 
 /* Style The Dropdown Button */
 .dropbtn {
-  background-color: #4CAF50;
+  display: block;
+  color: black;
+  text-align: center;
+  font-size:large; 
+  padding: 1vh 2vh;
+  height: 7vh;
+  text-decoration: none;
+  vertical-align: middle ;
+}
+
+.dropbtn:hover{
+  background-color: #333;
   color: white;
-  padding: 1vh;
-  font-size: 1vh;
-  border: none;
-  cursor: pointer;
 }
 
 /* The container <div> - needed to position the dropdown content */
@@ -161,7 +169,6 @@ li a:hover{
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-  
 }
 
 .dropdown-content button {
@@ -169,7 +176,6 @@ li a:hover{
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-  
 }
 
 /* Change color of dropdown links on hover */
@@ -242,6 +248,7 @@ li a:hover{
 
 .bet-element img{
   height: 7vh;
+
 }
 
 .drawmatch{
@@ -253,12 +260,13 @@ li a:hover{
   justify-content: space-between;
 }
 
+
 @media only screen and (min-width: 500px) {
   .bet-element{
     display: flex;
     margin:2vh;
-    margin-right: 3vh;
-    margin-left: 3vh;
+    margin-right: 2vh;
+    margin-left: 2vh;
     padding: 10px;
     background-color: white;
     border-radius: 10px;
@@ -270,8 +278,8 @@ li a:hover{
     display: flex;
     flex-direction: column;
     margin:2vh;
-    margin-right: 3vh;
-    margin-left: 3vh;
+    margin-right: 10px;
+    margin-left: 10px;
     padding: 10px;
     background-color: white;
     border-radius: 10px;
@@ -282,7 +290,7 @@ li a:hover{
 
 .drawmatchodds{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   float: right;
   margin: 0;
   margin-right: 2vh;
@@ -295,7 +303,6 @@ li a:hover{
   margin-left: 5%;
   margin-right: auto;
   float:left;
-
 }
 
 .betbox{
@@ -306,15 +313,14 @@ li a:hover{
   margin-right: 5%;
   margin-left: 0%;
 
-  /*padding-right: 1vh;
-  padding-left: 1vh;*/
 
   background-color: white;
   border: 0px solid gray;
   border-radius: 20px;
 
   overflow: hidden;
-  height: auto;
+  height: fit-content;
+
 }
 
 
@@ -332,6 +338,23 @@ li a:hover{
   background-color: darkgreen; /* Black background with opacity */
   z-index: 4; /* Specify a stack order in case you're using a different order for other elements */
   cursor:pointer; /* Add a pointer on hover */
+}
+
+#overlay-main {
+  position: absolute; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  flex-wrap: wrap;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  background-color: darkgreen; /* Black background with opacity */
+  z-index: 4; /* Specify a stack order in case you're using a different order for other elements */
+  cursor:pointer; /* Add a pointer on hover */
+
 }
 
 .competitions{
@@ -353,6 +376,7 @@ li a:hover{
   border: 1px solid lightgray;
   margin: 1vh;
   margin-bottom: 0;
+
 }
 
 
@@ -370,6 +394,7 @@ li a:hover{
   cursor:auto;
   width: 100%;
   margin-bottom: 2px;
+
 }
 
 .bet-type-button {
@@ -385,6 +410,8 @@ li a:hover{
   cursor:pointer;
   width: 50%;
   margin-bottom: 2px;
+
+  
 }
 
 table {
@@ -403,10 +430,9 @@ tr:nth-child(even) {
   box-shadow:none;
   color: black;
   text-align: center;
-  font-size: 16px;
   cursor:pointer;
-  width: 7vh;
-  margin-top: 30%;
-  margin-bottom: 30%;
+  width: fit-content;
+  height: fit-content;
+  margin: auto ;
 
 }

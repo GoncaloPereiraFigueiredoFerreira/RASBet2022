@@ -65,7 +65,7 @@
 }
 
 .bemvindo{
-    font-size:x-large;
+    font-size: calc(12px + 1vw);
 }
 
 .birthdate{
