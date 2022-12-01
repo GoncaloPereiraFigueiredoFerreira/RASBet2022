@@ -56,11 +56,11 @@ export class Aposta{
     Codigo: string;
     DateAp: string;
 
-    constructor(aposta:{ ApostadorID: string,Odd: number,Montante: number,Estado: "PEN"|"WON"|"LOST"|"CLS", Codigo: string}){
+    constructor(aposta:{ ApostadorID: string,Odd: number,Montante: number,Estado: "PEN"|"WON"|"LOST"|"CLS", Codigo: string, DataAp: string}){
         this.ApostadorID = aposta.ApostadorID
         this.Odd = aposta.Odd;
         this.Montante = aposta.Montante;
-        this.Estado = aposta.Estado;
+        this.Estado = 'PEN'
         this.Codigo = aposta.Codigo;
         this.DateAp = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
     }
