@@ -35,7 +35,7 @@ function Aux({evento,sport}){
 	var desc = "";
 	if(evento.Tipo == "RaceEvent") desc = `${evento.Liga}`;
 	else desc = `${evento.Participantes[0]} - ${evento.Participantes[1]}`
-	var input={token:getToken,sport:sport,EventoID:evento.EventoId};
+	var input={token:getToken(),sport:sport,EventoID:evento.EventoId};
 
 	function handleChange({target}){
 		input[target.name] = target.value;

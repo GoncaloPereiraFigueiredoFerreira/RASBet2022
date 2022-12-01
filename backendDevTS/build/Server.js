@@ -1,7 +1,8 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const bodyParser = require("body-parser");
-const reqHandler = require("./RequestHandler");
+const RequestHandler_1 = require("./RequestHandler");
 class Server {
     constructor() {
         this.port = 8080;
@@ -13,6 +14,7 @@ class Server {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
+        const reqHandler = new RequestHandler_1.RequestHandler();
         /// Init the event list
         reqHandler.initEventLst();
         ///Routing

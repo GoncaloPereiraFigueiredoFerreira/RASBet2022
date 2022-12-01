@@ -27,7 +27,7 @@ class SportEvent {
      * @param {string} description New description the event
      */
     updateWinner(result, description) {
-        this.description = description;
+        this.Description = description;
         this.Result = result;
         this.State = "FIN";
     }

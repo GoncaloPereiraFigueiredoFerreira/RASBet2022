@@ -8,7 +8,7 @@
 /// Required Modules
 import axios from 'axios';
 import fs from 'fs';
-const cnf         = require('config');
+const cnf          = require('config');
 import getRequests = require("./Requests");
 import parser      = require("./ResponseParsing");
 

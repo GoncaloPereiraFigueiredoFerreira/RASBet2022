@@ -59,6 +59,7 @@ class RaceEvent extends SportEvent {
         photos.push(this.CircuitPht);
         return {
             "Tipo": "RaceEvent",
+            "Estado": this.State,
             "EventoId": this.Id,
             "Liga": this.Circuit,
             "Participantes": this.Pilots,

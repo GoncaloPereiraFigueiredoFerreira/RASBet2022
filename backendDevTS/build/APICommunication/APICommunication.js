@@ -65,7 +65,6 @@ function fetchFootballEvents(startUp) {
         let existsFile = fs_1.default.existsSync(futpath);
         if (!existsFile || (configFlag && startUp) || !startUp) {
             let req = getRequests.genFutRequest(API_AUTH_KEY, futLeagueDic[league], 2022);
-            console.log(req);
             makeRequest(req, (json) => {
                 let noErrors = parser.parseFutResp(json);
                 if (!existsFile && noErrors)

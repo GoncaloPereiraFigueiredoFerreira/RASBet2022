@@ -1,7 +1,7 @@
 const sha1 = require('sha1');
 
 let instance:any = undefined;
-export class SessionHandler{
+export class SessionHandler implements ISessionHandler{
     sessions:  {[key: string]: {Email:string,Role:string, Gate:any}};
     
     constructor(){
@@ -18,7 +18,7 @@ export class SessionHandler{
         if (this.sessions[hash] != undefined){
             return ([this.sessions[hash]["Email"],this.sessions[hash]["Role"]]);}
         else {
-            return ("Hash no found")
+            return "Hash not found"
         }
     }
 
@@ -34,6 +34,11 @@ export class SessionHandler{
         return hash;
     }
 
+    /**
+     * 
+     * @param email String representation of a registered email
+     * @returns Returns the token for the given email
+     */
     getToken(email:string){
         for (let [key, value] of Object.entries(this.sessions)){
             if (value.Email == email){
@@ -43,17 +48,31 @@ export class SessionHandler{
         return "";
     }
 
+    /**
+     * Adds a communication gate to the session
+     * @param token Token of the user
+     * @param gate Gate for communication
+     */
     addGate(token:string,gate:any){
         
         this.sessions[token]["Gate"] = gate;
     }
 
+    /**
+     * Closes the connection to the user
+     * @param token Token
+     */
     closeConnection(token:string){
         
         //removes from token from sessions
         //delete this.sessions[token]
     }
 
+    /**
+     * Send a SSE to a user
+     * @param token Token of the user
+     * @param info Information to be sent
+     */
     sendNotification(token:string,info:object){
         
         if (this.sessions[token] != undefined){
@@ -62,6 +81,10 @@ export class SessionHandler{
         }
     }
 
+    /**
+     * 
+     * @returns Returns the instance of the Session handler
+     */
     static getInstance(){
         if (instance == undefined){
             instance = new SessionHandler();

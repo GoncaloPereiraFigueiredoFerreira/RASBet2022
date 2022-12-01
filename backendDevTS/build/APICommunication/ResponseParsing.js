@@ -17,7 +17,6 @@ function parseFutResp(json) {
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
         console.log(json.errors);
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
         return false;
     }
     else {
@@ -43,7 +42,6 @@ function parseFutResultResp(json) {
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
         console.log(json.errors);
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
         return false;
     }
     else {
@@ -137,7 +135,6 @@ function parseF1Resp(racesJson, pilotsJson) {
         console.log(racesJson.errors);
         console.log(pilotsJson.errors);
         return false;
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else {
         for (let pilot of pilotsJson.response) {
@@ -166,7 +163,6 @@ function parseF1ResultResp(json) {
     if (json.errors.length != 0) {
         console.error("Errors found in json response");
         console.log(json.errors);
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
         return false;
     }
     else {
@@ -187,7 +183,6 @@ function parseNBAResp(nbaJson) {
     if (nbaJson.errors.length != 0) {
         console.error("Errors found in json response");
         console.log(nbaJson.errors);
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
         return false;
     }
     else {
@@ -216,7 +211,6 @@ function parseNBAResultResp(json) {
         console.error("Errors found in json response");
         console.log(json.errors);
         return false;
-        //json.errors.map(x=> console.error(JSON.stringify(x)));
     }
     else {
         let id = json.response[0].id;

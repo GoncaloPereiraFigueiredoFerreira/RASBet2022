@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const reqHandler = require("./RequestHandler")
+import {RequestHandler} from "./RequestHandler"
+
 
 class Server{
     port = 8080;
@@ -17,6 +18,7 @@ class Server{
             );
             next();
         });
+        const reqHandler:IRequestHandler = new RequestHandler(); 
 
         /// Init the event list
         reqHandler.initEventLst();

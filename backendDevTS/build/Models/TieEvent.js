@@ -63,6 +63,7 @@ class TieEvent extends SportEvent {
     toJson() {
         return {
             "Tipo": "TieEvent",
+            "Estado": this.State,
             "EventoId": this.Id,
             "Liga": this.League,
             "Participantes": [this.Team1, this.Team2],

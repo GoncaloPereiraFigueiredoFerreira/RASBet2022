@@ -59,6 +59,7 @@ class NoTieEvent extends SportEvent {
     toJson() {
         return {
             "Tipo": "NoTieEvent",
+            "Estado": this.State,
             "EventoId": this.Id,
             "Liga": this.League,
             "Participantes": [this.Team1, this.Team2],

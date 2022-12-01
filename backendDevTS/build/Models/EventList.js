@@ -236,7 +236,7 @@ class EventList {
      * @returns Returns true if the supper odd was activated in the specific event
      */
     superOdds(sport, id, multiplier) {
-        if (this.eventList[sport][id] != undefined && !this.eventList[sport][id].isSuperOddsOn()) {
+        if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState == "BET" && !this.eventList[sport][id].isSuperOddsOn()) {
             this.eventList[sport][id].superOdds(multiplier);
             return true;
         }
