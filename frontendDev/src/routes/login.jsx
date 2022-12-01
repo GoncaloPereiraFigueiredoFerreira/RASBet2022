@@ -65,7 +65,7 @@ export default function Login({set,flag}) {
           <input type="text" name="Email" placeholder="Email" onChange={handleChange}/>
           <input type="password" name="PlvPasse" placeholder="Palavra-passe" onChange={handleChange}/>
           <button className = "button" type="submit">Login</button> 
-          {(error.error)?<p>{error.error}</p>:null}
+          {(error.error)?<p style={{"color":"red"}}>{error.error}</p>:null}
         </Form>
         <p>Não tem conta?</p>
         <a href='register'>Registe-se já!</a>

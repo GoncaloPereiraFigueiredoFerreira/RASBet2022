@@ -78,7 +78,7 @@ export default function Register({set,flag}) {
             <input type="password" id="password" name="PlvPasse" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="É necessário uma letra minúscula e maiúscula, um carácter especial um número e tamanho mínimo de 8 carácteres" placeholder='Palavra-passe'onChange={handleChange}/>
 
             <button className = "button" type="submit">Confirmar</button>
-            {(error.error)?<p>{error.error}</p>:null}
+            {(error.error)?<p style={{"color":"red"}}>{error.error}</p>:null}
           </Form>
         </div>
         <div className = "loginimg">

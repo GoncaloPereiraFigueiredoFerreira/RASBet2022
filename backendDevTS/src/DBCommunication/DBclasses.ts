@@ -44,7 +44,7 @@ export class Transacao{
         this.ApostadorID = transacao.ApostadorID;
         this.Valor = transacao.Valor;
         this.Tipo = transacao.Tipo;
-        this.DataTr = transacao.DataTr;
+        this.DataTr =`${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(11,19))}`
     }
 }
 
@@ -62,7 +62,7 @@ export class Aposta{
         this.Montante = aposta.Montante;
         this.Estado = 'PEN'
         this.Codigo = aposta.Codigo;
-        this.DateAp = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
+        this.DateAp = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(11,19))}`
     }
 }
 

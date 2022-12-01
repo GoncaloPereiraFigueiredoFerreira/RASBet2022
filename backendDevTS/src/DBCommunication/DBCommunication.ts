@@ -36,7 +36,9 @@ export class DBCommunication implements IDBCommunication{
             
     };
 
-    
+    private getToday(){
+        return `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(11,19))}`
+    }
 
     /**
      * @param {string} sql is a mysql query  
@@ -47,6 +49,12 @@ export class DBCommunication implements IDBCommunication{
         return new Promise((resolve,reject)=>{
             this.db.query(sql,args,(err: { code: any; },result: any)=>{
                 if(err){
+                    if(err.code=='ER_DUP_ENTRY'){
+                        reject({'error':'Valor(es) inserido(s) não permitido(s)'})
+                    }
+                    else if(err.code=='ER_BAD_NULL_ERROR'){
+                        reject({'error':'Certifique-se que os campos estão todos preenchidos'})
+                    }
                     reject({'error':err.code})
                 }
                 else{
@@ -333,10 +341,10 @@ export class DBCommunication implements IDBCommunication{
                                 return this.mysqlQuery('UPDATE Aposta SET Estado = "CLS" WHERE ID=?',message[i].ApostaID).then(()=>{
                                     return this.mysqlQuery('Select Montante,ApostadorID FROM Aposta WHERE ID=?',message[i].ApostaID)
                                 }).then((result:any)=>{
-                                
+                                    
                                     toNotify.push([result[0].ApostadorID,`A aposta com ID ${message[i].ApostaID} foi fechada`])
-                                    let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-                                    return this.transactionOnDb({"ApostadorID":result[0].ApostadorID,"Valor":(result[0].Montante),"Tipo":"Refund","DataTr":today})
+                                    
+                                    return this.transactionOnDb({"ApostadorID":result[0].ApostadorID,"Valor":(result[0].Montante),"Tipo":"Refund","DataTr":this.getToday()})
                                 }).catch((e)=>{return Promise.reject(e)})
                             }
                         }).catch((e)=>{return Promise.reject(e)})
@@ -345,7 +353,6 @@ export class DBCommunication implements IDBCommunication{
                 }
                 
             }).then(()=>{
-                
                 resolve({'Res':'evento closed','toNotify':toNotify})
             }).catch((message)=>{
                 reject(message)
@@ -382,8 +389,8 @@ export class DBCommunication implements IDBCommunication{
                                                     return this.mysqlQuery('Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                                 }).then((m:any)=>{
                                                     toNotify.push([m[0].ApostadorID,`Parabéns ganhou a aposta com ID ${mes[i].ApostaID}!!`])
-                                                    let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}`
-                                                    return this.transactionOnDb({"ApostadorID":m[0].ApostadorID,"Valor":(m[0].Montante)*(m[0].Odd),"Tipo":"Aposta_Ganha","DataTr":today})
+                                                    
+                                                    return this.transactionOnDb({"ApostadorID":m[0].ApostadorID,"Valor":(m[0].Montante)*(m[0].Odd),"Tipo":"Aposta_Ganha","DataTr":this.getToday()})
                                                 }).catch((e)=>{
                                                     return Promise.reject(e)
                                                 })
@@ -517,7 +524,7 @@ export class DBCommunication implements IDBCommunication{
     betHistoryOnDb(email: string){
         return new Promise((resolve,reject)=>{
             
-            this.mysqlQuery('SELECT * FROM Aposta WHERE ApostadorID=?',email).then(async(message:any)=>{
+            this.mysqlQuery('SELECT * FROM Aposta WHERE ApostadorID=? ORDER BY DateAp DESC',email).then(async(message:any)=>{
                 
                 for(let i =0 ; i<message.length;i++){
                     await this.mysqlQuery('SELECT Desporto,EventoID,Escolha FROM Aposta_Evento WHERE ApostaID=?',message[i].ID).then(async(data:any)=>{
@@ -535,7 +542,7 @@ export class DBCommunication implements IDBCommunication{
                     }).then((dados_jogos)=>{
                         message[i]['Jogos']=dados_jogos
                         if(dados_jogos.length>1){
-                            message[i]['Aridade']="Multipla"
+                            message[i]['Aridade']="Múltipla"
                         }
                         else message[i]['Aridade']="Simples"
                     }).catch((e)=>{
@@ -569,13 +576,15 @@ export class DBCommunication implements IDBCommunication{
      * @returns ids of events or error
      */
     startedEventOnDb(desporto: string){
-        let today = `${(new Date().toJSON().slice(0,10))} ${(new Date().toJSON().slice(12,19))}` 
+        let today = this.getToday()
+        console.log(`ola today -> ${today}`)
         return new Promise((resolve,reject)=>{
             let ids: any =[];
             this.mysqlQuery('SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"',[desporto,today]).then((result:any)=>{
                 for(let i =0;i < result.length;i++){
                     ids.push(result[i].ID)
                 }
+                console.log(ids)
                 resolve(ids)
             }).catch((e)=>{
                 reject(e)
