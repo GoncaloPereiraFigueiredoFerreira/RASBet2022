@@ -42,6 +42,9 @@ class DBCommunication {
         }));
     }
     ;
+    getToday() {
+        return `${(new Date().toJSON().slice(0, 10))} ${(new Date().toJSON().slice(11, 19))}`;
+    }
     /**
      * @param {string} sql is a mysql query
      * @param {any} args list of arguments in the query
@@ -319,8 +322,7 @@ class DBCommunication {
                                     return this.mysqlQuery('Select Montante,ApostadorID FROM Aposta WHERE ID=?', message[i].ApostaID);
                                 }).then((result) => {
                                     toNotify.push([result[0].ApostadorID, `A aposta com ID ${message[i].ApostaID} foi fechada`]);
-                                    let today = `${(new Date().toJSON().slice(0, 10))} ${(new Date().toJSON().slice(12, 19))}`;
-                                    return this.transactionOnDb({ "ApostadorID": result[0].ApostadorID, "Valor": (result[0].Montante), "Tipo": "Refund", "DataTr": today });
+                                    return this.transactionOnDb({ "ApostadorID": result[0].ApostadorID, "Valor": (result[0].Montante), "Tipo": "Refund", "DataTr": this.getToday() });
                                 }).catch((e) => { return Promise.reject(e); });
                             }
                         }).catch((e) => { return Promise.reject(e); });
@@ -359,8 +361,7 @@ class DBCommunication {
                                                     return this.mysqlQuery('Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?', mes[i].ApostaID);
                                                 }).then((m) => {
                                                     toNotify.push([m[0].ApostadorID, `Parabéns ganhou a aposta com ID ${mes[i].ApostaID}!!`]);
-                                                    let today = `${(new Date().toJSON().slice(0, 10))} ${(new Date().toJSON().slice(12, 19))}`;
-                                                    return this.transactionOnDb({ "ApostadorID": m[0].ApostadorID, "Valor": (m[0].Montante) * (m[0].Odd), "Tipo": "Aposta_Ganha", "DataTr": today });
+                                                    return this.transactionOnDb({ "ApostadorID": m[0].ApostadorID, "Valor": (m[0].Montante) * (m[0].Odd), "Tipo": "Aposta_Ganha", "DataTr": this.getToday() });
                                                 }).catch((e) => {
                                                     return Promise.reject(e);
                                                 });
@@ -486,7 +487,7 @@ class DBCommunication {
      */
     betHistoryOnDb(email) {
         return new Promise((resolve, reject) => {
-            this.mysqlQuery('SELECT * FROM Aposta WHERE ApostadorID=?', email).then((message) => __awaiter(this, void 0, void 0, function* () {
+            this.mysqlQuery('SELECT * FROM Aposta WHERE ApostadorID=? ORDER BY DateAp DESC', email).then((message) => __awaiter(this, void 0, void 0, function* () {
                 for (let i = 0; i < message.length; i++) {
                     yield this.mysqlQuery('SELECT Desporto,EventoID,Escolha FROM Aposta_Evento WHERE ApostaID=?', message[i].ID).then((data) => __awaiter(this, void 0, void 0, function* () {
                         let resposta = [];
@@ -502,7 +503,7 @@ class DBCommunication {
                     })).then((dados_jogos) => {
                         message[i]['Jogos'] = dados_jogos;
                         if (dados_jogos.length > 1) {
-                            message[i]['Aridade'] = "Multipla";
+                            message[i]['Aridade'] = "Múltipla";
                         }
                         else
                             message[i]['Aridade'] = "Simples";
@@ -535,13 +536,15 @@ class DBCommunication {
      * @returns ids of events or error
      */
     startedEventOnDb(desporto) {
-        let today = `${(new Date().toJSON().slice(0, 10))} ${(new Date().toJSON().slice(12, 19))}`;
+        let today = this.getToday();
+        console.log(`ola today -> ${today}`);
         return new Promise((resolve, reject) => {
             let ids = [];
             this.mysqlQuery('SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"', [desporto, today]).then((result) => {
                 for (let i = 0; i < result.length; i++) {
                     ids.push(result[i].ID);
                 }
+                console.log(ids);
                 resolve(ids);
             }).catch((e) => {
                 reject(e);
