@@ -184,7 +184,7 @@ export default function Sport({set}){
 			var data = {ApostadorID:getToken(),Codigo:input.codigo};
 			ret = await used_cod(data);
 			console.log("ret cod", ret);
-			if(ret.Res == "Nao"){input.check=true;}
+			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;setInput(ninput);}
 		}
 
 		function addBet(aposta){
