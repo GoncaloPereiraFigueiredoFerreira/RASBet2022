@@ -20,6 +20,10 @@ const sessionHandler = SessionHandler_1.SessionHandler.getInstance();
 const notifcationCenter = require("./NotificationCenter");
 const DBclasses_1 = require("./DBCommunication/DBclasses");
 class RequestHandler {
+    constructor() {
+        this.updateEvents = this.updateEvents.bind(this);
+        this.updateResults = this.updateResults.bind(this);
+    }
     dummyFunction(request, response) {
         response.status(200).send("Dummy here! But connection worked!");
     }
@@ -79,12 +83,12 @@ class RequestHandler {
         let list = [];
         let aposta = new DBclasses_1.Aposta(request.body.Aposta);
         let Eventos = request.body.Eventos;
-        for (let i = 0; i < request.body.Eventos.length; i++) {
-            list.push(new DBclasses_1.Evento(evLst.getEventDB(request.body.Eventos[i].Desporto, request.body.Eventos[i].EventoID)));
+        for (let i = 0; i < Eventos.length; i++) {
+            list.push(new DBclasses_1.Evento(evLst.getEventDB(Eventos[i].Desporto, Eventos[i].EventoID)));
         }
         let user = sessionHandler.verifyUser(aposta.ApostadorID);
         let token = aposta.ApostadorID;
-        if (user[0] && user[1] == 'apostador' && request.body.Eventos.length > 0) {
+        if (user[0] && user[1] == 'apostador' && Eventos.length > 0) {
             aposta.ApostadorID = user[0];
             dbComms.usedCodOnDb(aposta.ApostadorID, aposta.Codigo).then((message) => {
                 if (message.Res == "Sim") {
@@ -96,8 +100,8 @@ class RequestHandler {
             }).then(() => {
                 return dbComms.walletOnDb(user[0]);
             }).then((balanco) => {
-                for (let i = 0; i < request.body.Eventos.length; i++) {
-                    evLst.updateOddBet(request.body.Eventos[i].Desporto, request.body.Eventos[i].EventoID, aposta.Montante, request.body.Eventos[i].Escolha);
+                for (let i = 0; i < Eventos.length; i++) {
+                    evLst.updateOddBet(Eventos[i].Desporto, Eventos[i].EventoID, aposta.Montante, Eventos[i].Escolha);
                 }
                 sessionHandler.sendNotification(token, { "Balance": balanco });
                 response.sendStatus(200);
@@ -155,7 +159,7 @@ class RequestHandler {
         console.log(user);
         //mudar para admin
         if (user[0] && user[1] == 'Admin') {
-            dbComms.closeEventOnDb(EventoID, Desporto).then((message) => {
+            dbComms.closeEventOnDb(EventoID, Desporto).then((message) => __awaiter(this, void 0, void 0, function* () {
                 evLst.closeEvent(Desporto, EventoID);
                 for (let tuple of message.toNotify) {
                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
@@ -163,14 +167,14 @@ class RequestHandler {
                     //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                     // Notify wallet
                     let token = sessionHandler.getToken(tuple[0]);
-                    return dbComms.walletOnDb(tuple[0]).then((info) => {
+                    yield dbComms.walletOnDb(tuple[0]).then((info) => {
                         sessionHandler.sendNotification(token, { "Balance": info });
                     }).catch((e) => {
                         return Promise.reject(e);
                     });
                 }
                 response.status(200).send({ 'Res': message.Res });
-            }).catch((message) => {
+            })).catch((message) => {
                 response.status(400).send(message);
             });
         }

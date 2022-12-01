@@ -166,7 +166,7 @@ class EventList {
                 for (let i = 0; i < odds.length; i++) {
                     if (i != choice)
                         odds[i] += money * BETODDREL;
-                    else if (odds[i] > 1)
+                    else if (odds[i] > 1 + money * BETODDREL)
                         odds[i] -= money * BETODDREL;
                 }
                 this.eventList[sport][id].changeOdds(odds);
