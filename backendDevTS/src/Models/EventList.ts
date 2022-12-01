@@ -181,7 +181,7 @@ export class EventList implements IEventList{
                      odds = (this.eventList[sport][id] as RaceEvent | NoTieEvent | TieEvent).getOdds();
                      for (let i=0; i<odds.length;i++){
                          if (i != choice) odds[i]+=money*BETODDREL;
-                         else if (odds[i]>1) odds[i]-=money*BETODDREL;
+                         else if (odds[i]> 1 + money*BETODDREL) odds[i]-=money*BETODDREL;
                      }
                      (this.eventList[sport][id] as RaceEvent | NoTieEvent | TieEvent).changeOdds(odds);
                      return true;
@@ -346,10 +346,6 @@ export class EventList implements IEventList{
         else return null;
     }
         
-
-
-
-
 
      
      /**
