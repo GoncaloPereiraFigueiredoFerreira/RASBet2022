@@ -27,6 +27,12 @@ class EventList {
         }
         return instance;
     }
+    static getUpdateEventsInstance() {
+        if (instance == undefined) {
+            instance = new EventList();
+        }
+        return instance;
+    }
     /**
      * Adds a event to the event list where a draw is not a possible outcome
     * @param {string} sport Name of the sport

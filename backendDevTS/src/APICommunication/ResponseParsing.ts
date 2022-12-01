@@ -6,7 +6,7 @@
  */
 
 import {EventList} from "../Models/EventList";
-const evLst:IEventList = EventList.getInstance(); 
+const evLst:IUpdateEvents = EventList.getUpdateEventsInstance();
  
  /**
   * Function responsible for retrieving the information from the API response of a Football request 
@@ -169,7 +169,7 @@ const evLst:IEventList = EventList.getInstance();
          let pilotList = evLst.getParticipants("F1",id);
          let winner =  json.response[0].driver.name;
          let index = pilotList.indexOf(winner);
-         evLst.updateWinner("F1",id,index,evLst.getDescription("F1",id) + " Vencedor: "+winner);
+         evLst.updateWinner("F1",id,index,"Vencedor: "+winner);
          return true;
      }
  }

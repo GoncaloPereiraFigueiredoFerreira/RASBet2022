@@ -11,9 +11,9 @@ import { SportEvent } from "./SportEvent";
 const BETODDREL = 0.001;
  
  
-let instance: IEventList | undefined = undefined;
+let instance: IControlEvents | IUpdateEvents | undefined = undefined;
  
-export class EventList implements IEventList{
+export class EventList implements IControlEvents,IUpdateEvents{
      eventList: { [sport: string]: {[id: string]: SportEvent | NoTieEvent | RaceEvent | TieEvent }; };
      leagues: { [sport: string] : string[]};
  
@@ -28,12 +28,19 @@ export class EventList implements IEventList{
       * else returns the existing one
       * @returns Returns the singleton instance of this class
       */
-     static getInstance(): IEventList {
+     static getInstance(): IControlEvents  {
          if (instance == undefined){
              instance = new EventList();
          }
-         return instance;
+         return instance as IControlEvents;
      }
+
+     static getUpdateEventsInstance(): IUpdateEvents  {
+        if (instance == undefined){
+            instance = new EventList();
+        }
+        return instance as IUpdateEvents;
+    }
  
  
      /** 
