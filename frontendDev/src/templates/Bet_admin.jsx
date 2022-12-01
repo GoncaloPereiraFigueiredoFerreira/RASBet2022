@@ -47,22 +47,31 @@ function Aux({evento,sport}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
-		            	{(evento.Tipo=="RaceEvent")?<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px"}}></img>:null}
-		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>:null}
-		              <div>
-		              	<p>{desc}</p>
-		              	<p>{parseDate(evento.Data)}</p>
-		              </div>
-		              {(evento.Tipo!="RaceEvent")?<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>:null}
+
+
+		            	{(evento.Tipo=="RaceEvent")?<>            
+						<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
+            			<div>
+                			<p style={{'font-weight':'bold'}}>{evento.Liga}</p>
+                			<p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+           			 	</div>
+						</>:null}
+		              	{(evento.Tipo!="RaceEvent")?<>
+							<p style={{"margin":"0px",'font-weight':'bold'}}>{evento.Liga}</p>
+							<div style={{"display":"flex",'flex-direction':'row','float':'left'}}>
+								<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+								<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+								<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+							</div>
+							<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+					  	</>:null}
 		            </div>
 		            <div className="drawmatchodds">
-		              <button style={{"margin":"15px"}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Cancelar Aposta</button>
-		              <div>
-		              <Form onSubmit={handleSubmit}>
-		              	<input type="text" style={{"margin":"10px"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
-		              	<button style={{"margin":"15px"}} >Confirmar</button>
+		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flex-direction':'column','justify-content':'space-between'}}>
+						<p style={{"margin":"0",'float':'right','font-weight':'bold','font-size':'large','color':'red'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>x</p>
+						<input type="text" style={{"margin-bottom":"1vh","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
+						<button style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0'}}>Confirmar</button>
 		              </Form>
-		              </div>
 		            </div>
 	          	</div>
 	);

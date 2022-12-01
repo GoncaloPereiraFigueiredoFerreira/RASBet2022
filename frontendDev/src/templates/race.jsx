@@ -6,21 +6,38 @@ function test (part,odds){
 }
 
 export default function Race({evento,addAposta}){
+  function on() {
+    document.getElementById("overlay").style.display = "flex";
+  }
+  
+  function off() {
+    document.getElementById("overlay").style.display = "none";
+  }
+
   return(
   		<div class="bet-element" key={evento.EventoId.toString()}>
           <div class="racematch">
-            <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px"}}/>
+            <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
             <div>
-                <p>{evento.Liga}</p>
-                <p>{parseDate(evento.Data)}</p>
+                <p style={{'font-weight':'bold'}}>{evento.Liga}</p>
+                <p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
             </div>
           </div>
-        <div class="dropdown">
-          <button style={{"padding":"20px","justify-content":"center"}}>show odds</button>
-          <div class="dropdown-content">
-              {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button onClick={()=>(addAposta(parseBet(evento,ind)))}>{elem}</button>))}
-          </div>
-        </div>
+
+          <div id='overlay'>
+              <div style={{"display":"flex",'flex-wrap':'wrap'}}>
+                {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
+                  <div key={ind.toString() + evento.Liga} style={{"display":"flex",'flex-direction':'column'}}>
+                   
+                    {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button className="comp-button" style={{'width':'100%','border-radius':'0'}} onClick={()=>(addAposta(parseBet(evento,ind)))}> <img src={evento.Logos[ind]} style={{"height":"4vh"}}/> {elem}</button>))}
+                  </div>
+                
+                </>))}                
+              </div>
+              <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-right':'1vh','margin-bottom':'auto','margin-left':'auto'}} onClick={()=>(off())} type="button">Sair</button>
+            </div>
+
+            <button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>
       </div>
   );
 }

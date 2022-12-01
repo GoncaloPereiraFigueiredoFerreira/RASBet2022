@@ -80,6 +80,8 @@ header {
   left: 0;
   right: 0;
   height: 7vh;
+  z-index: 2;
+
 }
 
 header * {
@@ -162,6 +164,14 @@ li a:hover{
   
 }
 
+.dropdown-content button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  
+}
+
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
@@ -177,7 +187,7 @@ li a:hover{
 
 .mainpage{
   width: 100%;
-  height: 100%;
+  height: auto;
   display:flexbox;
   margin-top: 7vh;
   content: "";
@@ -188,7 +198,7 @@ li a:hover{
 
 .sidebar{
   width: 20%;
-  height: 100%;
+  height: auto;
   background-color: lightgray;
   color: black;
   display: block;
@@ -198,61 +208,86 @@ li a:hover{
 
 .betzone{
   width: 20%;
-  height: 100%;
+  height: auto;
   background-color: lightgray;
   color: black;
   display: block;
   float:left;
+
 }
 
 .betpage{
   width: 60%;
-  height: 100%;
+  height: auto;
   padding: 10px;
   background-color: lightgray;
   color: black;
   display: block;
   float:left;
-  overflow-y:auto;
+  overflow:visible;
 }
 
 .betpage-spec{
   width: 80%;
-  height: 100%;
+  height: auto;
   padding: 10px;
   background-color: lightgray;
   color: black;
   display: block;
   float:left;
-  overflow-y:auto;
+  overflow:visible;
 }
 
-.bet-element{
-  display: flex;
-  margin:2vh;
-  margin-right: 3vh;
-  margin-left: 3vh;
-  padding: 10px;
-  background-color: white;
-  border-radius: 10px;
-}
+
 
 .bet-element img{
-  height: 10vh;
+  height: 7vh;
 }
 
 .drawmatch{
-  float: right;
+  float: left;
   display: flex;
+  flex-direction:column;
   margin-right: 5%;
-  margin-left: auto;
+  margin: 0;
+  justify-content: space-between;
 }
+
+@media only screen and (min-width: 500px) {
+  .bet-element{
+    display: flex;
+    margin:2vh;
+    margin-right: 3vh;
+    margin-left: 3vh;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    justify-content: space-between;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .bet-element{
+    display: flex;
+    flex-direction: column;
+    margin:2vh;
+    margin-right: 3vh;
+    margin-left: 3vh;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    justify-content: space-between;
+  }
+}
+
 
 .drawmatchodds{
   display: flex;
+  justify-content: space-between;
   float: right;
-  margin-left: 5%;
-  margin-right: auto;
+  margin: 0;
+  margin-right: 2vh;
+
+  width: 30%;
 }
 
 .racematch{
@@ -280,23 +315,23 @@ li a:hover{
 
   overflow: hidden;
   height: auto;
-  /*position: sticky;*/
-  /*overflow-y:auto;*/
 }
 
 
 #overlay {
-  position: fixed;
-  display: none;
-  width: 100%;
-  height: 100%;
+  position: absolute; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  flex-wrap: wrap;
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 2;
-  cursor: pointer;
+  opacity: 0.9;
+  background-color: darkgreen; /* Black background with opacity */
+  z-index: 4; /* Specify a stack order in case you're using a different order for other elements */
+  cursor:pointer; /* Add a pointer on hover */
 }
 
 .competitions{
@@ -309,6 +344,7 @@ li a:hover{
   background-color: white;
   display: block;
   margin: 1vh;
+  overflow: hidden;
 
 }
 
@@ -322,7 +358,7 @@ li a:hover{
 
 .comp-button {
   background-color: white;
-  border-radius: 2vh;
+  border-radius: 0;
   border: 0 solid white;
   border-bottom: 2px solid gray;
   box-shadow:none;
@@ -346,7 +382,7 @@ li a:hover{
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  cursor:auto;
+  cursor:pointer;
   width: 50%;
   margin-bottom: 2px;
 }
@@ -358,4 +394,19 @@ table {
 
 tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.odd-button {
+  background-color: #FDDDC0;
+  border-radius: 1vh;
+  border: 0 solid white;
+  box-shadow:none;
+  color: black;
+  text-align: center;
+  font-size: 16px;
+  cursor:pointer;
+  width: 7vh;
+  margin-top: 30%;
+  margin-bottom: 30%;
+
 }

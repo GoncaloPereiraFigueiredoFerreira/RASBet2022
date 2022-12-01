@@ -30,23 +30,27 @@ export default function Empate({evento,sportid}){
   }
 
 	return(
-		 <div class="bet-element">
-            <div class="drawmatch">
-              <img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
-              <div>
-                <p>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-                <p>{parseDate(evento.Data)}</p>
-              </div>
-              <img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+		  <div class="bet-element">
+		    <div className="drawmatch">
+					<p style={{"margin":"0px",'font-weight':'bold'}}>{evento.Liga}</p>
+		      <div style={{"display":"flex",'flex-direction':'row','float':'left'}}>
+						<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+		        <p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+						<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+		      </div>
+					<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+		    </div>
+        <div class="drawmatchodds">
+	        <Form onSubmit={handleSubmit} style={{'display':'flex','flex-direction':'row'}}>
+            <div style={{'display':'flex','flex-direction':'column'}}>
+	          <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
+	          <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
+	          <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
+
             </div>
-            <div class="drawmatchodds">
-	            <Form onSubmit={handleSubmit}>
-	              <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="2" placeholder={`draw odd ${evento.Odds[2]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
-	              <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
-	              <button style={{"padding":"20px","justify-content":"center"}} type="submit">Submeter</button>  
-	            </Form>
-            </div>
-          </div> 
+ 	          <button style={{"height":"fit-content",'background-color':'orange','margin-top':'auto','margin-bottom':'0'}} type="submit">Submeter</button> 
+	        </Form>
+        </div>
+      </div> 
 	);
 }

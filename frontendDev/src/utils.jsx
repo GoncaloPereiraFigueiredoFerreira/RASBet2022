@@ -68,5 +68,5 @@ export function getDate_min(){
 
 
 export function parseDate(data){
-  return `'${data.slice(0,10)} ${data.slice(11,19)}'`
+  return `${data.slice(0,10)} ${data.slice(11,19)}`
 }

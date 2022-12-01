@@ -102,7 +102,7 @@ export default function Sport({set}){
 				Competições</p>
 			<div className="competitions">
 				{ligas.map((i,ind)=>(<button className='comp-button' 
-				style={{"border":"0px","backgroundColor":(filter.ligas.has(i)?"Red":"Grey")}} key={ind} 
+				style={{"border":"0px","backgroundColor":(filter.ligas.has(i)?"Lightgray":"White")}} key={ind} 
 				onClick={()=>{let nfilter={...filter};(nfilter.ligas.has(i))?nfilter.ligas.delete(i):nfilter.ligas.add(i);setFilter(nfilter)}}>{i}</button>))}
 			</div>
 	  </div>);
@@ -245,9 +245,9 @@ export default function Sport({set}){
 							<button style={{'margin-left':'5%','width':'30%','background-color':'red','color':'white'}} type="subit">Aplicar</button>
 						</Form>
 						<Form onSubmit={handleSubmit}>
-							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'width':'60%'}}/>
+							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
 							<p style={{'display':'inline','margin-left':'5%'}}>Cota: aqui</p>
-							<button style={{"margin":"3px",'width':'50%','margin-left':'20%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
+							<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
 						</Form>
 					</div>
 				</div>
@@ -286,17 +286,20 @@ export default function Sport({set}){
 				<div className="betzone" id="Rightbar">
 
 		            <div className="betbox" id="Multiplas">
+						<div>
+							<button className='bet-type-button' style={{'font-weight':'bold','border-bottom':'2px solid gray','width':'100%'}}>Códigos Promocionais</button>
+						</div>
 		              {cods.map((cod)=>(
 			              <div className="bet" key={cod}>
-			                <p>Codigo:{cod.Codigo}</p>
-			                <p>Valor:{cod.Valor}</p>
-			                <button style={{"margin":"3px"}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>Cancelar</button>
+							<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
+			                <p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
+			                <p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
 			              </div>
 		              ))}
 		              <Form onSubmit={handleSubmit}>
-		              	<input type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-		              	<input type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
-		              	<button style={{"margin":"3px"}} type="subit">Submeter</button>
+		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+		              	<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
 		              </Form>
 		            </div>
 		        </div>
