@@ -14,10 +14,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /// Required Modules
-const axios = require('axios');
-const fs = require('fs');
+const axios_1 = __importDefault(require("axios"));
+const fs_1 = __importDefault(require("fs"));
 const cnf = require('config');
 const getRequests = require("./Requests");
 const parser = require("./ResponseParsing");
@@ -25,7 +28,6 @@ const parser = require("./ResponseParsing");
 const API_AUTH_KEY = cnf.get("API_AUTH_KEY");
 /// Path where the json response files will be stored
 const rspPath = cnf.get("responsePath");
-// TODO: Should check if path actually exists
 /**
  * Function responsible for sending a http request
  *
@@ -34,7 +36,7 @@ const rspPath = cnf.get("responsePath");
  */
 function makeRequest(request, callback) {
     return new Promise((resolve, reject) => {
-        axios(request)
+        (0, axios_1.default)(request)
             .then((response) => {
             if (response == null && response.status != 200) {
                 console.error("Error found in the request response.\n");
@@ -60,17 +62,18 @@ function fetchFootballEvents(startUp) {
     let futLeagueDic = cnf.get("futebol_league_id");
     for (let league in futLeagueDic) {
         let futpath = rspPath + "fut" + futLeagueDic[league] + "res.json";
-        let existsFile = fs.existsSync(futpath);
+        let existsFile = fs_1.default.existsSync(futpath);
         if (!existsFile || (configFlag && startUp) || !startUp) {
             let req = getRequests.genFutRequest(API_AUTH_KEY, futLeagueDic[league], 2022);
+            console.log(req);
             makeRequest(req, (json) => {
                 let noErrors = parser.parseFutResp(json);
                 if (!existsFile && noErrors)
-                    fs.writeFile(futpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
-            }).catch((error) => console.log("Error in footbal events fetch. Startup: ", startUp));
+                    fs_1.default.writeFile(futpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
+            }).catch((error) => console.log("Error in footbal events fetch. Startup: ", startUp, "\nErrors:", error));
         }
         else {
-            let json = JSON.parse(fs.readFileSync(futpath, "utf-8"));
+            let json = JSON.parse(fs_1.default.readFileSync(futpath, "utf-8"));
             parser.parseFutResp(json);
         }
     }
@@ -85,12 +88,12 @@ function fetchPTFootballEvents() {
     makeRequest(req, (json) => {
         let noErrors = parser.parsePTFutResp(json);
         if (noErrors)
-            fs.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
+            fs_1.default.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
     })
         .catch((error) => {
-        if (fs.existsSync(futPTpath)) {
+        if (fs_1.default.existsSync(futPTpath)) {
             console.warn("Cant acess API! Reading cached file");
-            let futptJson = JSON.parse(fs.readFileSync(futPTpath, "utf-8"));
+            let futptJson = JSON.parse(fs_1.default.readFileSync(futPTpath, "utf-8"));
             parser.parsePTFutResp(futptJson);
         }
         else {
@@ -105,18 +108,17 @@ function fetchPTFootballEvents() {
 function fetchF1Events(startUp) {
     let configFlag = cnf.get("update_on_startup");
     let f1Racespath = rspPath + "f1" + "Races" + "Res.json";
-    let existsFile = fs.existsSync(f1Racespath);
+    let existsFile = fs_1.default.existsSync(f1Racespath);
     if (!existsFile || (configFlag && startUp) || !startUp) {
         let req = getRequests.genF1RacesRequest(API_AUTH_KEY);
         makeRequest(req, (json) => {
             fetchF1Events2(startUp, json);
             if (!existsFile)
-                fs.writeFile(f1Racespath, JSON.stringify(json), { flag: 'w+' }, () => { });
+                fs_1.default.writeFile(f1Racespath, JSON.stringify(json), { flag: 'w+' }, () => { });
         }).catch((error) => console.log("Error in f1 events fetch. Startup: ", startUp));
-        ;
     }
     else {
-        let json = JSON.parse(fs.readFileSync(f1Racespath, "utf-8"));
+        let json = JSON.parse(fs_1.default.readFileSync(f1Racespath, "utf-8"));
         fetchF1Events2(startUp, json);
     }
 }
@@ -127,17 +129,17 @@ function fetchF1Events(startUp) {
 function fetchF1Events2(startUp, jsonRaces) {
     let configFlag = cnf.get("update_on_startup");
     let f1Pilotspath = rspPath + "f1" + "Pilots" + "Res.json";
-    let existsFile = fs.existsSync(f1Pilotspath);
+    let existsFile = fs_1.default.existsSync(f1Pilotspath);
     if (!existsFile || (configFlag && startUp) || !startUp) {
         let req = getRequests.genF1DriversRequest(API_AUTH_KEY, 2022);
         makeRequest(req, (jsonPilots) => {
             let noErrors = parser.parseF1Resp(jsonRaces, jsonPilots);
             if (!existsFile && noErrors)
-                fs.writeFile(f1Pilotspath, JSON.stringify(jsonPilots), { flag: 'w+' }, () => { });
+                fs_1.default.writeFile(f1Pilotspath, JSON.stringify(jsonPilots), { flag: 'w+' }, () => { });
         }).catch((error) => console.log("Error in f1 pilots fetch. Startup: ", startUp));
     }
     else {
-        let jsonPilots = JSON.parse(fs.readFileSync(f1Pilotspath, "utf-8"));
+        let jsonPilots = JSON.parse(fs_1.default.readFileSync(f1Pilotspath, "utf-8"));
         parser.parseF1Resp(jsonRaces, jsonPilots);
     }
 }
@@ -148,18 +150,18 @@ function fetchF1Events2(startUp, jsonRaces) {
 function fetchNBAEvents(startUp) {
     let configFlag = cnf.get("update_on_startup");
     let nbapath = rspPath + "nba" + "Res.json";
-    let existsFile = fs.existsSync(nbapath);
+    let existsFile = fs_1.default.existsSync(nbapath);
     if (!existsFile || (configFlag && startUp) || !startUp) {
         let req = getRequests.genBasketRequest(API_AUTH_KEY, cnf.get("nba_league_id"), "2022-2023");
         makeRequest(req, (json) => {
             let noErrors = parser.parseNBAResp(json);
             if (!existsFile && noErrors)
-                fs.writeFile(nbapath, JSON.stringify(json), { flag: 'w+' }, () => { });
+                fs_1.default.writeFile(nbapath, JSON.stringify(json), { flag: 'w+' }, () => { });
         }).catch((error) => console.log("Error in nba events fetch. Startup: ", startUp));
         ;
     }
     else {
-        let jsonNBA = JSON.parse(fs.readFileSync(nbapath, "utf-8"));
+        let jsonNBA = JSON.parse(fs_1.default.readFileSync(nbapath, "utf-8"));
         parser.parseNBAResp(jsonNBA);
     }
 }

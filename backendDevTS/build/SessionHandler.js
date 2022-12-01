@@ -1,4 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SessionHandler = void 0;
 const sha1 = require('sha1');
 let instance = undefined;
 class SessionHandler {
@@ -61,4 +63,4 @@ class SessionHandler {
         return instance;
     }
 }
-module.exports = SessionHandler;
+exports.SessionHandler = SessionHandler;

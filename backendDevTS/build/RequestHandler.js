@@ -8,15 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const eventList = require("./Models/EventList");
-const evLst = eventList.getInstance();
+Object.defineProperty(exports, "__esModule", { value: true });
+const EventList_1 = require("./Models/EventList");
+const DBCommunication_1 = require("./DBCommunication/DBCommunication");
+const SessionHandler_1 = require("./SessionHandler");
+const evLst = EventList_1.EventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication");
-const dbComms1 = require("./DBCommunication/DBCommunication");
-const dbComms = new dbComms1();
+const dbComms = new DBCommunication_1.DBCommunication();
 const e = require("express");
-const sessionHandler = require("./SessionHandler").getInstance();
+const sessionHandler = SessionHandler_1.SessionHandler.getInstance();
 const notifcationCenter = require("./NotificationCenter");
-const { sendStatus } = require("express/lib/response");
 function dummyFunction(request, response) {
     response.status(200).send("Dummy here! But connection worked!");
 }
@@ -70,7 +71,7 @@ function loginFunction(request, response) {
 function registerBetFunction(request, response) {
     let list = [];
     for (let i = 0; i < request.body.Eventos.length; i++) {
-        list.push(evLst.toDb(request.body.Eventos[i].Desporto, request.body.Eventos[i].EventoID));
+        list.push(evLst.getEventDB(request.body.Eventos[i].Desporto, request.body.Eventos[i].EventoID));
     }
     let answer;
     let user = sessionHandler.verifyUser(request.body.Aposta.ApostadorID);
@@ -141,9 +142,11 @@ function editProfileFunction(request, response) {
  */
 function closeEventFunction(request, response) {
     let user = sessionHandler.verifyUser(request.body.Token);
+    console.log(user);
     //mudar para admin
     if (user[0] && user[1] == 'Admin') {
         dbComms.closeEventOnDb(request.body.Evento.EventoID, request.body.Evento.Desporto).then((message) => {
+            console.log("OII");
             evLst.closeEvent(request.body.Evento.Desporto, request.body.Evento.EventoID);
             for (let tuple of message.toNotify) {
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
