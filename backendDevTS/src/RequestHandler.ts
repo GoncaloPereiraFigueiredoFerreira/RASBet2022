@@ -597,7 +597,7 @@ function eventHandler(request:any,response:any,next:any){
         response.setHeader('X-Accel-Buffering', 'no');
         response.setHeader('Access-Control-Allow-Origin', "*");
         sessionHandler.addGate(token,response);
-
+        dbComms.walletOnDb(user[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
         request.on('close', () => {
             sessionHandler.closeConnection(token);
         });
