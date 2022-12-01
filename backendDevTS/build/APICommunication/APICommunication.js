@@ -187,7 +187,6 @@ function updateEventLst() {
  * @param {List} fixtures list of ids for futebol events
  */
 function updateFutResults(fixtures) {
-    console.log('321');
     return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
         let fixturesLst = [];
         let fixtureStr = "";
@@ -243,7 +242,6 @@ function updateBSKResults(games) {
  * @param {List} games List of ids of the games to be updated
  */
 function updateFUTPTResults(games) {
-    console.log('123');
     return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
         let req = getRequests.genFUTPTRequest();
         makeRequest(req, (json) => {
