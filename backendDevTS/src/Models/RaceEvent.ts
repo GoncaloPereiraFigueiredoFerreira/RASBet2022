@@ -1,11 +1,11 @@
 const SportEvent = require('./SportEvent');
 
 export class RaceEvent extends SportEvent{
-    PlayerOdds: number[];
-    Pilots: string[];
-    PilotsPht: string[];
-    Circuit: string;
-    CircuitPht: string;
+    private PlayerOdds: number[];
+    private Pilots: string[];
+    private PilotsPht: string[];
+    private Circuit: string;
+    private CircuitPht: string;
 
     /**
      * 
@@ -69,6 +69,7 @@ export class RaceEvent extends SportEvent{
         photos.push(this.CircuitPht)
         return{
             "Tipo": "RaceEvent",
+            "Estado": this.State,
             "EventoId" : this.Id,
             "Liga" : this.Circuit,
             "Participantes" : this.Pilots, 

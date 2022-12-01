@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EventList = void 0;
 /**
  * @file EventList,js
  *
@@ -7,10 +8,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const RaceEvent_1 = require("./RaceEvent");
 const NoTieEvent_1 = require("./NoTieEvent");
 const TieEvent_1 = require("./TieEvent");
-//import RaceEvent = require("./RaceEvent");
-//import NoTieEvent = require("./NoTieEvent");
-//import TieEvent = require("./TieEvent");
-//import SportEvent = require("./SportEvent");
 const SportEvent_1 = require("./SportEvent");
 const BETODDREL = 0.001;
 let instance = undefined;
@@ -35,60 +32,65 @@ class EventList {
     * @param {string} sport Name of the sport
     * @param {string} league Name of the league
     * @param {string} id Identifier of the event
-    * @param {string} description Description of the event
-    * @param {number} result Result of the event (0 if home won and 1 if away won)
-    * @param {string} state State of the event
     * @param {string} datetime Starting datetime of the event
     * @param {string} team1 Name of the home team
     * @param {string} team2 Name of the away team
     * @param {string} logo1 Url to the logo of the home team
     * @param {string} logo2 URL to the logo of the away team
     * @param {string} odds1 Odds of the home team winning
-    * @param {string} odds1 Odds of the away team winning
+    * @param {string} odds2 Odds of the away team winning
     */
-    addNoTieEventFromAPI(sport, league, id, description, result, state, datetime, team1, team2, logo1, logo2, odds1, odds2) {
+    addNoTieEventFromAPI(sport, league, id, datetime, team1, team2, logo1, logo2, odds1, odds2) {
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
             this.leagues[sport] = [];
         }
-        this.eventList[sport][id] = new NoTieEvent_1.NoTieEvent(sport, league, id, description, result, state, datetime, team1, team2, logo1, logo2, odds1, odds2);
-        if (!this.leagues[sport].includes(league))
-            this.leagues[sport].push(league);
+        let event = this.eventList[sport][id];
+        if (event == undefined) {
+            let description = team1 + " - " + team2;
+            this.eventList[sport][id] = new NoTieEvent_1.NoTieEvent(sport, league, id, description, -1, "NODD", datetime, team1, team2, logo1, logo2, odds1, odds2);
+            if (!this.leagues[sport].includes(league))
+                this.leagues[sport].push(league);
+        }
+        else if (!(event instanceof NoTieEvent_1.NoTieEvent)) {
+            this.eventList[sport][id] = new NoTieEvent_1.NoTieEvent(sport, league, id, event.getDescription(), event.getResult(), event.getState(), datetime, team1, team2, logo1, logo2, odds1, odds2);
+        }
     }
     /**
      * Adds a event to the event list where a draw is a possible outcome
      * @param {string} sport Name of the sport
      * @param {string} league Name of the league
      * @param {string} id Identifier of the event
-     * @param {string} description Description of the event
-     * @param {number} result Winner of the event
-     * @param {string} state Current state of the event
      * @param {string} datetime Date and time of the event
      * @param {string} team1 Name of the home team
      * @param {string} team2 Name of the away team
      * @param {string} logo1 URL with the logo of the home team
      * @param {string} logo2 URL with the logo of the away team
-     * @param {string} odds1 Initial Odds of winning for home team for event
-     * @param {string} odds2 Initial Odds of winning for away team for event
-     * @param {string} oddsDraw Initial Odds of a draw for event
+     * @param {number} oddsHome Initial Odds of winning for home team for event
+     * @param {number} oddsAway Initial Odds of winning for away team for event
+     * @param {number} oddsDraw Initial Odds of a draw for event
      */
-    addTieEventFromAPI(sport, league, id, description, result, state, datetime, team1, team2, logo1, logo2, odds1, odds2, oddsDraw) {
+    addTieEventFromAPI(sport, league, id, datetime, team1, team2, logo1, logo2, oddsHome, oddsAway, oddsDraw) {
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
             this.leagues[sport] = [];
         }
-        this.eventList[sport][id] = new TieEvent_1.TieEvent(sport, league, id, description, result, state, datetime, team1, team2, logo1, logo2, odds1, odds2, oddsDraw);
-        if (!this.leagues[sport].includes(league))
-            this.leagues[sport].push(league);
+        let event = this.eventList[sport][id];
+        if (event == undefined) {
+            let description = team1 + " - " + team2;
+            this.eventList[sport][id] = new TieEvent_1.TieEvent(sport, league, id, description, -1, "NODD", datetime, team1, team2, logo1, logo2, oddsHome, oddsAway, oddsDraw);
+            if (!this.leagues[sport].includes(league))
+                this.leagues[sport].push(league);
+        }
+        else if (!(event instanceof TieEvent_1.TieEvent)) {
+            this.eventList[sport][id] = new TieEvent_1.TieEvent(sport, league, id, event.getDescription(), event.getResult(), event.getState(), datetime, team1, team2, logo1, logo2, oddsHome, oddsAway, oddsDraw);
+        }
     }
     /**
      * Adds a race event to the event list
      * @param {string} sport Name of the sport
      * @param {string} league Name of the league
      * @param {string} id Identifier of the event
-     * @param {string} description String that contains the description of the event
-     * @param {number} result Result of the event (-1 if it hasnt finished or the index of the winner pilot)
-     * @param {string} state State of the event
      * @param {string} datetime Date and time of the event
      * @param {string[]} pilots List of names of the pilots participating in the race
      * @param {string[]} pilotsPhotos List of urls for each pilots face
@@ -96,14 +98,20 @@ class EventList {
      * @param {string} circuitPhoto Url for the circuit photo
      * @param {number[]} playerOdds List of odds for each contestant
      */
-    addRaceEventFromAPI(sport, league, id, description, result, state, datetime, pilots, pilotsPhotos, circuit, circuitPhoto, playerOdds) {
+    addRaceEventFromAPI(sport, league, id, datetime, pilots, pilotsPhotos, circuit, circuitPhoto, playerOdds) {
         if (this.eventList[sport] == undefined) {
             this.eventList[sport] = {};
             this.leagues[sport] = [];
         }
-        this.eventList[sport][id] = new RaceEvent_1.RaceEvent(sport, league, id, description, result, state, datetime, pilots, pilotsPhotos, circuit, circuitPhoto, playerOdds);
-        if (!this.leagues[sport].includes(league))
-            this.leagues[sport].push(league);
+        let event = this.eventList[sport][id];
+        if (event == undefined) {
+            this.eventList[sport][id] = new RaceEvent_1.RaceEvent(sport, league, id, circuit, -1, "NODD", datetime, pilots, pilotsPhotos, circuit, circuitPhoto, playerOdds);
+            if (!this.leagues[sport].includes(league))
+                this.leagues[sport].push(league);
+        }
+        else if (!(event instanceof RaceEvent_1.RaceEvent)) {
+            this.eventList[sport][id] = new RaceEvent_1.RaceEvent(sport, league, id, event.getDescription(), event.getResult(), event.getState(), datetime, pilots, pilotsPhotos, circuit, circuitPhoto, playerOdds);
+        }
     }
     /**
      * Adds an event from the DB
@@ -126,23 +134,10 @@ class EventList {
             this.leagues[sport].push(league);
     }
     /**
-     * Returns an event given a sport and an ID
-     * @param {string} sport
-     * @param {string} id
-     * @returns An Event (not a copy)
-     */
-    getEvent(sport, id) {
-        if (this.eventList[sport] != undefined && this.eventList[sport][id]) {
-            return this.eventList[sport][id];
-        }
-        else
-            return undefined;
-    }
-    /**
      * Method that alters the odd for a specific event
      * @param {string} sport Name of the sport
      * @param {string} id Identifier of event
-     * @param {List} odds List of odds to be assigned
+     * @param {number[]} odds List of odds to be assigned
      * @returns Returns true if the odds were added correctly
      */
     changeEventOdd(sport, id, odds) {
@@ -212,18 +207,6 @@ class EventList {
         });
     }
     /**
-     * Returns an event to the front end
-     * @param {string} sport Name of the sport
-     * @param {string} id Identifier of a sport
-     * @returns Returns a JSON that the front end is ready to parse
-     */
-    getEventFE(sport, id) {
-        if (this.eventList[sport][id] != undefined)
-            return this.eventList[sport][id].toJson();
-        else
-            return null;
-    }
-    /**
      * Returns a event object that the DB is ready to parse
      * @param {string} sport Name of the sport
      * @param {string} id Identifier of a sport
@@ -285,7 +268,7 @@ class EventList {
             return this.eventList[sport][id].getParticipants();
         }
         else
-            return null;
+            return [];
     }
     /**
      * Returns the odds for the results of a given event
@@ -298,7 +281,7 @@ class EventList {
             return this.eventList[sport][id].getOdds();
         }
         else
-            return null;
+            return [];
     }
     /**
      * Returns the state of a given sport event
@@ -309,19 +292,6 @@ class EventList {
     getState(sport, id) {
         if (this.eventList[sport][id] != undefined) {
             return this.eventList[sport][id].getState();
-        }
-        else
-            return null;
-    }
-    /**
-     * Returns a event object that the DB is ready to parse
-     * @param {string} sport Name of the sport
-     * @param {string} id Identifier of a sport
-     * @returns Returns a JSON that the DB is ready to parse
-     */
-    toDb(sport, id) {
-        if (this.eventList[sport][id] != undefined) {
-            return this.eventList[sport][id].toDB();
         }
         else
             return null;
@@ -340,6 +310,19 @@ class EventList {
             return null;
     }
     /**
+      * Returns the result for an event
+      * @param {string} sport Name of the sport
+      * @param {string} id Identifier of the event
+      * @returns Returns a string containing the result of an event
+      */
+    getResult(sport, id) {
+        if (this.eventList[sport][id] != undefined) {
+            return this.eventList[sport][id].getResult();
+        }
+        else
+            return null;
+    }
+    /**
      * Returns the leagues with sport events
      * @param {string} sport
      * @returns A list of strings representing the leagues
@@ -352,7 +335,7 @@ class EventList {
             return [];
     }
     /**
-     * Removes the PastEvents from the backend
+     * Removes the events that have past dates (already happened)
      * @param {string} sport Sport from which to delete all past event
      */
     removePastEvents(sport) {
@@ -368,4 +351,4 @@ class EventList {
         }
     }
 }
-module.exports = EventList;
+exports.EventList = EventList;

@@ -4,7 +4,6 @@ import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBclasses';
 
 
 export interface IDBCommunication {
-    mysqlQuery : (sql: string,args: any) => Promise<any>;
     
     registerOnDb : (apostador:Apostador) => Promise<any>;
 

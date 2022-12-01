@@ -3,13 +3,13 @@ const SportEvent = require('./SportEvent');
 
 
 export class TieEvent extends SportEvent{
-    Team1: string;
-    Team2: string;
-    Odds1: number;
-    Odds2: number;
-    OddsDraw: number;
-    Logo1: string;
-    Logo2: string;
+    private Team1: string;
+    private Team2: string;
+    private Odds1: number;
+    private Odds2: number;
+    private OddsDraw: number;
+    private Logo1: string;
+    private Logo2: string;
 
     /**
      * 
@@ -76,6 +76,7 @@ export class TieEvent extends SportEvent{
         
         return{
             "Tipo": "TieEvent",
+            "Estado": this.State,
             "EventoId" : this.Id,
             "Liga" : this.League,
             "Participantes" : [this.Team1,this.Team2],

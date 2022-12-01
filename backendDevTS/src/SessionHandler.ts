@@ -1,8 +1,8 @@
 const sha1 = require('sha1');
 
 let instance:any = undefined;
-class SessionHandler{
-    sessions:  {[key: string]: {Email:string,Role:String, Gate:any}};
+export class SessionHandler{
+    sessions:  {[key: string]: {Email:string,Role:string, Gate:any}};
     
     constructor(){
         this.sessions= {};
@@ -40,22 +40,22 @@ class SessionHandler{
                 return key;
             }
         }
-        return undefined;
+        return "";
     }
 
     addGate(token:string,gate:any){
-        console.log("create");
+        
         this.sessions[token]["Gate"] = gate;
     }
 
     closeConnection(token:string){
-        console.log("close");
+        
         //removes from token from sessions
         //delete this.sessions[token]
     }
 
     sendNotification(token:string,info:object){
-        console.log("send");
+        
         if (this.sessions[token] != undefined){
           const data = `data: ${JSON.stringify(info)}\n\n`;
           this.sessions[token]["Gate"].write(data);
@@ -73,4 +73,3 @@ class SessionHandler{
 
 }
 
-module.exports = SessionHandler;

@@ -1,12 +1,13 @@
-const eventList = require("./Models/EventList");
-const evLst = eventList.getInstance();
-const apiComms = require("./APICommunication/APICommunication")
+import {EventList} from "./Models/EventList";
 import {DBCommunication} from "./DBCommunication/DBCommunication";
+import {SessionHandler} from "./SessionHandler";
+const evLst:IEventList = EventList.getInstance()
+const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication();
 const e = require("express");
-const sessionHandler = require("./SessionHandler").getInstance();
+const sessionHandler:SessionHandler = SessionHandler.getInstance();
 const notifcationCenter = require("./NotificationCenter");
-const { sendStatus } = require("express/lib/response");
+
 
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBCommunication/DBclasses';
 
@@ -90,7 +91,7 @@ function registerBetFunction(request:any,response:any){
     let Eventos = request.body.Eventos
 
     for(let i = 0 ; i< request.body.Eventos.length; i++){
-        list.push(new Evento(evLst.toDb(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID)))
+        list.push(new Evento(evLst.getEventDB(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID)))
     }
     
     let user = sessionHandler.verifyUser(aposta.ApostadorID)
@@ -111,7 +112,7 @@ function registerBetFunction(request:any,response:any){
             return  dbComms.registerBetOnDb(aposta,Eventos,aposta.Codigo)
         }).then(()=>{
             return dbComms.walletOnDb(user[0])
-        }).then((balanco:number)=>{
+        }).then((balanco:any)=>{
                  
             for(let i = 0 ; i< request.body.Eventos.length; i++){
                 evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,aposta.Montante,request.body.Eventos[i].Escolha);
@@ -179,6 +180,7 @@ function closeEventFunction(request:any,response:any){
     let Desporto= request.body.Evento.Desporto
 
     let user = sessionHandler.verifyUser(request.body.Token)
+    console.log(user)
     //mudar para admin
     if(user[0] && user[1]=='Admin'){
         dbComms.closeEventOnDb(EventoID,Desporto).then((message:any)=>{
@@ -234,7 +236,7 @@ function finEventFunction(request:any,response:any){
 
                 // Notify wallet
                 let token = sessionHandler.getToken(tuple[0]);
-                dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                 
             }
             
@@ -451,7 +453,7 @@ function updateFUTEvents(){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                             let token = sessionHandler.getToken(tuple[0]);
-                            dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                            dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                 
                         }
                     });
@@ -477,7 +479,7 @@ function updateF1Events(){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                             let token = sessionHandler.getToken(tuple[0]);
-                            dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                            dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -503,7 +505,7 @@ function updateBSKEvents(){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                             let token = sessionHandler.getToken(tuple[0]);
-                            dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                            dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -527,7 +529,7 @@ function updateFUTPTEvents(){
                             console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                             //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                             let token = sessionHandler.getToken(tuple[0]);
-                            dbComms.walletOnDb(tuple[0]).then((info:number)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                            dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                         }
                     });
                     // Here we should notify all the users afected by the end of that event
@@ -595,6 +597,7 @@ function eventHandler(request:any,response:any,next:any){
         response.setHeader('X-Accel-Buffering', 'no');
         response.setHeader('Access-Control-Allow-Origin', "*");
         sessionHandler.addGate(token,response);
+        dbComms.walletOnDb(user[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
         request.on('close', () => {
             sessionHandler.closeConnection(token);
         });
