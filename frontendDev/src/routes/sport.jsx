@@ -118,8 +118,9 @@ export default function Sport({set}){
 		  .then(function (response) {
 		    console.log("response",response);
 		    const data = response.data;
-		    input.check = false;
-
+		    let ninput = {...input};
+		    ninput.check = false;
+		    setInput(ninput);
 		  })
 		  .catch(function (error) {
 		    console.log(error);
