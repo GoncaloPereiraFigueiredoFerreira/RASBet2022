@@ -235,7 +235,7 @@ export default function Sport({set}){
 										<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
 											{apostas.simples.Desc.Evento}</p>
 										<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
-											Resultado: {apostas.simples.Desc.Aposta} {apostas.simples.Aposta.Odd}</p>	              	
+											Resultado: {apostas.simples.Desc.Aposta} {parseFloat(apostas.simples.Aposta.Odd).toFixed(2)}</p>	              	
 							  		</div>):null
 						  		}
 							</>):(<>
@@ -246,7 +246,7 @@ export default function Sport({set}){
 								<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
 									{evento.Desc.Evento}</p>
 								<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
-									Resultado: {evento.Desc.Aposta} {evento.Aposta.Odd}</p>	 
+									Resultado: {evento.Desc.Aposta} {parseFloat(evento.Aposta.Odd).toFixed(2)}</p>	 
 							</div>
 					  	))}</>)}
 						<Form onSubmit={handleSubmit_cod} style={{'margin':'1vh'}}>
