@@ -91,13 +91,13 @@ export class RequestHandler implements IRequestHandler{
         let aposta = new Aposta(request.body.Aposta)
         let Eventos = request.body.Eventos
 
-        for(let i = 0 ; i< request.body.Eventos.length; i++){
-            list.push(new Evento(evLst.getEventDB(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID)))
+        for(let i = 0 ; i< Eventos.length; i++){
+            list.push(new Evento(evLst.getEventDB(Eventos[i].Desporto,Eventos[i].EventoID)))
         }
         
         let user = sessionHandler.verifyUser(aposta.ApostadorID)
         let token = aposta.ApostadorID;
-        if(user[0] && user[1]=='apostador' && request.body.Eventos.length>0){
+        if(user[0] && user[1]=='apostador' && Eventos.length>0){
             
             aposta.ApostadorID= user[0]
             
@@ -115,8 +115,8 @@ export class RequestHandler implements IRequestHandler{
                 return dbComms.walletOnDb(user[0])
             }).then((balanco:any)=>{
                     
-                for(let i = 0 ; i< request.body.Eventos.length; i++){
-                    evLst.updateOddBet(request.body.Eventos[i].Desporto,request.body.Eventos[i].EventoID,aposta.Montante,request.body.Eventos[i].Escolha);
+                for(let i = 0 ; i< Eventos.length; i++){
+                    evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
                 }
                 sessionHandler.sendNotification(token,{"Balance":balanco});
                 response.sendStatus(200);
@@ -184,7 +184,7 @@ export class RequestHandler implements IRequestHandler{
         console.log(user)
         //mudar para admin
         if(user[0] && user[1]=='Admin'){
-            dbComms.closeEventOnDb(EventoID,Desporto).then((message:any)=>{
+            dbComms.closeEventOnDb(EventoID,Desporto).then(async(message:any)=>{
             
                 evLst.closeEvent(Desporto,EventoID);
                 
@@ -196,7 +196,7 @@ export class RequestHandler implements IRequestHandler{
                     // Notify wallet
                     let token = sessionHandler.getToken(tuple[0]);
                 
-                    return dbComms.walletOnDb(tuple[0]).then((info:number)=>{
+                    await dbComms.walletOnDb(tuple[0]).then((info:number)=>{
                     
                         sessionHandler.sendNotification(token,{"Balance":info});
                     }).catch((e)=>{
@@ -453,8 +453,10 @@ export class RequestHandler implements IRequestHandler{
      * Handler responsible for updating all the results of football events
      */
     updateFUTEvents(){
+       
         return new Promise<void>((resolve,reject)=>{
         dbComms.startedEventOnDb("FUT").then((result:any)=>{
+          
             apiComms.updateFutResults(result).then(async()=>{
                 for (let fixture of result){
                     let event = evLst.getEventDB("FUT",fixture);
@@ -538,6 +540,7 @@ export class RequestHandler implements IRequestHandler{
      * Handler responsible for updating all the results of portuguese football events
      */
     updateFUTPTEvents(){
+       
         return new Promise<void>((resolve,reject)=>{
             dbComms.startedEventOnDb("FUTPT").then((result:any)=>{
                 apiComms.updateFUTPTResults(result).then(async()=>{
@@ -574,7 +577,6 @@ export class RequestHandler implements IRequestHandler{
             this.updateFUTPTEvents().then(() =>evLst.removePastEvents("FUTPT"));
             resolve();
         });
-
     }
 
 
@@ -586,7 +588,7 @@ export class RequestHandler implements IRequestHandler{
     updateEvents(request:any,response:any){
         let user = sessionHandler.verifyUser(request.query.token);
         if (user[1] == "Admin" ){
-            this.updateResults();    
+            this.updateResults();
             apiComms.updateEventLst();
             response.sendStatus(200);     
         }
