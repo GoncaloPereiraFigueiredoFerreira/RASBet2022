@@ -8,7 +8,7 @@ export default function Wallet({set}) {
 
 
     function Levantar(){
-      var data={Valor:input.Valor,Tipo:"Levantamento_Conta",ApostadorID:getToken(),DataTR:getDate()};
+      var data={Valor:input.Valor,Tipo:"Levantamento_Conta",ApostadorID:getToken(),DataTr:getDate()};
       console.log(data);
       var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
       .then(function (response) {
@@ -23,7 +23,7 @@ export default function Wallet({set}) {
     }
 
     function Depositar(){
-      var data={Valor:input.Valor,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTR:getDate()};
+      var data={Valor:input.Valor,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTr:getDate()};
       console.log(data);
       var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
       .then(function (response) {

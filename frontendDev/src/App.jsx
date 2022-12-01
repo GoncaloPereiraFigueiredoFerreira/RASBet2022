@@ -19,13 +19,14 @@ import {getRole} from "./utils"
 
 function App(){
 	const [flag,setFlag] = useState(false);
+	const defaultPage = ((getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>);
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
 	    element: <Root/>,
 	    errorElement: <ErrorPage />,
 	    children: [
-	      { index: true, element: (getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>},
+	      { index: true, element: defaultPage},
 	      {
 	      	path: "sport/:sportid",
 	      	loader: sportLoader,

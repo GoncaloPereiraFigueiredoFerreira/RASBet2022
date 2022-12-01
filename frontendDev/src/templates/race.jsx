@@ -1,11 +1,11 @@
 import {parseBet,parseDate} from "../utils"
 
 function test (part,odds){
-  const ret = part.map(((elem,ind) =>([elem,odds[ind]].join(" "))));
+  const ret = part.map(((elem,ind) =>([elem,odds[ind].toFixed(2)].join(" "))));
   return ret;
 }
 
-export default function Race({evento,addAposta}){
+export default function Race({evento,addAposta,escolhas}){
   function on() {
     document.getElementById("overlay").style.display = "flex";
   }
@@ -29,7 +29,7 @@ export default function Race({evento,addAposta}){
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div key={ind.toString() + evento.Liga} style={{"display":"flex",'flex-direction':'column'}}>
                    
-                    {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button className="comp-button" style={{'width':'100%','border-radius':'0'}} onClick={()=>(addAposta(parseBet(evento,ind)))}> <img src={evento.Logos[ind]} style={{"height":"4vh"}}/> {elem}</button>))}
+                    {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button className="comp-button" style={{'width':'100%','border-radius':'0',"backgroundColor":(escolhas.includes(ind))?"red":"grey"}} onClick={()=>(addAposta(parseBet(evento,ind)))}> <img src={evento.Logos[ind]} style={{"height":"4vh"}}/> {elem}</button>))}
                   </div>
                 
                 </>))}                

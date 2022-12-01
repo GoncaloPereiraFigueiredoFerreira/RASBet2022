@@ -21,7 +21,7 @@ export default function Root() {
         const parsedData = JSON.parse(event.data);
         console.log(parsedData);
 
-        if(parsedData.Balance){
+        if(parsedData.Balance !== undefined){
           setMy({Valor:parsedData.Balance});
           set(parsedData.Balance);
         }
@@ -59,7 +59,7 @@ export default function Root() {
         <nav>
           <ul>
             <li>
-              <img src='/logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'5vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
+              <img src='/logo.png' className = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'5vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
               <p style={{'display':'inline','width':'fit-content',"color":"gold",'text-align': 'center','vertical-align': 'middle'}}> RASBet</p>        
             </li>
             <li>
@@ -88,17 +88,15 @@ export default function Root() {
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='/perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
-              <div class="dropdown-content">
+              <img src='/perfil.png' style={{'width':'6vh','height':'6vh','margin':'0.5vh'}}/>
+              <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
                 <Link to={`histA/${token}`}>Histórico Apostas</Link>
+                <Link to={`login`}>Ir para login</Link>
               </div>
             </div>:null}
            
-            <li style={{"float":"right","padding":"1vh",'width':'auto','height':'auto'}}>
-              <button onClick={()=>{navigation('login')}}>Ir para login</button>
-            </li>
             {(getRole() == "apostador")?
               <li style={{"float":"right","padding":"1vh"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>

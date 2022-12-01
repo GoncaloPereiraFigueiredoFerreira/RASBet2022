@@ -1,9 +1,7 @@
 import {parseBet,parseDate} from "../utils"
 
 
-export default function Empate({evento,addAposta}){
-
-		
+export default function Empate({evento,addAposta,escolhas}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
@@ -16,16 +14,15 @@ export default function Empate({evento,addAposta}){
 					  <p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
 		            </div>
 		            <div className="drawmatchodds">
-						<div>
-				            <button className='odd-button' onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>
+					<div>
+				            <button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>
 						</div>
 						<div>
-			              	<button className='odd-button' onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2]}</button>
+			              	<button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2]}</button>
 						</div>
 						<div>
-							<button className='odd-button' onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1]}</button>
+							<button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1]}</button>
 						</div>
-
 		            </div>
 	          	</div>
 	);

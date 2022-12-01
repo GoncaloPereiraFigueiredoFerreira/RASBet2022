@@ -1,6 +1,9 @@
+import {useState} from "react"
+
 import axios from "axios"
 import {getToken,parseDate} from "../utils"
 import {Form} from "react-router-dom"
+import NPags from "./NPags"
 
 async function cancelar_aposta(evento,sport){
 	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId,Desporto:sport}};
@@ -32,7 +35,7 @@ function Aux({evento,sport}){
 	var desc = "";
 	if(evento.Tipo == "RaceEvent") desc = `${evento.Liga}`;
 	else desc = `${evento.Participantes[0]} - ${evento.Participantes[1]}`
-	var input={token:getToken,sport:sport,EventoID:evento.EventoId};
+	var input={token:getToken(),sport:sport,EventoID:evento.EventoId};
 
 	function handleChange({target}){
 		input[target.name] = target.value;
@@ -92,5 +95,15 @@ function check(filter,evento){
 
 
 export default function Bet(props){
-	return(<>{props.data.map((evento,ind)=>((check(props.filter,evento))?<Aux evento={evento} sport={props.sport}key={ind.toString()}/>:null))}</>);
+	const elem = 4;
+	const [page,setPage] = useState(0);
+
+	const filter = props.data.filter((evento)=>(check(props.filter,evento))); 
+	const array = filter.slice(page * elem,(page+1) * (elem));
+
+	return(
+		<>
+		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport}key={ind.toString()}/>))}
+		<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
+		</>);
 }

@@ -24,19 +24,19 @@ export default function HistA() {
 
   return (
     <>
-      <div className = "box" style={{'margin-top':'2vh','padding-top':'3vh'}}>
+      <div className = "box" style={{'marginTop':'2vh','paddingTop':'3vh'}}>
         <div className = "loginbox">
           <div className='bemvindo'>
             <p>Histórico de Apostas</p>
           </div>
           <table>
             <tr>
-              <th style={{'font-size':'large'}}>Tipo</th>
-              <th style={{'font-size':'large'}}>Campeonato:Jogo</th>
-              <th style={{'font-size':'large'}}>Montante</th>
-              <th style={{'font-size':'large'}}>Data</th>
-              <th style={{'font-size':'large'}}>Estado</th>
-              <th style={{'font-size':'large'}}>Odd</th>
+              <th style={{'fontSize':'large'}}>Tipo</th>
+              <th style={{'fontSize':'large'}}>Campeonato:Jogo</th>
+              <th style={{'fontSize':'large'}}>Montante</th>
+              <th style={{'fontSize':'large'}}>Data</th>
+              <th style={{'fontSize':'large'}}>Estado</th>
+              <th style={{'fontSize':'large'}}>Odd</th>
             </tr>
           {list.map((evento)=>(
 

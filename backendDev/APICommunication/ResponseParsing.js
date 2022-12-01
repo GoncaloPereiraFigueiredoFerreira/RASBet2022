@@ -36,11 +36,10 @@ function parseFutResp(json){
             
             let event = evLst.getEvent("FUT",id);
             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                evLst.addEventFromAPI(new TieEvent("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1,1));
+                evLst.addTieEventFromAPI("FUT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1,1);
             }
             else{
-                let e = new TieEvent("FUT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1,1);
-                evLst.addEventFromAPI(e);
+                evLst.addTieEventFromAPI("FUT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1,1);
             }
         }
         return true;
@@ -98,11 +97,10 @@ function parsePTFutResp(json){
 
             let event = evLst.getEvent("FUTPT",id);
             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                evLst.addEventFromAPI(new TieEvent("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined),sOdds1,sOdds2,sOddsTie);
+                evLst.addTieEventFromAPI("FUTPT",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,undefined,undefined,sOdds1,sOdds2,sOddsTie);
             }
             else{
-                let e = new TieEvent("FUTPT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
-                evLst.addEventFromAPI(e);
+                evLst.addTieEventFromAPI("FUTPT",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,undefined,undefined,sOdds1,sOdds2,sOddsTie);
             }
         //}
     }
@@ -169,11 +167,10 @@ function parseF1Resp(racesJson, pilotsJson){
 
             let event = evLst.getEvent("F1",id);
             if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                evLst.addEventFromAPI(new RaceEvent("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds));
+                evLst.addRaceEventFromAPI("F1","World F1 Competition",id,event.getDescription(),event.getResult(),event.getState(),date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
             }
             else{
-                let e = new RaceEvent("F1","World F1 Competition",id,circuit,-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
-                evLst.addEventFromAPI(e);
+                evLst.addRaceEventFromAPI("F1","World F1 Competition",id,circuit,-1,"NODD",date,pilotsNames,pilotsPhotos,circuit,circuitPhoto,playerOdds);
             }
         }
 
@@ -224,11 +221,10 @@ function parseNBAResp(nbaJson){
 
                 let event = evLst.getEvent("BSK",id);
                 if (event != undefined && !(event instanceof RaceEvent)&& !(event instanceof NoTieEvent)&& !(event instanceof TieEvent)){
-                    evLst.addEventFromAPI(new NoTieEvent("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1));
+                    evLst.addNoTieEventFromAPI("BSK",league,id,event.getDescription(),event.getResult(),event.getState(),date,team1,team2,logo1,logo2,1,1);
                 }
                 else{
-                    let e = new NoTieEvent("BSK",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1);
-                    evLst.addEventFromAPI(e);
+                    evLst.addNoTieEventFromAPI("BSK",league,id,team1+"-"+team2,-1,"NODD",date,team1,team2,logo1,logo2,1,1);
                 }
 
 
