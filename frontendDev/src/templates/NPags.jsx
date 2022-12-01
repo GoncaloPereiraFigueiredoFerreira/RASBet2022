@@ -1,6 +1,6 @@
 export default function NPags({paginas,func,atual}){
 	let m = []
-	paginas = Math.floor(paginas);
+	paginas = Math.ceil(paginas);
 
 	if(atual > paginas){func(0);}
 

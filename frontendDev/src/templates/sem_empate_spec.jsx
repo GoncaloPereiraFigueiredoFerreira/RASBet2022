@@ -19,14 +19,14 @@ export default function SemEmpate({evento,sportid}){
 
   function handleChange({target}){
     var aux = input;
-    input.Odds[parseInt(target.name)] = parseInt(target.value);
+    input.Odds[parseInt(target.name)] = parseFloat(target.value);
     input = input;
     console.log(input);
   } 
 
   async function handleSubmit(){
  	await register_bet(input);
-  window.location.reload(false);
+  //window.location.reload(false);
   }
 
 	return(

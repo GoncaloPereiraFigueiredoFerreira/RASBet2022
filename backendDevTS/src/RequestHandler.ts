@@ -11,6 +11,10 @@ const notifcationCenter = require("./NotificationCenter");
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBCommunication/DBclasses';
 
 export class RequestHandler implements IRequestHandler{
+    constructor(){
+        this.updateEvents = this.updateEvents.bind(this);
+        this.updateResults = this.updateResults.bind(this);
+    }
 
     dummyFunction(request:any,response:any){
         response.status(200).send("Dummy here! But connection worked!")

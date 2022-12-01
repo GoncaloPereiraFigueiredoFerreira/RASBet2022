@@ -118,8 +118,9 @@ export default function Sport({set}){
 		  .then(function (response) {
 		    console.log("response",response);
 		    const data = response.data;
-		    input.check = false;
-
+		    let ninput = {...input};
+		    ninput.check = false;
+		    setInput(ninput);
 		  })
 		  .catch(function (error) {
 		    console.log(error);
@@ -183,7 +184,7 @@ export default function Sport({set}){
 			var data = {ApostadorID:getToken(),Codigo:input.codigo};
 			ret = await used_cod(data);
 			console.log("ret cod", ret);
-			if(ret.Res == "Nao"){input.check=true;}
+			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;setInput(ninput);}
 		}
 
 		function addBet(aposta){
@@ -234,7 +235,7 @@ export default function Sport({set}){
 										<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
 											{apostas.simples.Desc.Evento}</p>
 										<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
-											Resultado: {apostas.simples.Desc.Aposta} {apostas.simples.Aposta.Odd}</p>	              	
+											Resultado: {apostas.simples.Desc.Aposta} {parseFloat(apostas.simples.Aposta.Odd).toFixed(2)}</p>	              	
 							  		</div>):null
 						  		}
 							</>):(<>
@@ -245,7 +246,7 @@ export default function Sport({set}){
 								<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
 									{evento.Desc.Evento}</p>
 								<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
-									Resultado: {evento.Desc.Aposta} {evento.Aposta.Odd}</p>	 
+									Resultado: {evento.Desc.Aposta} {parseFloat(evento.Aposta.Odd).toFixed(2)}</p>	 
 							</div>
 					  	))}</>)}
 						<Form onSubmit={handleSubmit_cod} style={{'margin':'1vh'}}>
