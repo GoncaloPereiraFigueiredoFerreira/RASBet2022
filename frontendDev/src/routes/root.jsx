@@ -58,37 +58,39 @@ export default function Root() {
       <header>
         <nav>
           <ul>
-            <li>
-              <img src='/logo.png' className = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'5vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
-              <p style={{'display':'inline','width':'fit-content',"color":"gold",'text-align': 'center','vertical-align': 'middle'}}> RASBet</p>        
+            <li>    
+              <div className="logo"> 
+                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'0.5vh',"marginRight":"0.1vh"}}/>
+                <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"15px","marginTop":"20px"}}> RASBet</p>        
+              </div>     
             </li>
             <li>
               <Link to='/sport/FUT'>
-              <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
               Futebol
               </Link>
             </li>
             <li>
               <Link to='/sport/FUTPT'>
-              <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
               FutebolPT
               </Link>
             </li>
             <li>
               <Link to='/sport/F1'>
-              <img src='/formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
               Formula 1
               </Link>
             </li>
             <li>
               <Link to='/sport/BSK'>
-              <img src='/basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+              <img src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
               Basquetebol</Link>
             </li>
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='/perfil.png' style={{'width':'6vh','height':'6vh','margin':'0.5vh'}}/>
+              <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'0.5vh'}}/>
               <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -100,15 +102,30 @@ export default function Root() {
             {(getRole() == "apostador")?
               <li style={{"float":"right","padding":"1vh"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
-                  Carteira: {myWallet.Valor}
+                  Carteira: {myWallet.Valor}€
                 </button>
               </li>:null}
             {(getRole() == "Admin")?
+            <>
+              <li style={{"float":"right","padding":"1vh"}}>
+                <button onClick={()=>{navigation(`login`)}}>
+                  Ir para Login
+                </button>
+              </li>
               <li style={{"float":"right","padding":"1vh"}}>
                 <button onClick={()=>{refresh();}}>
                   Refresh
                 </button>
-              </li>:null}
+              </li>
+            </>:null}
+            {(getRole() == "Special")?
+            <>
+              <li style={{"float":"right","padding":"1vh"}}>
+                <button onClick={()=>{navigation(`login`)}}>
+                  Ir para Login
+                </button>
+              </li>
+            </>:null}
           </ul>
         </nav>
       </header>
@@ -124,28 +141,29 @@ export default function Root() {
        <header>
          <nav>
            <ul>
-           <li>
-               <img src='/logo.png' class = "button" onClick={()=>{navigation('/');}} style={{'width':'fit-content','height':'5vh',"margin-top":"1vh","margin-left":"1vh","background-color":"darkgreen"}}/>
-               <p style={{'display':'inline','width':'fit-content',"color":"gold",'text-align': 'center','vertical-align': 'middle'}}> RASBet</p>        
-             </li>
+            <li>
+              <div className="logo"> 
+                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'0.5vh',"marginRight":"1vh"}}/>
+              </div>
+            </li>
 
             <div className="dropdown" style={{"float":"left"}}>
                 <div className="dropbtn">Desportos</div>
                 <div class="dropdown-content">
                   <Link to={`/sport/FUT`}>               
-                    <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
                     Futebol
                   </Link>
                   <Link to={`/sport/FUTPT`}>               
-                    <img src='/football.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
                     FutebolPT
                   </Link>
                   <Link to={`/sport/F1`}>               
-                    <img src='/formula1.png' style={{'width':'fit-content','height':'3vh'}}/>
+                    <img src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
                     Formula 1
                   </Link>                  
-                  <Link to={`/sport/FUTBSK`}>               
-                    <img src='/basketball.png' style={{'width':'fit-content','height':'3vh'}}/>
+                  <Link to={`/sport/BSK`}>               
+                    <img src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
                     Basquetebol
                   </Link>
                 </div>
@@ -153,22 +171,38 @@ export default function Root() {
  
              {(getRole() == "apostador")?
              <div className="dropdown">
-               <img src='/perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
+               <img src='/perfil.jpg' style={{'width':'52.5px','height':'52.5px','margin':'0.5vh'}}/>
                <div class="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>
                  <Link to={`histA/${token}`}>Histórico Apostas</Link>
-                 <Link to={`wallet/${token}`}>Carteira: {myWallet.Valor}</Link>
+                 <Link to={`wallet/${token}`}>Carteira: {myWallet.Valor}€</Link>
                  <Link to={`login`}>Ir para Login</Link>
                </div>
              </div>:null}
             
              {(getRole() == "Admin")?
-               <li style={{"float":"right","padding":"1vh"}}>
-                 <button onClick={()=>{refresh();}}>
-                   Refresh
-                 </button>
-               </li>:null}
+              <>
+                <li style={{"float":"right","paddingTop":"1vh","paddingRight":"0.5vh"}}>
+                <button onClick={()=>{navigation(`login`)}}>
+                  Sair
+                </button>
+                </li>
+                <li style={{"float":"right","paddingTop":"1vh","paddingRight":"0.5vh"}}>
+                  <button onClick={()=>{refresh();}}>
+                    Refresh
+                  </button>
+                </li>
+              </>
+               :null}
+            {(getRole() == "Special")?
+            <>
+              <li style={{"float":"right","padding":"1vh"}}>
+                <button onClick={()=>{navigation(`login`)}}>
+                  Ir para Login
+                </button>
+              </li>
+            </>:null}
            </ul>
          </nav>
        </header>

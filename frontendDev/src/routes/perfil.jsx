@@ -25,28 +25,53 @@ export default function Perfil(props){
 	const perfil = useLoaderData();
 
 	console.log(perfil);
+	const width = window.innerWidth;
 
 
 	//if(!perfil){return navigate("/login");}
-	return(
-	 <>
-      <div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
-        <div className = "loginbox">
-          <div className='bemvindo'>
-            <p>Perfil</p>
-          </div>
-          <p>Nome Completo:{perfil.Nome}</p>
-          <p>Email:{perfil.Email}</p>
-          <p>Data de nascimeto:{parseDate(perfil.DataNascimento)} </p>
-          <p>Nif:{perfil.NIF}</p>
-          <p>CC:{perfil.CC}</p>
-          <p>Morada:{perfil.Morada}</p>
-          <p>Telemovel:{perfil.Telemovel}</p>
+	if(width>1000){
+		return(
+		<>
+		<div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
+			<div className = "loginbox">
+			<div className='bemvindo'>
+				<p>Perfil</p>
+			</div>
+			<p>Nome Completo:{perfil.Nome}</p>
+			<p>Email:{perfil.Email}</p>
+			<p>Data de nascimeto:{parseDate(perfil.DataNascimento)} </p>
+			<p>Nif:{perfil.NIF}</p>
+			<p>CC:{perfil.CC}</p>
+			<p>Morada:{perfil.Morada}</p>
+			<p>Telemovel:{perfil.Telemovel}</p>
 
-          <button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
-        </div>
-      </div>
-    </>
-	);
+			<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
+			</div>
+		</div>
+		</>
+		);
+	}
+	else{
+		return(
+		<>
+		<div className = "box" style={{'margin':'5%','marginTop':'2vh','paddingTop':'3vh'}}>
+			<div className = "loginbox">
+			<div className='bemvindo'>
+				<p>Perfil</p>
+			</div>
+			<p>Nome Completo:{perfil.Nome}</p>
+			<p>Email:{perfil.Email}</p>
+			<p>Data de nascimeto:{parseDate(perfil.DataNascimento)} </p>
+			<p>Nif:{perfil.NIF}</p>
+			<p>CC:{perfil.CC}</p>
+			<p>Morada:{perfil.Morada}</p>
+			<p>Telemovel:{perfil.Telemovel}</p>
+
+			<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
+			</div>
+		</div>
+		</>
+		);
+	}
 }
 

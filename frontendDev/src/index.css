@@ -27,7 +27,7 @@ body {
   margin: 0;
   line-height: 1.5;
   color: black;
-  background-color: darkgreen;
+  background-color: lightgrey;
 }
 textarea,
 input,
@@ -79,7 +79,7 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  height: 7vh;
+  height: 61.25px;
   z-index: 2;
 
 }
@@ -110,14 +110,13 @@ li:last-child {
 }
 
 li a {
-  display: block;
+  display: flex;
   color: black;
   text-align: center;
   font-size:x-large; 
   padding: 1vh 2vh;
-  height: 7vh;
-  text-decoration: none;
-  
+  height: 61.25px;
+  text-decoration: none; 
 }
 
 li a:hover{
@@ -133,10 +132,9 @@ li a:hover{
   color: black;
   text-align: center;
   font-size:large; 
-  padding: 1vh 2vh;
-  height: 7vh;
+  padding-top: 15px;
+  height: 61.25px;
   text-decoration: none;
-  vertical-align: middle ;
 }
 
 .dropbtn:hover{
@@ -161,6 +159,7 @@ li a:hover{
   z-index: 1;
   right: 0;
   width:max-content;
+  font-size: 15px;
 }
 
 /* Links inside the dropdown */
@@ -168,7 +167,7 @@ li a:hover{
   color: black;
   padding: 12px 16px;
   text-decoration: none;
-  display: block;
+  display: flex;
 }
 
 .dropdown-content button {
@@ -247,7 +246,7 @@ li a:hover{
 
 
 .bet-element img{
-  height: 7vh;
+  height: 61.25px;
 
 }
 
@@ -293,9 +292,7 @@ li a:hover{
   justify-content: space-around;
   float: right;
   margin: 0;
-  margin-right: 2vh;
 
-  width: 30%;
 }
 
 .racematch{
@@ -343,7 +340,7 @@ li a:hover{
 #overlay-main {
   position: absolute; /* Sit on top of the page content */
   display: none; /* Hidden by default */
-  flex-wrap: wrap;
+  flex-direction: column;
   width: 100%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
   top: 0;
@@ -434,5 +431,6 @@ tr:nth-child(even) {
   width: fit-content;
   height: fit-content;
   margin: auto ;
+  margin-right: 1vh;
 
 }

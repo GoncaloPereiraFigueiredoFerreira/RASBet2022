@@ -47,14 +47,18 @@ export default function Register({set,flag}) {
   }
 
   useEffect(()=>{if(flag){set(false);navigate('/')}});
+
+  const width = window.innerWidth;
+
+  if(width>1000){
   return (
     <>
-      <div className="logo">
-        <img src='logo.png' style={{'width':'fit-content','height':'6vh','margin':'1vh'}}/>
-        <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
+      <div className="logo" onClick={()=>{navigate('/login');}} >
+        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'1vh',"marginRight":"0.1vh"}}/>
+        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>        
       </div>
       <div className = "box">
-        <div className = "loginbox">
+        <div className = "loginbox" style={{"width":"5%"}}>
           <div className='bemvindo'>
             <p>Registo</p>
           </div>
@@ -82,9 +86,50 @@ export default function Register({set,flag}) {
           </Form>
         </div>
         <div className = "loginimg">
-          <img src="logoimage.png" id="loginimage"/>
         </div>
       </div>
     </>
   );
+}
+else{
+  return (
+    <>
+      <div className="logo" onClick={()=>{navigate('/login');}}>
+        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'1vh',"marginRight":"0.1vh"}}/>
+        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>         
+      </div>
+      <div className = "box">
+        <div className = "loginbox" style={{"width":"100%"}}>
+          <div className='bemvindo'>
+            <p>Registo</p>
+          </div>
+
+          <Form onSubmit={handleSubmit}>
+            <input type="text" id="nome" name="Nome" placeholder='Nome Completo' onChange={handleChange}/>
+
+
+            <input type="email" id="email" name="Email" placeholder='Endereço Eletrónico' onChange={handleChange}/>
+
+
+            <div className="birthdate">
+            <label htmlFor="date" >Data de nascimento:  </label>
+            <input type="date" id="data" max={getDate_min()} name="DataNascimento" onChange={handleChange}/>
+            </div>
+
+            <input type="text" id="nif" name="NIF" pattern="\d{9}" title="São necessário 9 números" placeholder='NIF' onChange={handleChange}/>
+            <input type="text" id="cc" name="CC" pattern="\d{8}" title="São necessário 8 números" placeholder='Número de identidade' onChange={handleChange}/>
+            <input type="text" id="morada" name="Morada" placeholder='Morada, Número, Andar'onChange={handleChange}/>
+            <input type="text" id="telemovel" name="Telemovel" pattern="\d{9}" title="São necessário 9 números" placeholder='Telemóvel'onChange={handleChange}/>
+            <input type="password" id="password" name="PlvPasse" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="É necessário uma letra minúscula e maiúscula, um carácter especial um número e tamanho mínimo de 8 carácteres" placeholder='Palavra-passe'onChange={handleChange}/>
+
+            <button className = "button" type="submit">Confirmar</button>
+            {(error.error)?<p style={{"color":"red"}}>{error.error}</p>:null}
+          </Form>
+        </div>
+        <div className = "loginimg" style={{"width":(width*0.7),"height":(width*0.5),"backgroundSize":"contain"}}>
+        </div>
+      </div>
+    </>
+  );
+}
 }

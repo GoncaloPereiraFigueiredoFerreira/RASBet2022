@@ -1,7 +1,7 @@
 import {EventList} from "./Models/EventList";
 import {DBCommunication} from "./DBCommunication/DBCommunication";
 import {SessionHandler} from "./SessionHandler";
-const evLst:IEventList = EventList.getInstance()
+const evLst:IControlEvents = EventList.getInstance()
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication();
 const sessionHandler:ISessionHandler = SessionHandler.getInstance();

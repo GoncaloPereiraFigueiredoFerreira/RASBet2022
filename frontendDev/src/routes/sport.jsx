@@ -263,8 +263,8 @@ export default function Sport({set}){
 								<button style={{'width':'30%','backgroundColor':'red','color':'white',"float":"right","fontSize":"1vw"}} type="subit">Aplicar</button>
 							</Form>
 							<Form onSubmit={handleSubmit} style={{"display":"block"}}>
-								<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'1vh','width':'57%'}}/>
-								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
+								<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'1vh','width':'50%'}}/>
+								<p style={{'display':'inline','margin-right':'1vh','float':'right'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
 								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white',"fontSize":"1vw"}} type="subit">Aposta já</button>
 							</Form>
 						</div>
@@ -286,7 +286,7 @@ export default function Sport({set}){
 					
 					<div id="overlay-main">
 
-						<div className="betbox" id="Simples">
+						<div className="betbox" id="Simples" style={{"margin":"auto","marginTop":"1vh"}}>
 							<div>
 								<button className='bet-type-button' style={state?{'fontWeight':'bold','borderBottom':'2px solid gray'}:{'borderBottom':'1px solid lightgray'}} onClick={()=>(setState(true))}>Simples</button>
 								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Multiplas</button>
@@ -320,11 +320,10 @@ export default function Sport({set}){
 							<Form onSubmit={handleSubmit}>
 								<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
 								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
-								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
+								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Apostar</button>
 							</Form>
-							<button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(off())}>Sair</button>
-
 						</div>
+						<button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(off())}>Sair</button>
 					</div>
 				</>
 					);
@@ -332,13 +331,21 @@ export default function Sport({set}){
 	}
 
 	if(role == "Special")
-		return(<>  
-		{sidebar()}
-		<div className="betpage-spec">
-			<Bet_spec data={sport} tipo={sportid} filter={filter}/>
-		</div></>
-				);
-
+		if(width>1000){
+			return(<>  
+			{sidebar()}
+			<div className="betpage-spec">
+				<Bet_spec data={sport} tipo={sportid} filter={filter}/>
+			</div></>
+					);
+		}
+		else{
+			return(<>  
+				<div className="betpage-spec" style={{"width":"100%"}}>
+					<Bet_spec data={sport} tipo={sportid} filter={filter}/>
+				</div></>
+					);
+		}
 	if(role == "Admin"){
 
 		function handleChange({target}){
@@ -352,34 +359,78 @@ export default function Sport({set}){
 			add_cod(data);
 		}
 
+		function on() {
+			document.getElementById("overlay-main").style.display = "flex";
+		}
+			
+		function off() {
+			document.getElementById("overlay-main").style.display = "none";
+		}
+
+		if(width>1000){
+			return(
+				<>
+			{sidebar()}
+					<div className="betpage">
+						<Bet_admin data={sport} sport={sportid} filter={filter}/>
+					</div>
+					
+					<div className="betzone" id="Rightbar">
+
+						<div className="betbox" id="Multiplas">
+							<div>
+								<button className='bet-type-button' style={{'font-weight':'bold','border-bottom':'2px solid gray','width':'100%'}}>Códigos Promocionais</button>
+							</div>
+						{cods.map((cod)=>(
+							<div className="bet" key={cod}>
+								<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
+								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
+								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
+							</div>
+						))}
+						<Form onSubmit={handleSubmit}>
+							<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+							<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+							<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
+						</Form>
+						</div>
+					</div>
+				</>
+			);
+	}
+	else{
 		return(
 			<>
-	      {sidebar()}
-				<div className="betpage">
+				<div className="betpage" style={{"width":"100%"}}>
+					<button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(on())}>Códigos Promocionais</button>
+
 					<Bet_admin data={sport} sport={sportid} filter={filter}/>
 				</div>
 				
-				<div className="betzone" id="Rightbar">
+				<div id="overlay-main">
 
-		            <div className="betbox" id="Multiplas">
+					<div className="betbox" id="Multiplas" style={{"margin":"auto","marginTop":"1vh"}}>
 						<div>
 							<button className='bet-type-button' style={{'font-weight':'bold','border-bottom':'2px solid gray','width':'100%'}}>Códigos Promocionais</button>
 						</div>
-		              {cods.map((cod)=>(
-			              <div className="bet" key={cod}>
+					{cods.map((cod)=>(
+						<div className="bet" key={cod}>
 							<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
-			                <p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
-			                <p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
-			              </div>
-		              ))}
-		              <Form onSubmit={handleSubmit}>
-		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
-		              	<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
-		              </Form>
-		            </div>
-		        </div>
-            </>
+							<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
+							<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
+						</div>
+					))}
+					<Form onSubmit={handleSubmit}>
+						<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+						<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+						<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
+					</Form>
+					</div>
+					<button type="button" style={{"margin":"auto","marginTop":"2vh","backgroundColor":"orange"}} onClick={()=>(off())}>Sair</button>
+				</div>
+			</>
 		);
+	}
+
 	}
 }

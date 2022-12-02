@@ -8,7 +8,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseNBAResultResp = exports.parseNBAResp = exports.parseF1ResultResp = exports.parseF1Resp = exports.parsePTFutResultResp = exports.parsePTFutResp = exports.parseFutResultResp = exports.parseFutResp = void 0;
 const EventList_1 = require("../Models/EventList");
-const evLst = EventList_1.EventList.getInstance();
+const evLst = EventList_1.EventList.getUpdateEventsInstance();
 /**
  * Function responsible for retrieving the information from the API response of a Football request
  * @param {JSON} json Json that contains the response from the API
@@ -170,7 +170,7 @@ function parseF1ResultResp(json) {
         let pilotList = evLst.getParticipants("F1", id);
         let winner = json.response[0].driver.name;
         let index = pilotList.indexOf(winner);
-        evLst.updateWinner("F1", id, index, evLst.getDescription("F1", id) + " Vencedor: " + winner);
+        evLst.updateWinner("F1", id, index, "Vencedor: " + winner);
         return true;
     }
 }

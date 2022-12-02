@@ -29,7 +29,12 @@ export default function Race({evento,addAposta,escolhas}){
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div key={ind.toString() + evento.Liga} style={{"display":"flex",'flex-direction':'column'}}>
                    
-                    {test(evento.Participantes,evento.Odds).map((elem,ind)=>(<button className="comp-button" style={{'width':'100%','border-radius':'0',"backgroundColor":(escolhas.includes(ind))?"orange":"white","color":(escolhas.includes(0))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,ind)))}> <img src={evento.Logos[ind]} style={{"height":"4vh"}}/> {elem}</button>))}
+                    {(<button className="comp-button" 
+                              style={{'width':'100%','border-radius':'0',"backgroundColor":(escolhas.includes(ind))?"red":"grey"}} 
+                              onClick={()=>(addAposta(parseBet(evento,ind)))}> 
+                                <img src={evento.Logos[ind]} style={{"height":"4vh"}}/>
+                                {part}
+                      </button>)}
                   </div>
                 
                 </>))}                
