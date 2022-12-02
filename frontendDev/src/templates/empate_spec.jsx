@@ -56,7 +56,7 @@ export default function Empate({evento,sportid}){
 					<p style={{"margin":"0px",'font-weight':'bold'}}>{evento.Liga}</p>
 		      <div style={{"display":"flex",'flex-direction':'row','float':'left'}}>
 						<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
-		        <p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
+		        <p >{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 						<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		      </div>
 					<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>

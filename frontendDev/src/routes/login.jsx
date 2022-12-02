@@ -66,13 +66,50 @@ export default function Login({set,flag}) {
 
   useEffect(()=>{if(flag){set(false);navigate('/')}});
 
+  const width = window.innerWidth;
+
+  if(width>1000){
+  return (
+    <>
+
+    <div className="logo"> 
+        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'1vh',"marginRight":"0.1vh"}}/>
+        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>        
+    </div>
+
+    <div className="box" >
+
+      <div className = "loginbox" style={{"width":"5%"}}>
+        <div className='bemvindo'>
+          <p>Bem Vindo</p>
+        </div>
+        <Form onSubmit={handleSubmit}>
+          <input type="text" name="Email" placeholder="Email" onChange={handleChange}/>
+          <input type="password" name="PlvPasse" placeholder="Palavra-passe" onChange={handleChange}/>
+          <button className = "button" type="submit">Login</button> 
+          {(error.error)?<p style={{"color":"red"}}>{error.error}</p>:null}
+        </Form>
+        <p>Não tem conta?</p>
+        <a href='register'>Registe-se já!</a>
+      </div>
+
+      <div className = "loginimg" >
+      </div>
+      
+      
+    </div>
+    
+    </>
+  );
+  }
+  else{
 
   return (
     <>
 
-    <div className="logo">
-      <img src='logo.png' style={{'width':'fit-content','height':'6vh','margin':'1vh'}}/>
-      <p style={{'display':'inline','width':'fit-content',"color":"gold"}}> RASBet</p>        
+    <div className="logo" >
+        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'1vh',"marginRight":"0.1vh"}}/>
+        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>         
     </div>
 
     <div className="box">
@@ -91,13 +128,11 @@ export default function Login({set,flag}) {
         <a href='register'>Registe-se já!</a>
       </div>
 
-      <div className = "loginimg">
-        <img src="logoimage.png" id="loginimage"/>
+      <div className = "loginimg" style={{"width":(width*0.7),"height":(width*0.5),"backgroundSize":"contain"}}>
       </div>
-      
-      
     </div>
     
     </>
   );
+  }
 }

@@ -1,6 +1,15 @@
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  line-height: 1.5;
+  color: black;
+  background-color: darkgreen;
+}
+
 .logo{
-    display:block;
+    display:flex;
 }
 
 
@@ -65,7 +74,7 @@
 }
 
 .bemvindo{
-    font-size:x-large;
+    font-size: calc(12px + 1vw);
 }
 
 .birthdate{
@@ -76,16 +85,27 @@
 .loginimg{
     order: 2;
     flex-grow: 1;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     flex-shrink: 1;
 
     border-style: solid;
-    border-radius: 5%;
+    border-radius: 30px;
 
     margin: auto ;
-    padding: auto;
-    overflow: hidden;
+    /*padding: auto;
+    overflow: hidden;*/
     color: white;
+
+
+    background-image: url(../../public/logoimage.png);
+    background-position: center;
+    background-repeat: no-repeat;
+
+
+
+    height: 320px;
+    padding-top: 0; /* (img-height / img-width * container-width) */
+                /* (853 / 1280 * 100) */
 }
 
 #loginimage img{

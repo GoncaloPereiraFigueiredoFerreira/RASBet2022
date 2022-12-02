@@ -42,9 +42,9 @@ export default function HistT() {
           </div>
             <table>
             <tr>
-              <th style={{'fontSize':'large'}}>Montante</th>
-              <th style={{'fontSize':'large'}}>Tipo</th>
-              <th style={{'fontSize':'large'}}>Data</th>
+              <th>Montante</th>
+              <th>Tipo</th>
+              <th>Data</th>
             </tr>
             {list.lista.map((elem)=>(
             <tr id="Simples" key={elem.ID}>

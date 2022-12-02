@@ -78,34 +78,95 @@ export default function Wallet() {
     }
 
     function on() {
-        document.getElementById("overlay").style.display = "block";
+      document.getElementById("modo").style.display = "flex";
       }
       
-      function off() {
-        document.getElementById("overlay").style.display = "none";
-      }
+    function off() {
+      document.getElementById("modo").style.display = "none";
+    }
+
+    function onMBW() {
+      document.getElementById("mbway").style.display = "flex";
+
+    }
+      
+    function offMBW() {
+      document.getElementById("mbway").style.display = "none";
+    }
+
+    function onMB() {
+      document.getElementById("multibanco").style.display = "flex";
+
+    }
+      
+    function offMB() {
+      document.getElementById("multibanco").style.display = "none";
+    }
+
+    function onDep() {
+      document.getElementById("depositar").style.display = "flex";
+      offRet();
+    }
+      
+    function offDep() {
+      document.getElementById("depositar").style.display = "none";
+    }
+
+    function onRet() {
+      document.getElementById("retirar").style.display = "flex";
+      offDep();
+    }
+      
+    function offRet() {
+      document.getElementById("retirar").style.display = "none";
+    }
+
+    function onS() {
+      document.getElementById("selected").style.display = "flex";
+    }
+      
+    function offS() {
+      document.getElementById("selected").style.display = "none";
+    }
 
   return (
     <>
 
-      <div className = "box">
-        <div className = "loginbox">
+      <div className = "box" style={{"marginTop":"2vh","paddingTop":"2vh"}}>
+        <div className = "loginbox" >
           <div className='bemvindo'>
             <p>Wallet</p>
-            <p>Montante:{}</p>
-            <Form>
-              <input style={{"width":"30%"}}type="text" name="Valor" placeholder='Montante a depositar' pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
-              <button style={{"margin":"10px"}} onClick={()=>handleSubmit_DP()}>+</button>
-              <button style={{"margin":"10px"}} onClick={()=>handleSubmit_LV()}>-</button>
-            </Form>
-          </div>
-          {/*
-          <div id="overlay" onclick="off()">
-            <div id="text">Overlay Text</div>
           </div>
           
-          <button className = "button" style={{"margin-right":"30vh","margin-left":"30vh","width":"40%"}} onclick="on()">Depositar</button>
-          */}
+          <div id="overlay">
+            <div id="text">Overlay Text</div>
+          </div>
+
+          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","width":"40%"}} onClick={()=>{on();onRet()}}>Retirar</button>
+          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","marginTop":"1vh","width":"40%"}} onClick={()=>{on();onDep()}}>Depositar</button>
+
+          <div id="modo" style={{"display":"none","justifyContent":"center","flexDirection":"column","marginTop":"20px"}}>
+            <p>Selecionar modo:</p>
+            <div style={{"justifyContent":"center","flexDirection":"row"}}>
+              <img src="/MBway.png" style={{"margin":"auto"}} onClick={()=>{onS();onMBW()}}></img>
+              <img src="/multibanco.png" style={{"borderRadius":"20px","margin":"auto"}} onClick={()=>()=>{onS();onMB()}}></img>              
+            </div>
+          </div>
+
+          <div id="selected" style={{"display":"none","justifyContent":"center","marginTop":"20px"}}>
+            <Form id="selected" style={{"justifyContent":"center","marginTop":"20px"}}>
+              <input style={{"width":"100%"}} type="text" name="Valor" placeholder='Montante €' pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+              <div id="mbway" style={{"display":"none"}}>
+                <input style={{"display":"flex","width":"100%"}} type="text" name="Valor" placeholder='Nº de telemovel' pattern="\d*(\.\d{1,2}|)"/>
+              </div>
+              <div id="multibanco" style={{"display":"none"}}>
+                <input style={{"display":"flex","width":"100%"}} type="text" name="Valor" placeholder='IBAN' pattern="\d*(\.\d{1,2}|)"/>
+              </div>
+              <button id="depositar"  style={{"display":"none","display":"none", "backgroundColor":"red","width":"50%","marginLeft":"25%","textAlign":"center"}} onClick={()=>handleSubmit_DP()}>Depositar</button>
+              <button id="retirar"    style={{"display":"none","backgroundColor":"red","width":"50%","marginLeft":"25%","textAlign":"center"}} onClick={()=>handleSubmit_LV()}>Retirar</button>
+            </Form>
+          </div>
+
         </div>
       </div>
     </>
