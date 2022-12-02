@@ -4,6 +4,12 @@ import axios from 'axios'
 import './login.css'
 import {setToken,setRole} from "../utils"
 
+    /**
+     * Post request to login the user in RASBet
+     * @param JSON Data whith the information for login the user
+     * @returns Returns True if Post sucessed or error data
+     */
+
 async function login_req(data){
   console.log(data);
   var resp = await axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
@@ -22,17 +28,31 @@ async function login_req(data){
   return resp;
 }
 
+    /**
+     * Component that render the Login page
+     * @param JSON with filds set that is a function that set a flag if login successed and that same flag
+     * @returns Returns HTML for the component 
+     */
+
 export default function Login({set,flag}) {
   const navigate = useNavigate();
   const [input,setInput] = useState({Email:"",PlvPasse:""});
   const [error,setError] = useState({});
   
+  /**
+   * Handle changes in the input fields 
+   * @param input field that changed
+   */
 
   function handleChange({target}){
     var aux = input;
     input[target.name] = target.value;
     setInput(input);
   } 
+
+  /**
+   * Handle submit of a form, send login request
+   */
 
   async function handleSubmit(){
     var resp = await login_req(input);

@@ -5,6 +5,11 @@ import { useEffect,useState } from "react";
 
 import {getToken,getWallet,getRole,setWallet as set} from "../utils"
 
+    /**
+     * Component that render the root page(this page is the bar)
+     * @returns Returns HTML for the component 
+     */
+
 export default function Root() {
   const navigation = useNavigate();
   const token = getToken();
@@ -31,6 +36,11 @@ export default function Root() {
       setListening(true);
     }
   },[listening]);
+
+    /**
+     * GET request to register a new user
+     * @returns Returns the data if request sucessed or null
+     */
 
   async function refresh(){
     const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/',params:{"token":getToken()}}) 
@@ -154,7 +164,7 @@ export default function Root() {
  
              {(getRole() == "apostador")?
              <div className="dropdown">
-               <img src='/perfil.jpg' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
+               <img src='/perfil.png' style={{'width':'6vh','height':'3vh','margin':'1vh'}}/>
                <div class="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>

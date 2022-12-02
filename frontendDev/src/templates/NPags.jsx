@@ -1,3 +1,9 @@
+    /**
+     * Component that render the select page in pages 
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
+
 export default function NPags({paginas,func,atual}){
 	let m = []
 	paginas = Math.ceil(paginas);
@@ -13,7 +19,7 @@ export default function NPags({paginas,func,atual}){
 		if(atual > 0)m.push(atual - 1);
 		m.push(atual);
 		if(atual < paginas - 2)m.push(atual + 1);
-		if(atual < paginas - 1) m.push(paginas);
+		if(atual < paginas - 1) m.push(paginas - 1);
 	}
 
 	return(

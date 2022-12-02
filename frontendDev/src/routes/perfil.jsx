@@ -3,6 +3,12 @@ import axios from "axios"
 import Login from "./login"
 import {getToken,getRole,getWallet,parseDate} from "../utils"
 
+    /**
+     * Fetch the perfil information of the user
+     * @param JSON whith filed perfilid that is the token of the user
+     * @returns Returns the data if fetch sucessed or null
+     */
+
 export async function loader({params}){
 	const token = params.perfilid;
 	var ret;
@@ -20,14 +26,17 @@ export async function loader({params}){
 	return ret;
 }
 
-export default function Perfil(props){
+    /**
+     * Component that render the Perfil page
+     * @returns Returns HTML for the component 
+     */
+
+export default function Perfil(){
 	const navigate = useNavigate();
 	const perfil = useLoaderData();
 
 	console.log(perfil);
 
-
-	//if(!perfil){return navigate("/login");}
 	return(
 	 <>
       <div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>

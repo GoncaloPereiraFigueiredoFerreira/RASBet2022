@@ -5,11 +5,26 @@ import Empate from "./empate"
 import SemEmpate from "./sem_empate"
 import NPags from "./NPags"
 
+  /**
+   * auxiliar function that separate events by type to ther components
+   * @param event to be treated
+   * @param funtion to add event to bet
+   * @param position of that event in the list of events
+   * @param array that contain selected bets
+   */
+
 function aux(evento,addAposta,ind,escolhas){
 	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
 	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
 	else if(evento.Tipo == 'NoTieEvent') return(<SemEmpate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
 }
+
+  /**
+   * funtion that checks if event pass the filters applied
+   * @param filters applied
+   * @param event
+   * @returns a boolean if the event pass the filters applied
+   */
 
 function check(filter,evento){
 	let ret = true;
@@ -24,7 +39,19 @@ function check(filter,evento){
 	return ret;
 }
 
+    /**
+     * Component that render a bet
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
+
 export default function Bet(props){
+
+  /**
+   * funtion that verifies if evnt is selected in the current bet
+   * @param event
+   * @returns a boolean that represents id an event is selected or not
+   */
 
 	function selecionados(evento){
 		let ret;
@@ -39,7 +66,7 @@ export default function Bet(props){
 		return ret
 	}
 
-	const elem = 4;
+	const elem = 20;
 	const [page,setPage] = useState(0);
 
 

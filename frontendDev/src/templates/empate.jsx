@@ -1,5 +1,10 @@
 import {parseBet,parseDate} from "../utils"
 
+    /**
+     * Component that render a Draw event to user
+     * @params properties of the component with field event,addApost,escolhas
+     * @returns Returns HTML for the component 
+     */
 
 export default function Empate({evento,addAposta,escolhas}){
 	return(
@@ -15,13 +20,13 @@ export default function Empate({evento,addAposta,escolhas}){
 		            </div>
 		            <div className="drawmatchodds">
 					<div>
-				            <button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0]}</button>
+				            <button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
 						</div>
 						<div>
-			              	<button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2]}</button>
+			              	<button style={{"margin":"15px","backgroundColor":(escolhas.includes(2))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2].toFixed(2)}</button>
 						</div>
 						<div>
-							<button style={{"margin":"15px","backgroundColor":(escolhas.includes(0))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1]}</button>
+							<button style={{"margin":"15px","backgroundColor":(escolhas.includes(1))?"red":"grey"}} className='odd-button' onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
 						</div>
 		            </div>
 	          	</div>

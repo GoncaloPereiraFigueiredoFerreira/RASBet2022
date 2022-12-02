@@ -1,9 +1,19 @@
 
 //sessionStorage.clear() 
 
+    /**
+     * Save Token of the user in localStorage
+     * @params token of the user 
+     */
+
 export async function setToken(userToken) {
   sessionStorage.setItem('token', JSON.stringify(userToken));
 }
+
+    /**
+     * get Token of the user in localStorage
+     * @returns user token
+     */
 
 export function getToken(){
   const tokenString = sessionStorage.getItem('token');
@@ -12,9 +22,19 @@ export function getToken(){
   return userToken;
 }
 
+    /**
+     * Save Role of the user in localStorage
+     * @params token of the user 
+     */
+
 export async function setRole(userRole) {
   sessionStorage.setItem('role', JSON.stringify(userRole));
 }
+
+    /**
+     * get Role of the user in localStorage
+     * @returns user Role
+     */
 
 export function getRole(){
   const tokenString = sessionStorage.getItem('role');
@@ -23,9 +43,19 @@ export function getRole(){
   return userToken;
 }
 
+    /**
+     * save wallet of the user in localStorage
+     * @params user wallet
+     */
+
 export async function setWallet(userWallet) {
   sessionStorage.setItem('wallet', JSON.stringify(userWallet));
 }
+
+    /**
+     * get wallet of the user in localStorage
+     * @returns user wallet
+     */
 
 export function getWallet(){
   const tokenString = sessionStorage.getItem('wallet');
@@ -33,6 +63,13 @@ export function getWallet(){
   //const ret = userToken?.token;
   return userToken;
 }
+
+    /**
+     * Funtion that parses the frontend bet so the bacak end can read it
+     * @params event
+     * @params number that represents the side that the user bet in
+     * @returns Parsed bet
+     */
 
 export function parseBet(evento,escolha){
   var Nome;
@@ -54,6 +91,10 @@ export function parseBet(evento,escolha){
 
 }
 
+    /**
+     * Funtion that gives current date
+     * @returns string with current date from years to seconds
+     */
 
 export function getDate(){
   const data = new Date();
@@ -61,11 +102,21 @@ export function getDate(){
 
 }
 
+    /**
+     * Funtion that gives current date minus 18 years
+     * @returns string with current date minus 18 years from years to seconds
+     */
+
 export function getDate_min(){
   const data = new Date();
   return  (data.getFullYear()-18).toString().padStart(4,'0') + "-" + data.getMonth().toString().padStart(2,'0') + "-" + data.getDay().toString().padStart(2,'0');
 }
 
+    /**
+     * Funtion that parses a date to a more appealing format
+     * @params date 
+     * @returns Parsed date
+     */
 
 export function parseDate(data){
   return `${data.slice(0,10)} ${data.slice(11,19)}`

@@ -1,9 +1,22 @@
 import {parseBet,parseDate} from "../utils"
 
+    /**
+     * Function that aggregates odd an name of a pilot
+     * @params list of pilots
+     * @params  list of odds
+     * @returns Returns a combination of the two lists 
+     */
+
 function test (part,odds){
   const ret = part.map(((elem,ind) =>([elem,odds[ind].toFixed(2)].join(" "))));
   return ret;
 }
+
+    /**
+     * Component that render a Race event to an user
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
 
 export default function Race({evento,addAposta,escolhas}){
   function on() {

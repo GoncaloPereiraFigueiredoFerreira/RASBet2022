@@ -5,6 +5,13 @@ import {getToken,parseDate} from "../utils"
 import {Form} from "react-router-dom"
 import NPags from "./NPags"
 
+		/**
+     * Post request to admin cancel a bet
+     * @param event
+     * @param sport of the bet
+     * @returns Returns the response if request sucessed or null
+     */
+
 async function cancelar_aposta(evento,sport){
 	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId,Desporto:sport}};
    var resp = axios({method:'POST',url:'http://localhost:8080/api/closeEvent/',data:data}) 
@@ -18,6 +25,12 @@ async function cancelar_aposta(evento,sport){
   });
 }
 
+		/**
+     * Post request to admin add a super odd to an event
+     * @param JSON data to send in the Post request
+     * @returns Returns the response if request sucessed or null
+     */
+
 async function add_Super_Odds(data){
    var resp = axios({method:'POST',url:'http://localhost:8080/api/superOdds/',data:data}) 
   .then(function (response) {
@@ -30,6 +43,11 @@ async function add_Super_Odds(data){
   });
 }
 
+		/**
+     * Component that render the events to the admin
+     * @param JSON data that contain the field event and sport type
+     * @returns Returns HTML for the component
+     */
 
 function Aux({evento,sport}){
 	var desc = "";
@@ -80,6 +98,13 @@ function Aux({evento,sport}){
 	);
 }
 
+  /**
+   * funtion that checks if event pass the filters applied
+   * @param filters applied
+   * @param event
+   * @returns a boolean if the event pass the filters applied
+   */
+
 function check(filter,evento){
 	let ret = true;
 	if (filter.ligas.size > 0){
@@ -93,9 +118,14 @@ function check(filter,evento){
 	return ret;
 }
 
+    /**
+     * Component that render a bet
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
 
 export default function Bet(props){
-	const elem = 4;
+	const elem = 20;
 	const [page,setPage] = useState(0);
 
 	const filter = props.data.filter((evento)=>(check(props.filter,evento))); 

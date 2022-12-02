@@ -2,6 +2,12 @@ import axios from 'axios'
 import {getToken,parseDate} from  "../utils"
 import {useLoaderData} from 'react-router-dom';
 
+    /**
+     * Fetch the historic of Bets data of the user
+     * @param JSON whith filed perfilid that is the token of the user
+     * @returns Returns the data if fetch sucessed or null
+     */
+
 export async function loader({params}){
   const token = params.perfilid;
   var ret;
@@ -18,6 +24,11 @@ export async function loader({params}){
       }); 
   return ret;
 }
+
+    /**
+     * Component that render the historic of Bets page
+     * @returns Returns HTML for the component 
+     */
 
 export default function HistA() {
     const list = useLoaderData();

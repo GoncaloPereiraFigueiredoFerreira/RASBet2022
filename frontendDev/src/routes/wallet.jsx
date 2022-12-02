@@ -3,9 +3,18 @@ import {useState} from "react"
 import axios from "axios"
 import {getDate,getToken} from "../utils"
 
-export default function Wallet({set}) {
+    /**
+     * Component that render the wallet page
+     * @returns Returns HTML for the component 
+     */
+
+export default function Wallet() {
     const [input,setInput] = useState({Valor:0});
 
+    /**
+     * Post request to add more funds to the user account
+     * @returns Returns True if Post sucessed or error data
+     */
 
     function Levantar(){
       var data={Valor:input.Valor,Tipo:"Levantamento_Conta",ApostadorID:getToken(),DataTr:getDate()};
@@ -22,6 +31,11 @@ export default function Wallet({set}) {
       });
     }
 
+    /**
+     * Post request to remove funds from the user account
+     * @returns Returns True if Post sucessed or error data
+     */
+
     function Depositar(){
       var data={Valor:input.Valor,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTr:getDate()};
       console.log(data);
@@ -37,14 +51,27 @@ export default function Wallet({set}) {
       });
     }
 
+  /**
+   * Handle changes in the input fields 
+   * @param input field that changed
+   */
+
     function handleChange({target}){
       input[target.name] = target.value;
       setInput(input);
     }
 
+  /**
+   * Handle submit of a form, send deposit request
+   */
+
     function handleSubmit_DP(){
       const ret = Depositar();
     }
+
+  /**
+   * Handle submit of a form, send withdraw request
+   */
 
     function handleSubmit_LV(){
       const ret = Levantar();

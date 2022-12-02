@@ -17,6 +17,11 @@ import Register from './routes/register.jsx'
 
 import {getRole} from "./utils"
 
+  /**
+   * First funtion called in frontend
+   * Creates the routing tree for the application
+   */
+
 function App(){
 	const [flag,setFlag] = useState(false);
 	const defaultPage = ((getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>);

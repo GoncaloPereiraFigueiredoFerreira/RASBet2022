@@ -8,7 +8,11 @@ import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
 import Bet_admin from "../templates/Bet_admin"
 
-
+    /**
+     * Post request to admintrador add a new promocinal code
+     * @param JSON data to send in the Post request
+     * @returns Returns the response if request sucessed or null
+     */
 
 async function add_cod(data){
   var resp = axios({method:'POST',url:'http://localhost:8080/api/addPromocao/',data:data}) 
@@ -24,6 +28,12 @@ async function add_cod(data){
   return resp;
 }
 
+    /**
+     * Post request to admintrador remove a promocinal code
+     * @param JSON data to send in the Post request
+     * @returns Returns the response if request sucessed or null
+     */
+
 async function rm_cod(data){
   var resp = axios({method:'POST',url:'http://localhost:8080/api/remPromocao/',data:data}) 
   .then(function (response) {
@@ -37,6 +47,12 @@ async function rm_cod(data){
 
   return resp;
 }
+
+    /**
+     * Get request to discover if user as used that promocional code
+     * @param JSON data to send in the Get request
+     * @returns Returns the response if request sucessed or null
+     */
 
 async function used_cod(data){
   var resp = axios({method:'GET',url:'http://localhost:8080/api/usedCod/',params:data}) 
@@ -52,6 +68,12 @@ async function used_cod(data){
 
   return resp;
 }
+
+    /**
+     * Fetch the list of events to display to the users and if user is an admin get all promocional codes
+     * @param JSON whith filed perfilid that is the token of the user
+     * @returns Returns the data if fetch sucessed or null
+     */
 
 export async function loader({params}){
 	const token = getToken();
@@ -69,6 +91,12 @@ export async function loader({params}){
 	return ret;
 }
 
+    /**
+     * Fetch the all promocional codes in the system
+     * @param JSON whith filed perfilid that is the token of the user
+     * @returns Returns the data if fetch sucessed or null
+     */
+
 async function getCods(){
 	const ret = await axios({method:'GET',url:'http://localhost:8080/api/getpromocoes/',params:{"Token":getToken()}}) 
 	  .then(function (response) {
@@ -83,13 +111,22 @@ async function getCods(){
 	return ret;
 }
 
-export default function Sport({set}){
+    /**
+     * Component that render the sport page
+     * @returns Returns HTML for the component 
+     */
+
+export default function Sport(){
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
 	const [input,setInput] = useState({Valor:0});
 	const [filter,setFilter] = useState({"name":"","ligas":new Set([])})
 	const {sportid,sport,cods,ligas} = useLoaderData();
 
+  /**
+   * Component that render the sidebar(filters of the page sport)
+   * @returns Returns HTML for the component 
+   */
 
 	function sidebar(){
 
@@ -113,6 +150,13 @@ export default function Sport({set}){
 
 	if(role == "apostador"){
 
+
+		/**
+     * Post request to user do a new bet
+     * @param JSON data to send in the Post request
+     * @returns Returns the response if request sucessed or null
+     */
+
 		async function reg_bet(data){
 		  var resp = axios({method:'POST',url:'http://localhost:8080/api/registerBet/',data:data}) 
 		  .then(function (response) {
@@ -130,19 +174,36 @@ export default function Sport({set}){
 		  return resp;
 		}
 
+  /**
+   * Handle changes in the input fields for a bet and turn them into floats 
+   * @param input field that changed
+   */
+
 		function handleChange({target}){
 				let ninput = {...input};
-		    ninput[target.name] = (target.value != "")?parseInt(target.value):0;
+		    ninput[target.name] = (target.value != "")?parseFloat(target.value):0;
 		    setInput(ninput);
 		} 
+
+  /**
+   * Handle changes in the promocional code field
+   * @param input field that changed
+   */
+
 		function handleChangeCodS({target}){
 			input[target.name] = target.value;
 			input.check = false;
 			setInput(input);
 		}
 
+	/**
+   * Handle submit of a form responsable for the bet
+   * See if it is a simple or multiple bet and processes the data accordingly
+   */
+
 		function handleSubmit(){
-			if((apostas.simples != null || apostas.mult.length > 0) && window.confirm("Deseja apostar?")){
+			console.log(input.check , input.Valor)
+			if((apostas.simples != null || apostas.mult.length > 0) && (input.check || input.Valor > 0) && window.confirm("Deseja apostar?")){
 				if(state){
 					var ret = null;
 					var data = apostas.simples;
@@ -179,6 +240,10 @@ export default function Sport({set}){
 			}
 		}
 
+	/**
+   * Handle submit of a form responsable for the promocional code
+   */
+
 		async function handleSubmit_cod(){
 			var ret = null;
 			var data = {ApostadorID:getToken(),Codigo:input.codigo};
@@ -186,6 +251,11 @@ export default function Sport({set}){
 			console.log("ret cod", ret);
 			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;setInput(ninput);}
 		}
+
+  /**
+   * adds a event to the corrent bet
+   * @param event to be add to the bet
+   */
 
 		function addBet(aposta){
 			var napostas = {...apostas};
@@ -255,7 +325,7 @@ export default function Sport({set}){
 							<button style={{'marginLeft':'5%','width':'30%','backgroundColor':'red','color':'white'}} type="subit">Aplicar</button>
 						</Form>
 						<Form onSubmit={handleSubmit}>
-							<input type="number" placeholder='Aposta' name="valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
+							<input type="number" step="0.01" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} min={(input.check)?"0":"0.01"} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
 							<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
 							<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Aposta já</button>
 						</Form>
@@ -275,10 +345,19 @@ export default function Sport({set}){
 
 	if(role == "Admin"){
 
+	/**
+   * Handle changes in the input fields 
+   * @param input field that changed
+   */
+
 		function handleChange({target}){
 			input[target.name] = target.value;
 			setInput(input);
 		}
+
+  /**
+   * Handle submit of a form, send add promocional code request
+   */
 
 		function handleSubmit(){
 			var data = {Token:getToken(),Promocao:input};
@@ -308,7 +387,7 @@ export default function Sport({set}){
 		              ))}
 		              <Form onSubmit={handleSubmit}>
 		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+		              	<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="number" step="0.01" required placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" min="0.1" title="Intruduza montante válido" onChange={handleChange}/>
 		              	<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
 		              </Form>
 		            </div>

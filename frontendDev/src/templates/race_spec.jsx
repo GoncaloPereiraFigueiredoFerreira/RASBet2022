@@ -2,10 +2,23 @@ import { Form } from 'react-router-dom'
 import { getToken,parseDate} from "../utils"
 import axios from 'axios'
 
+    /**
+     * Function that aggregates odd an name of a pilot
+     * @params list of pilots
+     * @params  list of odds
+     * @returns Returns a combination of the two lists 
+     */
+
 function test (part,odds){
   const ret = part.map(((elem,ind) =>([elem,odds[ind]].join(" "))));
   return ret;
 }
+
+    /**
+     * Post request to specialist register an odds to an event
+     * @param JSON data to send in the Post request
+     * @returns Returns the data if request sucessed or false
+     */
 
 async function register_bet(data){
   console.log(data);
@@ -18,8 +31,19 @@ async function register_bet(data){
   });
 }
 
+    /**
+     * Component that render a Race event to a specialist
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
+
 export default function Race({evento,sportid}){
   let input = {sport:sportid,token:getToken(),Odds:evento.Participantes.map((a,ind)=>(evento.Odds[ind])),EventoId:evento.EventoId.toString()}; 
+
+  /**
+   * Handle changes in the input fields 
+   * @param input field that changed
+   */
 
   function handleChange({target}){
     var aux = input;
@@ -27,6 +51,10 @@ export default function Race({evento,sportid}){
     input = input;
     console.log(input);
   } 
+
+  /**
+   * Handle submit of a form, send login request
+   */
 
   async function handleSubmit(){
     await register_bet(input);

@@ -4,6 +4,12 @@ import axios from "axios"
 import Login from "./login"
 import {getToken,getRole,getWallet,parseDate} from "../utils"
 
+
+		/**
+     * Fetch the profile information for the edit page
+     * @param JSON whith filed perfilid that is the token of the user
+     * @returns Returns the data if fetch sucessed or null
+     */
 export async function loader({params}){
 	const token = params.perfilid;
 	var ret;
@@ -21,6 +27,12 @@ export async function loader({params}){
 	return ret;
 }
 
+		/**
+     * Post request to edit the profile information of the user
+     * @param JSON data to send in the Post request
+     * @returns Returns the data if request sucessed or false
+     */
+
 async function edit(data){
 	var res = await axios({method:'POST',url:'http://localhost:8080/api/editProfile/',data:data}) 
 	  .then(function (response) {
@@ -35,6 +47,10 @@ async function edit(data){
 	  return res;
 }
 
+		/**
+     * Component that render the edit page
+     * @returns Returns the HTML of the component
+     */
 
 export default function Perfil(props){
 	const navigate = useNavigate();
@@ -51,6 +67,10 @@ export default function Perfil(props){
 		const ret = await edit(data);
 		if(ret) setFlag(true);
 	}
+
+  /**
+   * Handle submit of a form, send edit request
+   */
 
 	function handleChange({target}){
 		if(target.value != ""){

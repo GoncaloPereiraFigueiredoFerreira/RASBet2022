@@ -1,5 +1,10 @@
 import {parseBet,parseDate} from "../utils"
 
+    /**
+     * Component that render a NoDraw event to user
+     * @params properties of the component with field event,addApost,escolhas
+     * @returns Returns HTML for the component 
+     */
 
 export default function SemEmpate({evento,addAposta,escolhas}){
 	return(

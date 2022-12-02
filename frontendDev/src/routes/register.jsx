@@ -5,6 +5,13 @@ import './login.css'
 
 import {setToken,setRole,getDate_min} from "../utils"
 
+    /**
+     * Post request to register a new user
+     * @param JSON data to send in the Post request
+     * @returns Returns true if request sucessed or an error
+     */
+
+
 async function register_req(data){
   console.log(data);
   var resp = await axios({method:'POST',url:'http://localhost:8080/api/register/',data:data}) 
@@ -23,17 +30,30 @@ async function register_req(data){
   return resp;
 }
 
+    /**
+     * Component that render the Register page
+     * @returns Returns HTML for the component 
+     */
+
 export default function Register({set,flag}) {
   const navigate = useNavigate();
   const [input,setInput] = useState({Email:"",PlvPasse:""});
   const [error,setError] = useState({});
   
+  /**
+   * Handle changes in the input fields 
+   * @param input field that changed
+   */
 
   function handleChange({target}){
     var aux = input;
     input[target.name] = target.value;
     setInput(input);
   } 
+
+  /**
+   * Handle submit in a form, send register request
+   */
 
   async function handleSubmit(){
     let resp = await register_req(input);

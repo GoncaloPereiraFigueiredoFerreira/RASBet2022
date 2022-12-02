@@ -3,6 +3,12 @@ import { Form } from 'react-router-dom'
 import { getToken,parseDate} from '../utils'
 import axios from 'axios'
 
+    /**
+     * Post request to specialist register an odds to an event
+     * @param JSON data to send in the Post request
+     * @returns Returns the data if request sucessed or false
+     */
+
 async function register_bet(data){
 	console.log(data);
    axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
@@ -14,8 +20,20 @@ async function register_bet(data){
   });
 }
 
+    /**
+     * Component that render a NoDraw event to a specialist
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
+
 export default function SemEmpate({evento,sportid}){
   let input = {sport:sportid,token:getToken(),Odds:[evento.Odds[0],evento.Odds[1]],EventoId:evento.EventoId.toString()};
+
+    /**
+     * Component that render a Race event to a specialist
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
 
   function handleChange({target}){
     var aux = input;
@@ -23,6 +41,10 @@ export default function SemEmpate({evento,sportid}){
     input = input;
     console.log(input);
   } 
+
+  /**
+   * Handle submit of a form, send login request
+   */
 
   async function handleSubmit(){
  	await register_bet(input);

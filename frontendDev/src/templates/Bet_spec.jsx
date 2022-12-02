@@ -5,11 +5,24 @@ import Empate from "./empate_spec"
 import SemEmpate from "./sem_empate_spec"
 import NPags from "./NPags"
 
+  /**
+   * auxiliar function that separate events by type to their components
+   * @param event to be treated
+   * @param type of event
+   */
+
 function aux(evento,tipo){
 	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
 	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
 	else if(evento.Tipo == "NoTieEvent") return (<SemEmpate evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
 }
+
+  /**
+   * funtion that checks if event pass the filters applied
+   * @param filters applied
+   * @param event
+   * @returns a boolean if the event pass the filters applied
+   */
 
 function check(filter,evento){
 	let ret = true;
@@ -24,8 +37,14 @@ function check(filter,evento){
 	return ret;
 }
 
+    /**
+     * Component that render a bet
+     * @params properties of the component
+     * @returns Returns HTML for the component 
+     */
+
 export default function Bet(props){
-	const elem = 4;
+	const elem = 20;
 	const [page,setPage] = useState(0);
 
 	const filter = props.data.filter((evento)=>(check(props.filter,evento))); 
