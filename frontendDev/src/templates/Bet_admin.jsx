@@ -13,7 +13,7 @@ import NPags from "./NPags"
      */
 
 async function cancelar_aposta(evento,sport){
-	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId,Desporto:sport}};
+	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId.toString(),Desporto:sport}};
    var resp = axios({method:'POST',url:'http://localhost:8080/api/closeEvent/',data:data}) 
   .then(function (response) {
     console.log("response",response);
@@ -49,11 +49,11 @@ async function add_Super_Odds(data){
      * @returns Returns HTML for the component
      */
 
-function Aux({evento,sport}){
+function Aux({evento,sport,update,ind}){
 	var desc = "";
 	if(evento.Tipo == "RaceEvent") desc = `${evento.Liga}`;
 	else desc = `${evento.Participantes[0]} - ${evento.Participantes[1]}`
-	var input={token:getToken(),sport:sport,EventoID:evento.EventoId};
+	var input={token:getToken(),sport:sport,EventoID:evento.EventoId.toString()};
 
 	function handleChange({target}){
 		input[target.name] = target.value;
@@ -89,11 +89,12 @@ function Aux({evento,sport}){
 							<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
 					  	</>:null}
 		            </div>
+		            <p>Estado:{evento.Estado}</p>
 		            <div className="drawmatchodds"style={{'width':'30%'}}>
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flex-direction':'column','justify-content':'space-between'}}>
 						<input type="text" style={{"margin-bottom":"1vh","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
 						<button style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'auto','margin-right':'0'}}>Confirmar</button>
-						<button style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'10%','margin-right':'0'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Remover</button>
+						<button type="button" style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'10%','margin-right':'0'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Remover</button>
 		              </Form>
 		            </div>
 	          	</div>
@@ -122,11 +123,12 @@ function Aux({evento,sport}){
 						<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
 					  </>:null}
 				</div>
+					<p>Estado:{evento.Estado}</p>
 				<div className="drawmatchodds">
 				  <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flex-direction':'column','justify-content':'space-between'}}>
 					<input type="text" style={{"margin-bottom":"1vh","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
 					<button style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0'}} type="submit">Confirmar</button>
-					<button style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0','margin-top':'1vh'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){cancelar_aposta(evento,sport);window.location.reload(false);}}}>Remover</button>
+					<button type="button" style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0','margin-top':'1vh'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Remover</button>
 				  </Form>
 				</div>
 			  </div>
@@ -169,7 +171,7 @@ export default function Bet(props){
 
 	return(
 		<>
-		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport}key={ind.toString()}/>))}
+		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport} update={props.update} ind={ind} key={ind.toString()}/>))}
 		<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
 		</>);
 }

@@ -22,12 +22,14 @@ function test (part,odds){
 
 async function register_bet(data){
   console.log(data);
-   axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
+  await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
   .then(function (response) {
     console.log(response);
+    return response;
   })
   .catch(function (error) {
     console.log(error);
+    return false;
   });
 }
 
@@ -37,7 +39,7 @@ async function register_bet(data){
      * @returns Returns HTML for the component 
      */
 
-export default function Race({evento,sportid}){
+export default function Race({evento,sportid,update,ind}){
   let input = {sport:sportid,token:getToken(),Odds:evento.Participantes.map((a,ind)=>(evento.Odds[ind])),EventoId:evento.EventoId.toString()}; 
 
   /**
@@ -57,8 +59,8 @@ export default function Race({evento,sportid}){
    */
 
   async function handleSubmit(){
-    await register_bet(input);
-    //window.location.reload(false);
+    let ret = await register_bet(input);
+    if(ret){update(ind);}
   }
 
   function on() {

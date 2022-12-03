@@ -11,10 +11,10 @@ import NPags from "./NPags"
    * @param type of event
    */
 
-function aux(evento,tipo){
-	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
-	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
-	else if(evento.Tipo == "NoTieEvent") return (<SemEmpate evento={evento} sportid={tipo} key={evento.EventoId.toString() + evento.Liga}/>);
+function aux(evento,tipo,update,ind){
+	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} sportid={tipo} update={update} ind={ind} key={evento.EventoId.toString() + evento.Liga}/>);
+	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} sportid={tipo} update={update} ind={ind} key={evento.EventoId.toString() + evento.Liga}/>);
+	else if(evento.Tipo == "NoTieEvent") return (<SemEmpate evento={evento} sportid={tipo} update={update} ind={ind} key={evento.EventoId.toString() + evento.Liga}/>);
 }
 
   /**
@@ -51,7 +51,7 @@ export default function Bet(props){
 	const array = filter.slice(page * elem,(page+1) * (elem));
 	return (
 		<>
-			{array.map((evento,ind)=>(aux(evento,props.tipo)))}
+			{array.map((evento,ind)=>(aux(evento,props.tipo,props.update,ind)))}
 			<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
 		</>);
 }
