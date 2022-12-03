@@ -267,7 +267,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
       * @returns Returns true if the supper odd was activated in the specific event
       */ 
      superOdds(sport: string , id: string ,multiplier: any){
-         if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState=="BET" && !this.eventList[sport][id].isSuperOddsOn()){
+         if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState()=="BET" && !this.eventList[sport][id].isSuperOddsOn()){
              (this.eventList[sport][id] as RaceEvent | NoTieEvent | TieEvent).superOdds(multiplier);
              return true;
          }
