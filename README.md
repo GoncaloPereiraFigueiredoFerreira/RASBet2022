@@ -9,9 +9,13 @@ Backend:
 
 0. Alterar a configuração "responsepath" no ficheiro /backend/config/default.json para o path completo para a pasta "API Responses/"
 1. Mudar de pasta para a diretoria /backend
-2. Executar comando
+2. Executar comando que compila o código Typescript para JavaScript
 ```
-  npm start
+  npm run compile
+``` 
+3. Executar comando 
+```
+  npm run start
 ``` 
 
 Frontend:
