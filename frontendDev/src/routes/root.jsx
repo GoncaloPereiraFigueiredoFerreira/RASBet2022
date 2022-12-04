@@ -70,20 +70,20 @@ export default function Root() {
           <ul>
             <li>    
               <div className="logo"> 
-                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'0.5vh',"marginRight":"0.1vh"}}/>
+                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
                 <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"15px","marginTop":"20px"}}> RASBet</p>        
               </div>     
-            </li>
-            <li>
-              <Link to='/sport/FUT'>
-              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
-              Futebol
-              </Link>
             </li>
             <li>
               <Link to='/sport/FUTPT'>
               <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
               FutebolPT
+              </Link>
+            </li>
+            <li>
+              <Link to='/sport/FUT'>
+              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+              Futebol
               </Link>
             </li>
             <li>
@@ -100,7 +100,7 @@ export default function Root() {
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'0.5vh'}}/>
+              <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
               <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -110,19 +110,19 @@ export default function Root() {
             </div>:null}
            
             {(getRole() == "apostador")?
-              <li style={{"float":"right","padding":"1vh"}}>
+              <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
                 </button>
               </li>:null}
             {(getRole() == "Admin")?
             <>
-              <li style={{"float":"right","padding":"1vh"}}>
+              <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
                 <button onClick={()=>{navigation(`login`)}}>
                   Ir para Login
                 </button>
               </li>
-              <li style={{"float":"right","padding":"1vh"}}>
+              <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
                 <button onClick={()=>{refresh();}}>
                   Refresh
                 </button>
@@ -130,7 +130,7 @@ export default function Root() {
             </>:null}
             {(getRole() == "Special")?
             <>
-              <li style={{"float":"right","padding":"1vh"}}>
+              <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`login`)}}>
                   Ir para Login
                 </button>
@@ -153,20 +153,20 @@ export default function Root() {
            <ul>
             <li>
               <div className="logo"> 
-                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'0.5vh',"marginRight":"1vh"}}/>
+                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
               </div>
             </li>
 
             <div className="dropdown" style={{"float":"left"}}>
                 <div className="dropbtn">Desportos</div>
-                <div class="dropdown-content">
-                  <Link to={`/sport/FUT`}>               
-                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
-                    Futebol
-                  </Link>
+                <div class="dropdown-content" style={{"left":"0"}}>
                   <Link to={`/sport/FUTPT`}>               
                     <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
                     FutebolPT
+                  </Link>                  
+                  <Link to={`/sport/FUT`}>               
+                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+                    Futebol
                   </Link>
                   <Link to={`/sport/F1`}>               
                     <img src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
@@ -181,7 +181,7 @@ export default function Root() {
  
              {(getRole() == "apostador")?
              <div className="dropdown">
-               <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'0.5vh'}}/>
+               <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
                <div class="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -193,12 +193,12 @@ export default function Root() {
             
              {(getRole() == "Admin")?
               <>
-                <li style={{"float":"right","paddingTop":"1vh","paddingRight":"0.5vh"}}>
+                <li style={{"float":"right","paddingTop":"12px","paddingRight":"5px"}}>
                 <button onClick={()=>{navigation(`login`)}}>
                   Sair
                 </button>
                 </li>
-                <li style={{"float":"right","paddingTop":"1vh","paddingRight":"0.5vh"}}>
+                <li style={{"float":"right","paddingTop":"12px","paddingRight":"5px"}}>
                   <button onClick={()=>{refresh();}}>
                     Refresh
                   </button>
@@ -207,7 +207,7 @@ export default function Root() {
                :null}
             {(getRole() == "Special")?
             <>
-              <li style={{"float":"right","padding":"1vh"}}>
+              <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`login`)}}>
                   Ir para Login
                 </button>

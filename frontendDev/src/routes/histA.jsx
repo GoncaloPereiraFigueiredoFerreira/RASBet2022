@@ -35,7 +35,7 @@ export default function HistA() {
 
   return (
     <>
-      <div className = "box" style={{'marginTop':'2vh','paddingTop':'3vh'}}>
+      <div className = "box" style={{'marginTop':'20px','paddingTop':'30px'}}>
         <div className = "loginbox">
           <div className='bemvindo'>
             <p>Histórico de Apostas</p>

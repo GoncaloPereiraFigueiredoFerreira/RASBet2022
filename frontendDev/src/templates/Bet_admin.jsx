@@ -73,7 +73,7 @@ function Aux({evento,sport,update,ind}){
 
 
 		            	{(evento.Tipo=="RaceEvent")?<>            
-						<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
+						<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             			<div>
                 			<p style={{'font-weight':'bold'}}>{evento.Liga}</p>
                 			<p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -92,9 +92,9 @@ function Aux({evento,sport,update,ind}){
 		            <p>Estado:{evento.Estado}</p>
 		            <div className="drawmatchodds"style={{'width':'30%'}}>
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flex-direction':'column','justify-content':'space-between'}}>
-						<input type="text" style={{"margin-bottom":"1vh","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
-						<button style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'auto','margin-right':'0'}}>Confirmar</button>
-						<button type="button" style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'10%','margin-right':'0'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Remover</button>
+					    <p style={{"margin":"0","margin-right":"10px",'float':'right','fontWeight':'bold','color':'red','fontSize':'25px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>x</p>
+						<input type="text" style={{"margin-bottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
+						<button style={{"height":"fit-content","width":"45%",'background-color':'orange','margin-left':'auto','margin-right':'0','float':'right'}}>Confirmar</button>
 		              </Form>
 		            </div>
 	          	</div>
@@ -107,7 +107,7 @@ function Aux({evento,sport,update,ind}){
 
 
 					{(evento.Tipo=="RaceEvent")?<>            
-					<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
+					<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
 					<div>
 						<p style={{'font-weight':'bold'}}>{evento.Liga}</p>
 						<p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -126,9 +126,9 @@ function Aux({evento,sport,update,ind}){
 					<p>Estado:{evento.Estado}</p>
 				<div className="drawmatchodds">
 				  <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flex-direction':'column','justify-content':'space-between'}}>
-					<input type="text" style={{"margin-bottom":"1vh","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
+					<input type="text" style={{"margin-bottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
 					<button style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0'}} type="submit">Confirmar</button>
-					<button type="button" style={{"height":"fit-content","width":"100%",'background-color':'orange','margin-left':'auto','margin-right':'0','margin-top':'1vh'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Remover</button>
+					<button type="button" style={{"height":"fit-content","width":"100%",'background-color':'red','margin-left':'auto','margin-right':'0','margin-top':'10px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Cancelar evento</button>
 				  </Form>
 				</div>
 			  </div>

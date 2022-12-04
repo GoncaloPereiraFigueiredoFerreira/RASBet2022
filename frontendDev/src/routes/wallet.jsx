@@ -132,7 +132,7 @@ export default function Wallet() {
   return (
     <>
 
-      <div className = "box" style={{"marginTop":"2vh","paddingTop":"2vh"}}>
+      <div className = "box" style={{"marginTop":"20px","paddingTop":"20px"}}>
         <div className = "loginbox" >
           <div className='bemvindo'>
             <p>Wallet</p>
@@ -143,7 +143,7 @@ export default function Wallet() {
           </div>
 
           <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","width":"40%"}} onClick={()=>{on();onRet()}}>Retirar</button>
-          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","marginTop":"1vh","width":"40%"}} onClick={()=>{on();onDep()}}>Depositar</button>
+          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","marginTop":"10px","width":"40%"}} onClick={()=>{on();onDep()}}>Depositar</button>
 
           <div id="modo" style={{"display":"none","justifyContent":"center","flexDirection":"column","marginTop":"20px"}}>
             <p>Selecionar modo:</p>
