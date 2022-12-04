@@ -360,7 +360,7 @@ class DBCommunication {
                         yield this.mysqlQuery('SELECT Estado FROM Aposta WHERE ID=?', mes[i].ApostaID).then((result) => {
                             if (result[0].Estado == 'PEN') {
                                 return this.mysqlQuery('SELECT Escolha FROM Aposta_Evento WHERE ApostaID=? AND EventoID = ? AND Desporto = ?', [mes[i].ApostaID, eventID, desporto]).then((message) => {
-                                    if (message[0].Escolha == resultado) {
+                                    if (message.length == 1 && message[0].Escolha == resultado) {
                                         return this.mysqlQuery('SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"', mes[i].ApostaID).then((m) => {
                                             if (m.length == 0) {
                                                 return this.mysqlQuery('UPDATE Aposta SET Estado = "WON" WHERE ID=?', mes[i].ApostaID).then(() => {
@@ -545,14 +545,12 @@ class DBCommunication {
      */
     startedEventOnDb(desporto) {
         let today = this.getToday();
-        console.log(`ola today -> ${today}`);
         return new Promise((resolve, reject) => {
             let ids = [];
             this.mysqlQuery('SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"', [desporto, today]).then((result) => {
                 for (let i = 0; i < result.length; i++) {
                     ids.push(result[i].ID);
                 }
-                console.log(ids);
                 resolve(ids);
             }).catch((e) => {
                 reject(e);

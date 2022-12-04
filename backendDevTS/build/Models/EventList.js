@@ -9,7 +9,7 @@ const RaceEvent_1 = require("./RaceEvent");
 const NoTieEvent_1 = require("./NoTieEvent");
 const TieEvent_1 = require("./TieEvent");
 const SportEvent_1 = require("./SportEvent");
-const BETODDREL = 0.001;
+const IMPACT_ODDS_INICIAIS = 1000;
 let instance = undefined;
 class EventList {
     constructor() {
@@ -169,11 +169,19 @@ class EventList {
         if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState() == "BET") {
             if (this.eventList[sport][id] instanceof RaceEvent_1.RaceEvent || this.eventList[sport][id] instanceof NoTieEvent_1.NoTieEvent || this.eventList[sport][id] instanceof TieEvent_1.TieEvent) {
                 odds = this.eventList[sport][id].getOdds();
+                let sum = 0;
+                let x = 0;
                 for (let i = 0; i < odds.length; i++) {
-                    if (i != choice)
-                        odds[i] += money * BETODDREL;
-                    else if (odds[i] > 1 + money * BETODDREL)
-                        odds[i] -= money * BETODDREL;
+                    odds[i] = (odds[i] - 1) * IMPACT_ODDS_INICIAIS;
+                    sum += odds[i];
+                    if (i == choice) {
+                        x = odds[i] - odds[i] * (odds[i] / (odds[i] + money * ((odds[i] / IMPACT_ODDS_INICIAIS) + 1)));
+                        odds[i] = odds[i] - x;
+                    }
+                }
+                let razao = sum / (sum - x);
+                for (let i = 0; i < odds.length; i++) {
+                    odds[i] = 1 + ((odds[i] * razao) / IMPACT_ODDS_INICIAIS);
                 }
                 this.eventList[sport][id].changeOdds(odds);
                 return true;
