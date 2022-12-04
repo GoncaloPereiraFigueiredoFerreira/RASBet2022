@@ -87,7 +87,7 @@ export default function Wallet() {
 
     function onMBW() {
       document.getElementById("mbway").style.display = "flex";
-
+      offMB();
     }
       
     function offMBW() {
@@ -96,7 +96,7 @@ export default function Wallet() {
 
     function onMB() {
       document.getElementById("multibanco").style.display = "flex";
-
+      offMBW();
     }
       
     function offMB() {
@@ -141,15 +141,15 @@ export default function Wallet() {
           <div id="overlay">
             <div id="text">Overlay Text</div>
           </div>
-
-          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","width":"40%"}} onClick={()=>{on();onRet()}}>Retirar</button>
-          <button className = "button" style={{"borderRadius":"10px","margin-right":"30%","marginLeft":"30%","marginTop":"10px","width":"40%"}} onClick={()=>{on();onDep()}}>Depositar</button>
-
+          <div style={{"display":"flex","flexDirection":"column"}}>
+            <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","width":"fit-content"}} onClick={()=>{on();onRet()}}>Retirar</button>
+            <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","marginTop":"10px","width":"fit-content"}} onClick={()=>{on();onDep()}}>Depositar</button>
+          </div>
           <div id="modo" style={{"display":"none","justifyContent":"center","flexDirection":"column","marginTop":"20px"}}>
             <p>Selecionar modo:</p>
             <div style={{"justifyContent":"center","flexDirection":"row"}}>
               <img src="/MBway.png" style={{"margin":"auto"}} onClick={()=>{onS();onMBW()}}></img>
-              <img src="/multibanco.png" style={{"borderRadius":"20px","margin":"auto"}} onClick={()=>()=>{onS();onMB()}}></img>              
+              <img src="/multibanco.png" style={{"borderRadius":"20px","margin":"auto"}} onClick={()=>{onS();onMB()}}></img>              
             </div>
           </div>
 
@@ -162,8 +162,8 @@ export default function Wallet() {
               <div id="multibanco" style={{"display":"none"}}>
                 <input style={{"display":"flex","width":"100%"}} type="text" name="Valor" placeholder='IBAN' pattern="\d*(\.\d{1,2}|)"/>
               </div>
-              <button id="depositar"  style={{"display":"none","display":"none", "backgroundColor":"red","width":"50%","marginLeft":"25%","textAlign":"center"}} onClick={()=>handleSubmit_DP()}>Depositar</button>
-              <button id="retirar"    style={{"display":"none","backgroundColor":"red","width":"50%","marginLeft":"25%","textAlign":"center"}} onClick={()=>handleSubmit_LV()}>Retirar</button>
+              <button id="depositar"  style={{"display":"none","backgroundColor":"red","width":"fit-content","margin":"auto","textAlign":"center"}} onClick={()=>handleSubmit_DP()}>Depositar</button>
+              <button id="retirar"    style={{"display":"none","backgroundColor":"red","width":"fit-content","margin":"auto","textAlign":"center"}} onClick={()=>handleSubmit_LV()}>Retirar</button>
             </Form>
           </div>
 
