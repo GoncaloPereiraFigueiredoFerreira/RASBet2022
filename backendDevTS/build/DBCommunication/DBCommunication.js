@@ -120,7 +120,7 @@ class DBCommunication {
         });
     }
     /**
-     * this function checks if the given email and password correspond to an entry in either the Funcionario or Apostador table
+     * this function checks if the given email and password match an entry in either the Funcionario or Apostador table
      * @param {String} email that was set in the register phase
      * @param {String} pass that was set in the register phase
      * @returns error or email not registed or wrong password or success
@@ -216,7 +216,7 @@ class DBCommunication {
      * this function checks if all events are neither closed nor finalized, then registers a transaction, and if a promocional code
      * was submited then it raises the bet amount accordingly, registers the use of the promocional code and registers the bet
      * @param {object} aposta object that contains all values of an entry in Aposta table
-     * @param {object} eventos set of event objects that contain all values of an entry in Evento table
+     * @param {object} eventos set of objects that contain the ID,Sport and the predicted result of an Event
      * @param {String} codigo string corresponding to the key of an entry in Promocao table
      * @returns success or error
      */
@@ -456,17 +456,19 @@ class DBCommunication {
                 resolve({ "Res": "Codigo promocional nulo" });
                 return;
             }
+            let valor;
             this.mysqlQuery('SELECT * FROM Promocao WHERE Codigo=?', codigo).then((message) => {
                 if (message.length == 0) {
                     return Promise.reject({ "error": "Codigo nao existe" });
                 }
+                valor = message[0].Valor;
                 return this.mysqlQuery('SELECT * FROM Promocao_Apostador WHERE Codigo=? AND ApostadorID = ?', [codigo, email]);
             }).then((message) => {
                 if (message.length == 0) {
-                    resolve({ "Res": "Nao" });
+                    resolve({ "Res": "Nao", "Valor": valor });
                 }
                 else {
-                    resolve({ "Res": "Sim" });
+                    resolve({ "Res": "Sim", "Valor": valor });
                 }
             }).catch((e) => {
                 reject(e);
@@ -574,6 +576,9 @@ class DBCommunication {
             });
         });
     }
+    /**
+     * @returns all entries in the Evento table
+     */
     getEventsOnDb() {
         return new Promise((resolve, reject) => {
             this.mysqlQuery("SELECT * FROM Evento", []).then((result) => {
