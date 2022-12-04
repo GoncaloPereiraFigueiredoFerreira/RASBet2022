@@ -90,5 +90,5 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","12345","Special");
 INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("admin@coisas.pt","12345","Admin");
 INSERT INTO Apostador(Email,NIF,Telemovel,Nome,Morada,DataNascimento,Balance,PlvPasse,CC) 
-    VALUES ("user@coisas.pt","123456789","123456789","Coito dos Santos","Paraíso","1999-9-7",2000,"12345","12345678");
+    VALUES ("user@coisas.pt","123456789","123456789","Couto dos Santos","Paraíso","1999-9-7",2000,"12345","12345678");
 
