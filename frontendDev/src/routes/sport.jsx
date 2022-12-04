@@ -259,7 +259,7 @@ export default function Sport(){
 			var data = {ApostadorID:getToken(),Codigo:input.codigo};
 			ret = await used_cod(data);
 			console.log("ret cod", ret);
-			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;setInput(ninput);}
+			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;ninput.codVal=ret.Valor;setInput(ninput);}
 		}
 
   /**
@@ -341,7 +341,7 @@ export default function Sport(){
 							</Form>
 							<Form onSubmit={handleSubmit} style={{"display":"block"}}>
 								<input type="number" step="0.01" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()}  title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'10px','width':'50%'}}/>
-								<p style={{'display':'inline','margin-right':'10px','float':'right'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
+								<p style={{'display':'inline','margin-right':'10px','float':'right'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*(input.Valor+((input.check)?input.codVal:0))).toFixed(2)}</p>
 								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white',"fontSize":"1vw"}} type="subit">Aposta já</button>
 							</Form>
 						</div>
@@ -396,7 +396,7 @@ export default function Sport(){
 							</Form>
 							<Form onSubmit={handleSubmit}>
 								<input type="number" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
-								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
+								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*(input.Valor+((input.check)?input.codVal:0))).toFixed(2)}</p>
 								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Apostar</button>
 							</Form>
 						</div>

@@ -98,7 +98,7 @@ export function parseBet(evento,escolha){
 
 export function getDate(){
   const data = new Date();
-  return  data.getFullYear().toString().padStart(4,'0') + "-" + data.getMonth().toString().padStart(2,'0') + "-" + data.getDay().toString().padStart(2,'0') + " " + data.getHours().toString().padStart(2,'0') + ":" + data.getMinutes().toString().padStart(2,'0') + ":" + data.getSeconds().toString().padStart(2,'0');
+  return  data.getFullYear().toString().padStart(4,'0') + "-" + (data.getMonth()+1).toString().padStart(2,'0') + "-" + data.getDate().toString().padStart(2,'0') + " " + data.getHours().toString().padStart(2,'0') + ":" + data.getMinutes().toString().padStart(2,'0') + ":" + data.getSeconds().toString().padStart(2,'0');
 
 }
 
@@ -109,7 +109,7 @@ export function getDate(){
 
 export function getDate_min(){
   const data = new Date();
-  return  (data.getFullYear()-18).toString().padStart(4,'0') + "-" + data.getMonth().toString().padStart(2,'0') + "-" + data.getDay().toString().padStart(2,'0');
+  return  (data.getFullYear()-18).toString().padStart(4,'0') + "-" + (data.getMonth()+1).toString().padStart(2,'0') + "-" + data.getDate().toString().padStart(2,'0');
 }
 
     /**

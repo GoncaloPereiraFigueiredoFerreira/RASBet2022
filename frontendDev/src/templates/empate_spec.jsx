@@ -11,7 +11,7 @@ import axios from 'axios'
 
 async function register_bet(data){
 	console.log(data);
-  await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
+  let ret = await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
   .then(function (response) {
   	console.log(response)
     return response;
@@ -20,6 +20,7 @@ async function register_bet(data){
   	console.log(error);
     return false;
   });
+  return ret
 }
 
     /**
