@@ -456,7 +456,7 @@ export default function Sport(){
 						))}
 						<Form onSubmit={handleSubmit}>
 							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
 							<button style={{"margin":"3px",'width':'80%','marginLeft':'10%','margin-top':'10px','backgroundColor':'green','color':'white'}} type="subit">Criar</button>
 						</Form>
 						</div>
