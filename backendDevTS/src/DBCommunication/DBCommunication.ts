@@ -579,14 +579,12 @@ export class DBCommunication implements IDBCommunication{
      */
     startedEventOnDb(desporto: string){
         let today = this.getToday()
-        console.log(`ola today -> ${today}`)
         return new Promise((resolve,reject)=>{
             let ids: any =[];
             this.mysqlQuery('SELECT ID FROM Evento WHERE Desporto=? AND DataEvent < ? AND Estado="BET"',[desporto,today]).then((result:any)=>{
                 for(let i =0;i < result.length;i++){
                     ids.push(result[i].ID)
                 }
-                console.log(ids)
                 resolve(ids)
             }).catch((e)=>{
                 reject(e)

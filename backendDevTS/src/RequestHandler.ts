@@ -185,8 +185,6 @@ export class RequestHandler implements IRequestHandler{
         let Desporto= request.body.Evento.Desporto
 
         let user = sessionHandler.verifyUser(request.body.Token)
-        console.log(user)
-        //mudar para admin
         if(user[0] && user[1]=='Admin'){
             dbComms.closeEventOnDb(EventoID,Desporto).then(async(message:any)=>{
             
@@ -195,7 +193,7 @@ export class RequestHandler implements IRequestHandler{
                 for(let tuple of message.toNotify){
                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                     //Send email
-                    //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                    notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
 
                     // Notify wallet
                     let token = sessionHandler.getToken(tuple[0]);
@@ -237,7 +235,7 @@ export class RequestHandler implements IRequestHandler{
             dbComms.finEventOnDb(EventoID,Desporto,Resultado,Descricao).then((message:any)=>{
                 for(let tuple of message.toNotify){
                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                    //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                    notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
 
                     // Notify wallet
                     let token = sessionHandler.getToken(tuple[0]);
@@ -497,12 +495,12 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                                 let token = sessionHandler.getToken(tuple[0]);
                                 dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                             }
                         });
-                        // Here we should notify all the users afected by the end of that event
+                        
                 }
                 resolve();
             });
@@ -526,12 +524,12 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                                 let token = sessionHandler.getToken(tuple[0]);
                                 dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                             }
                         });
-                        // Here we should notify all the users afected by the end of that event
+                        
                     }
                 }
                 resolve();
@@ -554,12 +552,12 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
                                 let token = sessionHandler.getToken(tuple[0]);
                                 dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
                             }
                         });
-                        // Here we should notify all the users afected by the end of that event
+                        
                     } 
                 }
                 resolve();
