@@ -388,8 +388,9 @@ export class DBCommunication implements IDBCommunication{
                                                 
                                                     return this.mysqlQuery('Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                                 }).then((m:any)=>{
+                                                   
                                                     toNotify.push([m[0].ApostadorID,`Parabéns ganhou a aposta com ID ${mes[i].ApostaID}!!`])
-                                                    
+                                                 
                                                     return this.transactionOnDb({"ApostadorID":m[0].ApostadorID,"Valor":(m[0].Montante)*(m[0].Odd),"Tipo":"Aposta_Ganha","DataTr":this.getToday()})
                                                 }).catch((e)=>{
                                                     return Promise.reject(e)
@@ -403,10 +404,10 @@ export class DBCommunication implements IDBCommunication{
                                     else{
                                         
                                         return this.mysqlQuery('UPDATE Aposta SET Estado = "LOST" WHERE ID=?',mes[i].ApostaID).then(()=>{
+                                            
                                             return this.mysqlQuery('SELECT ApostadorID FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                         }).then((message:any)=>{
-                                            for (let i in message)
-                                                toNotify.push([message[i].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
+                                            toNotify.push([message[0].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
                                         }).catch((e)=>{
                                             return Promise.reject(e)
                                         })
