@@ -14,12 +14,10 @@ export async function loader({params}){
   if(token == "undefined"){ret = null;}
   else ret = await axios({method:'GET',url:'http://localhost:8080/api/transHist/',params:{"ApostadorID":token}}) 
       .then(function (response) {
-        console.log("response",response);
         const data = response.data;
         return data;
       })
       .catch(function (error) {
-        console.log(error);
         return null;
       }); 
   return ret;
@@ -48,9 +46,9 @@ export default function HistT() {
             </tr>
             {list.lista.map((elem)=>(
             <tr id="Simples" key={elem.ID}>
-              <th style={{'font-weight':'normal'}}>{elem.Valor}</th>
-              <th style={{'font-weight':'normal'}}>{elem.Tipo}</th> 
-              <th style={{'font-weight':'normal'}}>{parseDate(elem.DataTr)}</th>               
+              <th style={{'fontWeight':'normal'}}>{elem.Valor}</th>
+              <th style={{'fontWeight':'normal'}}>{elem.Tipo}</th> 
+              <th style={{'fontWeight':'normal'}}>{parseDate(elem.DataTr)}</th>               
             </tr>
             ))}
           </table>

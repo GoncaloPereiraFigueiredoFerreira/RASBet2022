@@ -138,7 +138,7 @@ const evLst:IUpdateEvents = EventList.getUpdateEventsInstance();
      }
      else{
          for (let pilot of pilotsJson.response){
-             pilotsNames.push(pilot.team.name + "-" +  pilot.driver.name);
+             pilotsNames.push(pilot.driver.name  + "-" +pilot.team.name);
              pilotsPhotos.push(pilot.driver.image);
          }
          for (let race of racesJson.response){

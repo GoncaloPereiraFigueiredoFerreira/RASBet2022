@@ -10,16 +10,15 @@ import axios from 'axios'
      */
 
 async function register_bet(data){
-	console.log(data);
-  await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
+  let ret = await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
   .then(function (response) {
-    console.log(response);
     return response;
   })
   .catch(function (error) {
-    console.log(error);
     return false;
   });
+
+  return ret
 }
 
     /**
@@ -41,7 +40,6 @@ export default function SemEmpate({evento,sportid,update,ind}){
     var aux = input;
     input.Odds[parseInt(target.name)] = parseFloat(target.value);
     input = input;
-    console.log(input);
   } 
 
   /**
@@ -54,23 +52,23 @@ export default function SemEmpate({evento,sportid,update,ind}){
   }
 
 	return(
-		  <div class="bet-element">
+		  <div className="bet-element">
 		    <div className="drawmatch">
-					<p style={{"margin":"0px",'font-weight':'bold'}}>{evento.Liga}</p>
-		      <div style={{"display":"flex",'flex-direction':'row','float':'left'}}>
+					<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
+		      <div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 						<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 		        <p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 						<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		      </div>
-					<p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+					<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 		    </div>
-        <div class="drawmatchodds">
-	        <Form onSubmit={handleSubmit} style={{'display':'flex','flex-direction':'row'}}>
-            <div style={{'display':'flex','flex-direction':'column'}}>
+        <div className="drawmatchodds">
+	        <Form onSubmit={handleSubmit} style={{'display':'flex','flexDirection':'row'}}>
+            <div style={{'display':'flex','flexDirection':'column'}}>
               <input type="text" style={{"margin":"10px"}} name="0" placeholder={`home odd ${evento.Odds[0]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
               <input type="text" style={{"margin":"10px"}} name="1" placeholder={`away odd ${evento.Odds[1]}`} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" onChange={handleChange}/>
 	          </div>
-            <button style={{"height":"fit-content",'background-color':'orange','margin-top':'auto','margin-bottom':'0'}} type="submit">Submeter</button>  
+            <button style={{"height":"fit-content",'backgroundColor':'orange','marginTop':'auto','marginBottom':'0'}} type="submit">Submeter</button>  
 	        </Form>
         </div>
       </div> 

@@ -14,9 +14,9 @@ import NPags from "./NPags"
    */
 
 function aux(evento,addAposta,ind,escolhas){
-	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
-	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
-	else if(evento.Tipo == 'NoTieEvent') return(<SemEmpate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString()}/>);
+	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
+	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
+	else if(evento.Tipo == 'NoTieEvent') return(<SemEmpate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
 }
 
   /**

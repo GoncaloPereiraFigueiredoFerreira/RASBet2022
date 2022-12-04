@@ -18,16 +18,13 @@ export default function Wallet() {
 
     function Levantar(){
       var data={Valor:input.Valor,Tipo:"Levantamento_Conta",ApostadorID:getToken(),DataTr:getDate()};
-      console.log(data);
       var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
       .then(function (response) {
-        console.log(response);
         const data = response.data;
         //setWallet(data.Balance);
         //set({Valor:data.Balance});
       })
       .catch(function (error) {
-        console.log(error);
       });
     }
 
@@ -38,16 +35,13 @@ export default function Wallet() {
 
     function Depositar(){
       var data={Valor:input.Valor,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTr:getDate()};
-      console.log(data);
       var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
       .then(function (response) {
-        console.log(response);
         const data = response.data;
         //setWallet(data.Balance);
         //set({Valor:data.Balance});
       })
       .catch(function (error) {
-        console.log(error);
       });
     }
 
@@ -138,9 +132,6 @@ export default function Wallet() {
             <p>Wallet</p>
           </div>
           
-          <div id="overlay">
-            <div id="text">Overlay Text</div>
-          </div>
           <div style={{"display":"flex","flexDirection":"column"}}>
             <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","width":"fit-content"}} onClick={()=>{on();onRet()}}>Retirar</button>
             <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","marginTop":"10px","width":"fit-content"}} onClick={()=>{on();onDep()}}>Depositar</button>

@@ -15,12 +15,10 @@ export async function loader({params}){
 	if(token == "undefined"){ret = null;}
 	else ret = await axios({method:'GET',url:'http://localhost:8080/api/profileInfo/',params:{"ApostadorID":token}}) 
   		.then(function (response) {
-    		console.log(response);
     		const data = response.data;
     		return data;
   		})
   		.catch(function (error) {
-    		console.log(error);
     		return null;
   		}); 
 	return ret;
@@ -35,7 +33,6 @@ export default function Perfil(){
 	const navigate = useNavigate();
 	const perfil = useLoaderData();
 
-	console.log(perfil);
 	const width = window.innerWidth;
 
 	if(width>1000){

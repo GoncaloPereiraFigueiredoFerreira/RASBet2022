@@ -16,12 +16,10 @@ export async function loader({params}){
 	if(token == "undefined"){ret = null;}
 	else ret = await axios({method:'GET',url:'http://localhost:8080/api/profileInfo/',params:{"ApostadorID":token}}) 
   		.then(function (response) {
-    		console.log(response);
     		const data = response.data;
     		return data;
   		})
   		.catch(function (error) {
-    		console.log(error);
     		return null;
   		}); 
 	return ret;
@@ -36,12 +34,10 @@ export async function loader({params}){
 async function edit(data){
 	var res = await axios({method:'POST',url:'http://localhost:8080/api/editProfile/',data:data}) 
 	  .then(function (response) {
-	    console.log(response);
 	    const data = response.data;
 	    return response;
 	  })
 	  .catch(function (error) {
-	    console.log(error);
 	    return false;
 	  });
 	  return res;
@@ -58,12 +54,10 @@ export default function Perfil(props){
 	const [input,setInput] = useState({});
 	const [flag,setFlag] = useState(false);
 
-	console.log(perfil);
 	
 	async function handleSubmit(){
 		var data = input;
 		data.ApostadorID = getToken();
-		console.log(data);
 		const ret = await edit(data);
 		if(ret) setFlag(true);
 	}
@@ -89,7 +83,7 @@ export default function Perfil(props){
 	if(width>1000){
 		return(
 		<>
-		<div className = "box" style={{'margin':'25%','margin-top':'2vh','padding-top':'3vh'}}>
+		<div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
 			<div className = "loginbox">
 			<div className='bemvindo'>
 				<p>Perfil</p>
@@ -101,7 +95,7 @@ export default function Perfil(props){
 				<input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 				<p>Telemovel:</p>
 				<input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d{9}" title="São necessário 9 números"/>
-				<button className = "button" type="submit" style={{'display': 'flex','justify-content': 'center','align-items': 'center'}}>Save</button>
+				<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}}>Save</button>
 			</Form>
 			</div>
 		</div>
@@ -111,7 +105,7 @@ export default function Perfil(props){
 	else{
 		return(
 			<>
-			<div className = "box" style={{'margin':'5%','margin-top':'2vh','padding-top':'3vh'}}>
+			<div className = "box" style={{'margin':'5%','marginTop':'2vh','paddingTop':'3vh'}}>
 				<div className = "loginbox">
 				<div className='bemvindo'>
 					<p>Perfil</p>
@@ -123,7 +117,7 @@ export default function Perfil(props){
 					<input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 					<p>Telemovel:</p>
 					<input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d{9}" title="São necessário 9 números"/>
-					<button className = "button" type="submit" style={{'display': 'flex','justify-content': 'center','align-items': 'center'}}>Save</button>
+					<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}}>Save</button>
 				</Form>
 				</div>
 			</div>
