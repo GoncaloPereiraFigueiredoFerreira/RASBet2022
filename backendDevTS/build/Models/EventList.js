@@ -179,10 +179,14 @@ class EventList {
                         odds[i] = odds[i] - x;
                     }
                 }
-                let razao = sum / (sum - x);
-                for (let i = 0; i < odds.length; i++) {
-                    odds[i] = 1 + ((odds[i] * razao) / IMPACT_ODDS_INICIAIS);
+                if (sum > 0) {
+                    let razao = sum / (sum - x);
+                    for (let i = 0; i < odds.length; i++) {
+                        odds[i] = 1 + ((odds[i] * razao) / IMPACT_ODDS_INICIAIS);
+                    }
                 }
+                else
+                    odds = this.eventList[sport][id].getOdds();
                 this.eventList[sport][id].changeOdds(odds);
                 return true;
             }
