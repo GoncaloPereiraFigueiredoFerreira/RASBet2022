@@ -379,7 +379,7 @@ export class DBCommunication implements IDBCommunication{
                         await this.mysqlQuery('SELECT Estado FROM Aposta WHERE ID=?',mes[i].ApostaID).then((result:any)=>{
                             if(result[0].Estado=='PEN'){
                                 return this.mysqlQuery('SELECT Escolha FROM Aposta_Evento WHERE ApostaID=? AND EventoID = ? AND Desporto = ?',[mes[i].ApostaID,eventID,desporto]).then((message:any)=>{
-                                    if(message[0].Escolha==resultado){
+                                    if(message.length==1 && message[0].Escolha==resultado){
                                         
                                         return this.mysqlQuery('SELECT EventoID FROM Aposta_Evento INNER JOIN Evento ON Aposta_Evento.Desporto= Evento.Desporto AND Aposta_Evento.EventoID = Evento.ID WHERE Aposta_Evento.ApostaID=? AND Evento.Estado != "FIN"',mes[i].ApostaID).then((m:any)=>{
                                             if(m.length==0){

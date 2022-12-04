@@ -8,7 +8,7 @@ import { TieEvent } from "./TieEvent";
 import { SportEvent } from "./SportEvent";
 
  
-const BETODDREL = 0.001;
+const IMPACT_ODDS_INICIAIS = 1000;
  
  
 let instance: IControlEvents | IUpdateEvents | undefined = undefined;
@@ -186,9 +186,19 @@ export class EventList implements IControlEvents,IUpdateEvents{
          if (this.eventList[sport][id] != undefined && this.eventList[sport][id].getState() == "BET"){
                  if (this.eventList[sport][id] instanceof RaceEvent || this.eventList[sport][id] instanceof NoTieEvent || this.eventList[sport][id] instanceof TieEvent){
                      odds = (this.eventList[sport][id] as RaceEvent | NoTieEvent | TieEvent).getOdds();
-                     for (let i=0; i<odds.length;i++){
-                         if (i != choice) odds[i]+=money*BETODDREL;
-                         else if (odds[i]> 1 + money*BETODDREL) odds[i]-=money*BETODDREL;
+                     let sum=0;
+                     let x =0;
+                     for (let i=0;i<odds.length;i++){
+                        odds[i]= (odds[i] - 1) * IMPACT_ODDS_INICIAIS
+                        sum+= odds[i]
+                        if(i==choice){
+                            x = odds[i] - odds[i]*(odds[i]/(odds[i]+money*((odds[i]/IMPACT_ODDS_INICIAIS)+1)))
+                            odds[i]= odds[i]-x
+                        }
+                     }
+                     let razao = sum/(sum-x)
+                     for (let i=0;i<odds.length;i++){
+                        odds[i] = 1 + ((odds[i]*razao)/IMPACT_ODDS_INICIAIS)
                      }
                      (this.eventList[sport][id] as RaceEvent | NoTieEvent | TieEvent).changeOdds(odds);
                      return true;

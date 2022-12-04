@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
     EventoID VARCHAR(40) NOT NULL,
     Desporto ENUM("FUT","FUTPT","BSK","F1") NOT NULL,
     Escolha INT NOT NULL,
-    PRIMARY KEY(ApostaID,EventoID),
+    PRIMARY KEY(ApostaID,EventoID,Desporto,Escolha),
     FOREIGN KEY(ApostaID)
 		REFERENCES Aposta(ID),
     FOREIGN KEY(EventoID,Desporto)
