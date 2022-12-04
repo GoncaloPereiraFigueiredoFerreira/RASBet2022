@@ -45,9 +45,7 @@ export default function Race({evento,sportid,update,ind}){
    */
 
   function handleChange({target}){
-    var aux = input;
     input.Odds[parseInt(target.name)] = parseFloat(target.value);
-    input = input;
   } 
 
   /**
@@ -71,7 +69,7 @@ export default function Race({evento,sportid,update,ind}){
   return(
   		<div className="bet-element">
             <div className="racematch">
-              <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
+              <img alt="" alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
               <div>
                 <p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
                 <p style={{'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -83,7 +81,7 @@ export default function Race({evento,sportid,update,ind}){
               <div style={{"display":"flex",'flexWrap':'wrap'}}>
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div style={{"display":"flex",'flexDirection':'row'}} key={ind.toString() + evento.Liga}>
-                    <img src={evento.Logos[ind]} style={{'marginTop':'20px',"height":"40px"}} />
+                    <img alt="" alt="" src={evento.Logos[ind]} style={{'marginTop':'20px',"height":"40px"}} />
                     <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" name={ind}/></a>
                   </div>
                 

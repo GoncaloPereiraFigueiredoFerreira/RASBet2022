@@ -12,9 +12,9 @@ export default function SemEmpate({evento,addAposta,escolhas}){
 		        <div className="drawmatch">
 					<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 		          	<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
-						<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+						<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 	                	<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-						<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+						<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 	              	</div>
 					<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 		        </div>

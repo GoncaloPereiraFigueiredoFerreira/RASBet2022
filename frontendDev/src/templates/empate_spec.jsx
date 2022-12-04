@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Form } from 'react-router-dom'
 import { getToken,parseDate} from '../utils'
 import axios from 'axios'
@@ -35,9 +34,7 @@ export default function Empate({evento,sportid,update,ind}){
    */
 
   function handleChange({target}){
-    var aux = input;
     input.Odds[parseInt(target.name)] = parseFloat(target.value);
-    input = input;
   } 
 
   /**
@@ -54,9 +51,9 @@ export default function Empate({evento,sportid,update,ind}){
 		    <div className="drawmatch">
 					<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 		      <div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
-						<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+						<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 		        <p >{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-						<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+						<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		      </div>
 					<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 		    </div>

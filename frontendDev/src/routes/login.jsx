@@ -70,7 +70,7 @@ export default function Login({set,flag}) {
     <>
 
     <div className="logo"> 
-        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
+        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
         <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>        
     </div>
 
@@ -105,7 +105,7 @@ export default function Login({set,flag}) {
     <>
 
     <div className="logo" >
-        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
+        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
         <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>         
     </div>
 

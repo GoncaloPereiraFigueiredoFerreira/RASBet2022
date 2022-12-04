@@ -139,8 +139,8 @@ export default function Wallet() {
           <div id="modo" style={{"display":"none","justifyContent":"center","flexDirection":"column","marginTop":"20px"}}>
             <p>Selecionar modo:</p>
             <div style={{"justifyContent":"center","flexDirection":"row"}}>
-              <img src="/MBway.png" style={{"margin":"auto"}} onClick={()=>{onS();onMBW()}}></img>
-              <img src="/multibanco.png" style={{"borderRadius":"20px","margin":"auto"}} onClick={()=>{onS();onMB()}}></img>              
+              <img alt="" src="/MBway.png" style={{"margin":"auto"}} onClick={()=>{onS();onMBW()}}></img>
+              <img alt="" src="/multibanco.png" style={{"borderRadius":"20px","margin":"auto"}} onClick={()=>{onS();onMB()}}></img>              
             </div>
           </div>
 
