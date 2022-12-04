@@ -30,7 +30,7 @@ export default function Race({evento,addAposta,escolhas}){
   return(
   		<div class="bet-element" key={evento.EventoId.toString()}>
           <div class="racematch">
-            <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
+            <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             <div>
                 <p style={{'font-weight':'bold'}}>{evento.Liga}</p>
                 <p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -45,14 +45,14 @@ export default function Race({evento,addAposta,escolhas}){
                     {(<button className="comp-button" 
                               style={{'width':'100%','border-radius':'0',"backgroundColor":(escolhas.includes(ind))?"red":"grey"}} 
                               onClick={()=>(addAposta(parseBet(evento,ind)))}> 
-                                <img src={evento.Logos[ind]} style={{"height":"4vh"}}/>
+                                <img src={evento.Logos[ind]} style={{"height":"40px"}}/>
                                 {part}
                       </button>)}
                   </div>
                 
                 </>))}                
               </div>
-              <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-right':'1vh','margin-bottom':'auto','margin-left':'auto'}} onClick={()=>(off())} type="button">Sair</button>
+              <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-right':'10px','margin-bottom':'auto','margin-left':'auto'}} onClick={()=>(off())} type="button">Sair</button>
             </div>
 
             <button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>

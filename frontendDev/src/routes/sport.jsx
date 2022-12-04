@@ -144,9 +144,9 @@ export default function Sport(){
 				<div className="sidebar" id="Leftbar">
 					<input type="text" name="name" placeholder="Procure por um jogo" 
 					onChange={({target})=>{let nfilter={...filter};nfilter.name=target.value;setFilter(nfilter);}}
-					style={{"marginLeft":"1vh","borderRadius":"10px","margin":"1vh",'width':'95%'}}/>
+					style={{"marginLeft":"10px","borderRadius":"10px","margin":"10px",'width':'95%'}}/>
 					
-					<p style={{"marginLeft":"1vh","borderRadius":"10px","margin":"1vh"}}>
+					<p style={{"marginLeft":"10px","borderRadius":"10px","margin":"10px"}}>
 						Competições</p>
 					<div className="competitions">
 						{ligas.map((i,ind)=>(<button className='comp-button' 
@@ -259,7 +259,7 @@ export default function Sport(){
 			var data = {ApostadorID:getToken(),Codigo:input.codigo};
 			ret = await used_cod(data);
 			console.log("ret cod", ret);
-			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;setInput(ninput);}
+			if(ret.Res == "Nao"){let ninput = {...input};ninput.check=true;ninput.codVal=ret.Valor;setInput(ninput);}
 		}
 
   /**
@@ -316,10 +316,10 @@ export default function Sport(){
 								{state?(<>	
 									{apostas.simples?(
 										<div className="bet">
-											<p style={{"margin":"0","margin-right":"1vh",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
-											<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
+											<p style={{"margin":"0","margin-right":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
+											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 												{apostas.simples.Desc.Evento}</p>
-											<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
+											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
 												Resultado: {apostas.simples.Desc.Aposta} {parseFloat(apostas.simples.Aposta.Odd).toFixed(2)}</p>	              	
 										</div>):null
 									}
@@ -327,21 +327,21 @@ export default function Sport(){
 
 							{apostas.mult.map((evento)=>(
 								<div className="bet" key={"a_"+evento.Evento.EventoID+evento.Evento.Escolha}>
-									<p style={{"margin":"0","margin-right":"1vh",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
-									<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
+									<p style={{"margin":"0","margin-right":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
+									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 										{evento.Desc.Evento}</p>
-									<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
+									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
 										Resultado: {evento.Desc.Aposta} {parseFloat(evento.Aposta.Odd).toFixed(2)}</p>	 
 								</div>
 							))}</>)}
-							<Form onSubmit={handleSubmit_cod} style={{'margin':'1vh'}}>
+							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
 								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
 								<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'width':'30%','backgroundColor':'red','color':'white',"float":"right","fontSize":"1vw"}} type="subit">Aplicar</button>
 							</Form>
 							<Form onSubmit={handleSubmit} style={{"display":"block"}}>
-								<input type="number" step="0.01" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()}  title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'1vh','width':'50%'}}/>
-								<p style={{'display':'inline','margin-right':'1vh','float':'right'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
+								<input type="number" step="0.01" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()}  title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'10px','width':'50%'}}/>
+								<p style={{'display':'inline','margin-right':'10px','float':'right'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*(input.Valor+((input.check)?input.codVal:0))).toFixed(2)}</p>
 								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white',"fontSize":"1vw"}} type="subit">Aposta já</button>
 							</Form>
 						</div>
@@ -363,7 +363,7 @@ export default function Sport(){
 					
 					<div id="overlay-main">
 
-						<div className="betbox" id="Simples" style={{"margin":"auto","marginTop":"1vh"}}>
+						<div className="betbox" id="Simples" style={{"margin":"auto","marginTop":"10px"}}>
 							<div>
 								<button className='bet-type-button' style={state?{'fontWeight':'bold','borderBottom':'2px solid gray'}:{'borderBottom':'1px solid lightgray'}} onClick={()=>(setState(true))}>Simples</button>
 								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Multiplas</button>
@@ -371,10 +371,10 @@ export default function Sport(){
 								{state?(<>	
 									{apostas.simples?(
 										<div className="bet">
-											<p style={{"margin":"0","margin-right":"1vh",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
-											<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
+											<p style={{"margin":"0","margin-right":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
+											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 												{apostas.simples.Desc.Evento}</p>
-											<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
+											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
 												Resultado: {apostas.simples.Desc.Aposta} {parseFloat(apostas.simples.Aposta.Odd).toFixed(2)}</p>	              	
 										</div>):null
 									}
@@ -382,21 +382,21 @@ export default function Sport(){
 
 							{apostas.mult.map((evento)=>(
 								<div className="bet" key={"a_"+evento.Evento.EventoID+evento.Evento.Escolha}>
-									<p style={{"margin":"0","margin-right":"1vh",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
-									<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'gray'}}>
+									<p style={{"margin":"0","margin-right":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
+									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 										{evento.Desc.Evento}</p>
-									<p style={{"margin":"1vh",'padding-left':'1vh','fontWeight':'bold','color':'black'}}>
+									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
 										Resultado: {evento.Desc.Aposta} {parseFloat(evento.Aposta.Odd).toFixed(2)}</p>	 
 								</div>
 							))}</>)}
-							<Form onSubmit={handleSubmit_cod} style={{'margin':'1vh'}}>
+							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
 								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
 								<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'marginLeft':'5%','width':'30%','backgroundColor':'red','color':'white'}} type="subit">Aplicar</button>
 							</Form>
 							<Form onSubmit={handleSubmit}>
 								<input type="number" placeholder='Aposta' name="Valor" pattern="\d*(\.\d{1,2}|)" max={getWallet()} title="Intruduza montante válido" onChange={handleChange} style={{'margin-left':'5%','width':'60%'}}/>
-								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*input.Valor).toFixed(2)}</p>
+								<p style={{'display':'inline','margin-left':'5%'}}>Cota: {(((state)?((apostas.simples)?apostas.simples.Aposta.Odd:1):apostas.mult.map((e)=>(e.Aposta.Odd)).reduce((x,y)=>(x*y),1))*(input.Valor+((input.check)?input.codVal:0))).toFixed(2)}</p>
 								<button style={{"margin":"3px",'width':'50%','margin-left':'25%','background-color':'green','color':'white'}} type="subit">Apostar</button>
 							</Form>
 						</div>
@@ -469,15 +469,15 @@ export default function Sport(){
 							</div>
 						{cods.map((cod,ind)=>(
 							<div className="bet" key={cod}>
-								<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>{rm_cod({Token:getToken(),Codigo:cod.Codigo});update();cods = cods.splice(ind,1);console.log(cods)}}>x</p>
-								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
-								<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
+								<p style={{"margin":"0","margin-right":"10px",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>{rm_cod({Token:getToken(),Codigo:cod.Codigo});update();cods = cods.splice(ind,1);console.log(cods)}}>x</p>
+								<p style={{"margin":"10px",'padding-left':'10px','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
+								<p style={{"margin":"10px",'padding-left':'10px','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
 							</div>
 						))}
 						<Form onSubmit={handleSubmit}>
-							<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-							<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
-							<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
+							<input style={{'margin-left':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+							<input style={{'margin-left':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*[1-9](\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+							<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'10px','background-color':'green','color':'white'}} type="subit">Criar</button>
 						</Form>
 						</div>
 					</div>
@@ -495,25 +495,25 @@ export default function Sport(){
 				
 				<div id="overlay-main">
 
-					<div className="betbox" id="Multiplas" style={{"margin":"auto","marginTop":"1vh"}}>
+					<div className="betbox" id="Multiplas" style={{"margin":"auto","marginTop":"10px"}}>
 						<div>
 							<button className='bet-type-button' style={{'font-weight':'bold','border-bottom':'2px solid gray','width':'100%'}}>Códigos Promocionais</button>
 						</div>
 					{cods.map((cod)=>(
 						<div className="bet" key={cod}>
-							<p style={{"margin":"0","margin-right":"1vh",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
+							<p style={{"margin":"0","margin-right":"10px",'float':'right','font-weight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
 
-							<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
-							<p style={{"margin":"1vh",'padding-left':'1vh','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
+							<p style={{"margin":"10px",'padding-left':'10px','font-weight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
+							<p style={{"margin":"10px",'padding-left':'10px','font-weight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
 						</div>
 					))}
 					<Form onSubmit={handleSubmit}>
-						<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
-						<input style={{'margin-left':'5%','width':'90%','margin-top':'1vh'}} type="number" step="0.01" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" min="0.1" title="Intruduza montante válido" onChange={handleChange}/>
-						<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'1vh','background-color':'green','color':'white'}} type="subit">Criar</button>
+						<input style={{'margin-left':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+						<input style={{'margin-left':'5%','width':'90%','margin-top':'10px'}} type="number" step="0.01" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" min="0.1" title="Intruduza montante válido" onChange={handleChange}/>
+						<button style={{"margin":"3px",'width':'80%','margin-left':'10%','margin-top':'10px','background-color':'green','color':'white'}} type="subit">Criar</button>
 					</Form>
 					</div>
-					<button type="button" style={{"margin":"auto","marginTop":"2vh","backgroundColor":"orange"}} onClick={()=>(off())}>Sair</button>
+					<button type="button" style={{"margin":"auto","marginTop":"20px","backgroundColor":"orange"}} onClick={()=>(off())}>Sair</button>
 				</div>
 			</>
 		);

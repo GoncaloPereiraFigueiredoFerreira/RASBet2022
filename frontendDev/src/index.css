@@ -114,7 +114,7 @@ li a {
   color: black;
   text-align: center;
   font-size:x-large; 
-  padding: 1vh 2vh;
+  padding: 14px 20px;
   height: 61.25px;
   text-decoration: none; 
 }
@@ -194,7 +194,7 @@ li a:hover{
   width: 100%;
   height: auto;
   display:flexbox;
-  margin-top: 7vh;
+  margin-top: 61.25px;
   content: "";
   display: table;
   clear: both;
@@ -263,9 +263,9 @@ li a:hover{
 @media only screen and (min-width: 500px) {
   .bet-element{
     display: flex;
-    margin:2vh;
-    margin-right: 2vh;
-    margin-left: 2vh;
+    margin:20px;
+    margin-right: 20px;
+    margin-left: 20px;
     padding: 10px;
     background-color: white;
     border-radius: 10px;
@@ -276,7 +276,7 @@ li a:hover{
   .bet-element{
     display: flex;
     flex-direction: column;
-    margin:2vh;
+    margin:20px;
     margin-right: 10px;
     margin-left: 10px;
     padding: 10px;
@@ -356,14 +356,14 @@ li a:hover{
 
 .competitions{
   
-  border-radius: 2vh;
+  border-radius: 20px;
   border: 2px solid grey;
   width: 95%;
   height: auto;
   color: #000;
   background-color: white;
   display: block;
-  margin: 1vh;
+  margin: 10px;
   overflow: hidden;
 
 }
@@ -371,7 +371,7 @@ li a:hover{
 .bet{
   background-color: white;
   border: 1px solid lightgray;
-  margin: 1vh;
+  margin: 10px;
   margin-bottom: 0;
 
 }
@@ -422,7 +422,7 @@ tr:nth-child(even) {
 
 .odd-button {
   background-color: #FDDDC0;
-  border-radius: 1vh;
+  border-radius: 10px;
   border: 0 solid white;
   box-shadow:none;
   color: black;
@@ -431,6 +431,19 @@ tr:nth-child(even) {
   width: fit-content;
   height: fit-content;
   margin: auto ;
-  margin-right: 1vh;
+  margin-right: 10px;
 
+}
+
+.odd-button:last-child {
+  background-color: #FDDDC0;
+  border-radius: 10px;
+  border: 0 solid white;
+  box-shadow:none;
+  color: black;
+  text-align: center;
+  cursor:pointer;
+  width: fit-content;
+  height: fit-content;
+  margin: auto ;
 }

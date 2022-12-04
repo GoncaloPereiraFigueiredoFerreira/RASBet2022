@@ -41,7 +41,7 @@ export default function Perfil(){
 	if(width>1000){
 		return(
 		<>
-		<div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
+		<div className = "box" style={{'margin':'25%','marginTop':'20px','paddingTop':'30px'}}>
 			<div className = "loginbox">
 			<div className='bemvindo'>
 				<p>Perfil</p>
@@ -64,7 +64,7 @@ export default function Perfil(){
 	else{
 		return(
 		<>
-		<div className = "box" style={{'margin':'5%','marginTop':'2vh','paddingTop':'3vh'}}>
+		<div className = "box" style={{'margin':'5%','marginTop':'20px','paddingTop':'30px'}}>
 			<div className = "loginbox">
 			<div className='bemvindo'>
 				<p>Perfil</p>

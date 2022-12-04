@@ -35,7 +35,7 @@ export default function HistA() {
 
   return (
     <>
-      <div className = "box" style={{'marginTop':'2vh','paddingTop':'3vh'}}>
+      <div className = "box" style={{'marginTop':'20px','paddingTop':'30px'}}>
         <div className = "loginbox">
           <div className='bemvindo'>
             <p>Histórico de Apostas</p>
@@ -46,6 +46,7 @@ export default function HistA() {
               <th>Campeonato:Jogo</th>
               <th>Montante</th>
               <th>Data</th>
+              <th>Escolha</th>
               <th>Estado</th>
               <th>Odd</th>
             </tr>
@@ -62,6 +63,12 @@ export default function HistA() {
                   ))}</th>
               <th style={{'font-weight':'normal'}}>{evento.Montante}</th>
               <th style={{'font-weight':'normal'}}>{parseDate(evento.DateAp)}</th>
+              <th style={{'font-weight':'normal'}}>   
+                {evento.Jogos.map((jogo,ind)=>(
+                  <div style={{"margin":"2px"}} key={ind.toString()}>
+                      <p style={{'font-weight':'bold'}}>{jogo.Escolha}</p>          
+                  </div>
+                  ))}</th>
               <th style={{'font-weight':'normal'}}>{evento.Estado}</th>
               <th style={{'font-weight':'normal'}}>{evento.Odd}</th>
             </tr>

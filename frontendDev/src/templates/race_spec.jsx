@@ -75,7 +75,7 @@ export default function Race({evento,sportid,update,ind}){
   return(
   		<div class="bet-element">
             <div class="racematch">
-              <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'11vh'}}/>
+              <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
               <div>
                 <p style={{'font-weight':'bold'}}>{evento.Liga}</p>
                 <p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -87,7 +87,7 @@ export default function Race({evento,sportid,update,ind}){
               <div style={{"display":"flex",'flex-wrap':'wrap'}}>
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
                   <div key={ind.toString() + evento.Liga} style={{"display":"flex",'flex-direction':'row'}}>
-                    <img src={evento.Logos[ind]} style={{'margin-top':'2vh',"height":"4vh"}} />
+                    <img src={evento.Logos[ind]} style={{'margin-top':'20px',"height":"40px"}} />
                     <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" name={ind}/></a>
                   </div>
                 
@@ -95,7 +95,7 @@ export default function Race({evento,sportid,update,ind}){
               </div>
               <div style={{"display":"flex", 'float':'right','margin-right':'0','margin-left':'auto'}}>
                 <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-bottom':'auto'}} onClick={()=>(off())} type="button">Sair</button>
-                <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-bottom':'auto','margin-right':'1vh','margin-left':'1vh'}} type="submit">Submeter</button>                
+                <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-bottom':'auto','margin-right':'10px','margin-left':'10px'}} type="submit">Submeter</button>                
               </div>
 
             </div>
