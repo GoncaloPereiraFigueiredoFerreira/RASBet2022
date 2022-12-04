@@ -71,7 +71,7 @@ export default function Register({set,flag}) {
   return (
     <>
       <div className="logo" onClick={()=>{navigate('/login');}} >
-        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
+        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
         <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>        
       </div>
       <div className = "box">
@@ -112,7 +112,7 @@ else{
   return (
     <>
       <div className="logo" onClick={()=>{navigate('/login');}}>
-        <img src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
+        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
         <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>         
       </div>
       <div className = "box">

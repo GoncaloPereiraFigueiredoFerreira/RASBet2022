@@ -68,7 +68,7 @@ function Aux({evento,sport,update,ind}){
 
 
 		            	{(evento.Tipo=="RaceEvent")?<>            
-						<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
+						<img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             			<div>
                 			<p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
                 			<p style={{'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -77,9 +77,9 @@ function Aux({evento,sport,update,ind}){
 		              	{(evento.Tipo!="RaceEvent")?<>
 							<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 							<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
-								<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+								<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 								<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-								<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+								<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 							</div>
 							<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 					  	</>:null}
@@ -102,7 +102,7 @@ function Aux({evento,sport,update,ind}){
 
 
 					{(evento.Tipo=="RaceEvent")?<>            
-					<img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
+					<img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
 					<div>
 						<p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
 						<p style={{'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
@@ -111,9 +111,9 @@ function Aux({evento,sport,update,ind}){
 					  {(evento.Tipo!="RaceEvent")?<>
 						<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 						<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
-							<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
+							<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 							<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-							<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
+							<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 						</div>
 						<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 					  </>:null}

@@ -316,7 +316,7 @@ export default function Sport(){
 								</div>
 							))}</>)}
 							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
-								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
+								{(input.check)?<img alt="" style={{'width':'20px'}} src="/check.png"/>:null}
 								<input type="value" placeholder='Código' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'width':'30%','backgroundColor':'red','color':'white',"float":"right","fontSize":"1vw"}} type="subit">Aplicar</button>
 							</Form>
@@ -371,7 +371,7 @@ export default function Sport(){
 								</div>
 							))}</>)}
 							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
-								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
+								{(input.check)?<img alt="" style={{'width':'20px'}} src="/check.png"/>:null}
 								<input type="value" placeholder='Código' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'marginLeft':'5%','width':'30%','backgroundColor':'red','color':'white'}} type="subit">Aplicar</button>
 							</Form>

@@ -67,37 +67,37 @@ export default function Root() {
           <ul>
             <li>    
               <div className="logo"> 
-                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
+                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
                 <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"15px","marginTop":"20px"}}> RASBet</p>        
               </div>     
             </li>
             <li>
               <Link to='/sport/FUTPT'>
-              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
               FutebolPT
               </Link>
             </li>
             <li>
               <Link to='/sport/FUT'>
-              <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
               Futebol
               </Link>
             </li>
             <li>
               <Link to='/sport/F1'>
-              <img src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
               Formula 1
               </Link>
             </li>
             <li>
               <Link to='/sport/BSK'>
-              <img src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
               Basquetebol</Link>
             </li>
 
             {(getRole() == "apostador")?
             <div className="dropdown">
-              <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
+              <img alt="" src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
               <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -150,7 +150,7 @@ export default function Root() {
            <ul>
             <li>
               <div className="logo"> 
-                <img src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
+                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
               </div>
             </li>
 
@@ -158,19 +158,19 @@ export default function Root() {
                 <div className="dropbtn">Desportos</div>
                 <div class="dropdown-content" style={{"left":"0"}}>
                   <Link to={`/sport/FUTPT`}>               
-                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
                     FutebolPT
                   </Link>                  
                   <Link to={`/sport/FUT`}>               
-                    <img src='/football.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
                     Futebol
                   </Link>
                   <Link to={`/sport/F1`}>               
-                    <img src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
                     Formula 1
                   </Link>                  
                   <Link to={`/sport/BSK`}>               
-                    <img src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
                     Basquetebol
                   </Link>
                 </div>
@@ -178,7 +178,7 @@ export default function Root() {
  
              {(getRole() == "apostador")?
              <div className="dropdown">
-               <img src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
+               <img alt="" src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
                <div class="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>
