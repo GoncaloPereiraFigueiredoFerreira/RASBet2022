@@ -382,8 +382,7 @@ class DBCommunication {
                                         return this.mysqlQuery('UPDATE Aposta SET Estado = "LOST" WHERE ID=?', mes[i].ApostaID).then(() => {
                                             return this.mysqlQuery('SELECT ApostadorID FROM Aposta WHERE ID=?', mes[i].ApostaID);
                                         }).then((message) => {
-                                            for (let i in message)
-                                                toNotify.push([message[i].ApostadorID, `Perdeu a aposta com ID ${mes[i].ApostaID}`]);
+                                            toNotify.push([message[0].ApostadorID, `Perdeu a aposta com ID ${mes[i].ApostaID}`]);
                                         }).catch((e) => {
                                             return Promise.reject(e);
                                         });
