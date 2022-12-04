@@ -14,12 +14,10 @@ export async function loader({params}){
   if(token == "undefined"){ret = null;}
   else ret = await axios({method:'GET',url:'http://localhost:8080/api/betHistory/',params:{"ApostadorID":token}}) 
       .then(function (response) {
-        console.log("response",response);
         const data = response.data;
         return data.lista;
       })
       .catch(function (error) {
-        console.log(error);
         return null;
       }); 
   return ret;
@@ -52,25 +50,25 @@ export default function HistA() {
             </tr>
           {list.map((evento)=>(
 
-            <tr id={evento.Aridade} key={evento.ID} style={{'font-weight':'normal'}}>
-              <th style={{'font-weight':'normal'}}>{evento.Aridade}</th>
-              <th style={{'font-weight':'normal'}}>   
+            <tr id={evento.Aridade} key={evento.ID} style={{'fontWeight':'normal'}}>
+              <th style={{'fontWeight':'normal'}}>{evento.Aridade}</th>
+              <th style={{'fontWeight':'normal'}}>   
                 {evento.Jogos.map((jogo,ind)=>(
                   <div style={{"margin":"2px"}} key={ind.toString()}>
-                      <p style={{'font-weight':'bold'}}>{jogo.Liga}:</p>
+                      <p style={{'fontWeight':'bold'}}>{jogo.Liga}:</p>
                       <p>{jogo.Descricao}</p>            
                   </div>
                   ))}</th>
-              <th style={{'font-weight':'normal'}}>{evento.Montante}</th>
-              <th style={{'font-weight':'normal'}}>{parseDate(evento.DateAp)}</th>
-              <th style={{'font-weight':'normal'}}>   
+              <th style={{'fontWeight':'normal'}}>{evento.Montante}</th>
+              <th style={{'fontWeight':'normal'}}>{parseDate(evento.DateAp)}</th>
+              <th style={{'fontWeight':'normal'}}>   
                 {evento.Jogos.map((jogo,ind)=>(
                   <div style={{"margin":"2px"}} key={ind.toString()}>
-                      <p style={{'font-weight':'bold'}}>{jogo.Escolha}</p>          
+                      <p style={{'fontWeight':'bold'}}>{jogo.Escolha}</p>          
                   </div>
                   ))}</th>
-              <th style={{'font-weight':'normal'}}>{evento.Estado}</th>
-              <th style={{'font-weight':'normal'}}>{evento.Odd}</th>
+              <th style={{'fontWeight':'normal'}}>{evento.Estado}</th>
+              <th style={{'fontWeight':'normal'}}>{evento.Odd}</th>
             </tr>
 
           ))}

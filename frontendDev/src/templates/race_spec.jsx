@@ -21,14 +21,11 @@ function test (part,odds){
      */
 
 async function register_bet(data){
-  console.log(data);
   await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
   .then(function (response) {
-    console.log(response);
     return response;
   })
   .catch(function (error) {
-    console.log(error);
     return false;
   });
 }
@@ -51,7 +48,6 @@ export default function Race({evento,sportid,update,ind}){
     var aux = input;
     input.Odds[parseInt(target.name)] = parseFloat(target.value);
     input = input;
-    console.log(input);
   } 
 
   /**
@@ -73,35 +69,35 @@ export default function Race({evento,sportid,update,ind}){
 
 
   return(
-  		<div class="bet-element">
-            <div class="racematch">
+  		<div className="bet-element">
+            <div className="racematch">
               <img src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
               <div>
-                <p style={{'font-weight':'bold'}}>{evento.Liga}</p>
-                <p style={{'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+                <p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
+                <p style={{'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
               </div>
             </div>
           <Form onSubmit={handleSubmit} style={{"padding":"10px"}}>
 
             <div id='overlay'>
-              <div style={{"display":"flex",'flex-wrap':'wrap'}}>
+              <div style={{"display":"flex",'flexWrap':'wrap'}}>
                 {test(evento.Participantes,evento.Odds).map((part,ind)=>(<>
-                  <div key={ind.toString() + evento.Liga} style={{"display":"flex",'flex-direction':'row'}}>
-                    <img src={evento.Logos[ind]} style={{'margin-top':'20px',"height":"40px"}} />
+                  <div style={{"display":"flex",'flexDirection':'row'}} key={ind.toString() + evento.Liga}>
+                    <img src={evento.Logos[ind]} style={{'marginTop':'20px',"height":"40px"}} />
                     <a><input type="text" style={{"margin":"15px"}} placeholder={part} onChange={handleChange} pattern="\d*[1-9](\.\d{1,}|)" title="Intruduza valor superior a 1" name={ind}/></a>
                   </div>
                 
                 </>))}                
               </div>
-              <div style={{"display":"flex", 'float':'right','margin-right':'0','margin-left':'auto'}}>
-                <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-bottom':'auto'}} onClick={()=>(off())} type="button">Sair</button>
-                <button style={{"height":"fit-content",'background-color':'orange','margin-top':'0','margin-bottom':'auto','margin-right':'10px','margin-left':'10px'}} type="submit">Submeter</button>                
+              <div style={{"display":"flex", 'float':'right','marginRight':'0','marginLeft':'auto'}}>
+                <button style={{"height":"fit-content",'backgroundColor':'orange','marginTop':'0','marginBottom':'auto'}} onClick={()=>(off())} type="button">Sair</button>
+                <button style={{"height":"fit-content",'backgroundColor':'orange','marginTop':'0','marginBottom':'auto','marginRight':'10px','marginLeft':'10px'}} type="submit">Submeter</button>                
               </div>
 
             </div>
-            <div style={{"display":"flex",'flex-direction':'column'}}>
-              <button type="button" style={{"margin-bottom":"5px"}} onClick={()=>(on())}>Criar Odds</button>
-              <button style={{"height":"fit-content",'background-color':'orange','margin-top':'auto','margin-bottom':'0'}} type="submit">Submeter</button>              
+            <div style={{"display":"flex",'flexDirection':'column'}}>
+              <button type="button" style={{"marginBottom":"5px"}} onClick={()=>(on())}>Criar Odds</button>
+              <button style={{"height":"fit-content",'backgroundColor':'orange','marginTop':'auto','marginBottom':'0'}} type="submit">Submeter</button>              
             </div>
 
           </Form>

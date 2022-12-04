@@ -13,17 +13,14 @@ import {setToken,setRole,getDate_min} from "../utils"
 
 
 async function register_req(data){
-  console.log(data);
   var resp = await axios({method:'POST',url:'http://localhost:8080/api/register/',data:data}) 
   .then(function (response) {
-    console.log(response);
     const data = response.data;
     setToken(data.Token);
     setRole("apostador");
     return true;
   })
   .catch(function (error) {
-    console.log(error.response.data);
     return error.response.data;
   });
 

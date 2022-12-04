@@ -85,7 +85,6 @@ export function parseBet(evento,escolha){
             ,Evento:{EventoID:evento.EventoId.toString(),Desporto:"",Escolha:escolha}
             ,Desc:{Evento:Nome,Aposta:desc_aposta}};
 
-  console.log(ret);
 
   return ret;
 

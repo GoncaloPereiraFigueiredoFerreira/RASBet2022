@@ -11,17 +11,14 @@ import {setToken,setRole} from "../utils"
      */
 
 async function login_req(data){
-  console.log(data);
   var resp = await axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
   .then(function (response) {
-    console.log(response);
     const data = response.data;
     setToken(data.Token);
     setRole(data.FRole);
     return true;
   })
   .catch(function (error) {
-    console.log(error.response.data);
     return error.response.data;
   });
 

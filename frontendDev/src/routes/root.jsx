@@ -20,11 +20,10 @@ export default function Root() {
     if (getRole() == "apostador" && !listening) {
       const events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
 
-      events.onerror = (error) => {console.log("error sse:",error);}
+      //events.onerror = (error) => {console.log("error sse:",error);}
 
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
-        console.log(parsedData);
 
         if(parsedData.Balance !== undefined){
           setMy({Valor:parsedData.Balance});
@@ -45,12 +44,10 @@ export default function Root() {
   async function refresh(){
     const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/',params:{"token":getToken()}}) 
       .then(function (response) {
-        console.log(response);
         const data = response.data;
         return data;
       })
       .catch(function (error) {
-        console.log(error);
         return null;
       }); 
   }

@@ -10,13 +10,13 @@ export default function Empate({evento,addAposta,escolhas}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
-						<p style={{"margin":"0px",'font-weight':'bold'}}>{evento.Liga}</p>
-		              	<div style={{"display":"flex",'flex-direction':'row','float':'left'}}>
+						<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
+		              	<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 							<img src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 		                	<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 							<img src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		              	</div>
-					  <p style={{"margin":"0px",'font-weight':'bold'}}>{parseDate(evento.Data)}</p>
+					  <p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 		            </div>
 		            <div className="drawmatchodds">
 				            <button className='odd-button' style={{"backgroundColor":(escolhas.includes(0))?"orange":"beige","color":(escolhas.includes(0))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
