@@ -292,7 +292,7 @@ export default function Sport(){
 						<div className="betbox" id="Simples">
 							<div>
 								<button className='bet-type-button' style={state?{'fontWeight':'bold','borderBottom':'2px solid gray'}:{'borderBottom':'1px solid lightgray'}} onClick={()=>(setState(true))}>Simples</button>
-								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Multiplas</button>
+								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Múltiplas</button>
 							</div>
 								{state?(<>	
 									{apostas.simples?(
@@ -317,7 +317,7 @@ export default function Sport(){
 							))}</>)}
 							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
 								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
-								<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
+								<input type="value" placeholder='Código' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'width':'30%','backgroundColor':'red','color':'white',"float":"right","fontSize":"1vw"}} type="subit">Aplicar</button>
 							</Form>
 							<Form onSubmit={handleSubmit} style={{"display":"block"}}>
@@ -347,7 +347,7 @@ export default function Sport(){
 						<div className="betbox" id="Simples" style={{"margin":"auto","marginTop":"10px"}}>
 							<div>
 								<button className='bet-type-button' style={state?{'fontWeight':'bold','borderBottom':'2px solid gray'}:{'borderBottom':'1px solid lightgray'}} onClick={()=>(setState(true))}>Simples</button>
-								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Multiplas</button>
+								<button className='bet-type-button' style={state?{'float':'right','borderBottom':'1px solid lightgray'}:{'fontWeight':'bold','float':'right','borderBottom':'2px solid gray'}} onClick={()=>(setState(false))}>Múltiplas</button>
 							</div>
 								{state?(<>	
 									{apostas.simples?(
@@ -372,7 +372,7 @@ export default function Sport(){
 							))}</>)}
 							<Form onSubmit={handleSubmit_cod} style={{'margin':'10px'}}>
 								{(input.check)?<img style={{'width':'20px'}} src="/check.png"/>:null}
-								<input type="value" placeholder='Codigo' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
+								<input type="value" placeholder='Código' name="codigo" onChange={handleChangeCodS} style={{'width':'60%'}}/>
 								<button style={{'marginLeft':'5%','width':'30%','backgroundColor':'red','color':'white'}} type="subit">Aplicar</button>
 							</Form>
 							<Form onSubmit={handleSubmit}>
@@ -455,7 +455,7 @@ export default function Sport(){
 							</div>
 						))}
 						<Form onSubmit={handleSubmit}>
-							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Código' name="Codigo" onChange={handleChange}/>
 							<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
 							<button style={{"margin":"3px",'width':'80%','marginLeft':'10%','margin-top':'10px','backgroundColor':'green','color':'white'}} type="subit">Criar</button>
 						</Form>
@@ -488,7 +488,7 @@ export default function Sport(){
 						</div>
 					))}
 					<Form onSubmit={handleSubmit}>
-						<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Codigo' name="Codigo" onChange={handleChange}/>
+						<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Código' name="Codigo" onChange={handleChange}/>
 						<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="number" step="0.01" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" min="0.1" title="Intruduza montante válido" onChange={handleChange}/>
 						<button style={{"margin":"3px",'width':'80%','marginLeft':'10%','margin-top':'10px','backgroundColor':'green','color':'white'}} type="subit">Criar</button>
 					</Form>
