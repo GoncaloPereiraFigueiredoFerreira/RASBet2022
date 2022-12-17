@@ -2,6 +2,7 @@ import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "reac
 import Login from "./login";
 import axios from "axios";
 import { useEffect,useState } from "react";
+import {get_request} from "../requests"
 
 import {getToken,getWallet,getRole,setWallet as set} from "../utils"
 
@@ -42,14 +43,7 @@ export default function Root() {
      */
 
   async function refresh(){
-    const ret = await axios({method:'GET',url:'http://localhost:8080/api/update/',params:{"token":getToken()}}) 
-      .then(function (response) {
-        const data = response.data;
-        return data;
-      })
-      .catch(function (error) {
-        return null;
-      }); 
+    const ret = await get_request('/update/',{"token":getToken()})
   }
 
   if(getRole() == "apostador"){

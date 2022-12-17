@@ -1,4 +1,5 @@
 import {useState} from "react"
+import {post_request} from "../requests"
 
 import axios from "axios"
 import {getToken,parseDate} from "../utils"
@@ -14,13 +15,9 @@ import NPags from "./NPags"
 
 async function cancelar_aposta(evento,sport){
 	var data = {Token:getToken(),Evento:{EventoID:evento.EventoId.toString(),Desporto:sport}};
-   var resp = axios({method:'POST',url:'http://localhost:8080/api/closeEvent/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-  })
-  .catch(function (error) {
-    return null;
-  });
+  var resp = await post_request('/closeEvent/',data)
+  if (resp.error) resp = null
+  else resp = resp.data
 }
 
 		/**
@@ -30,13 +27,9 @@ async function cancelar_aposta(evento,sport){
      */
 
 async function add_Super_Odds(data){
-   var resp = axios({method:'POST',url:'http://localhost:8080/api/superOdds/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-  })
-  .catch(function (error) {
-    return null;
-  });
+  var resp = await post_request('/superOdds/',data)
+  if (resp.error) resp = null
+  else resp = resp.data
 }
 
 		/**

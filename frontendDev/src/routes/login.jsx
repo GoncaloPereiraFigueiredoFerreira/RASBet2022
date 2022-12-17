@@ -3,6 +3,7 @@ import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
 import {setToken,setRole} from "../utils"
+import {post_request} from "../requests"
 
     /**
      * Post request to login the user in RASBet
@@ -11,16 +12,13 @@ import {setToken,setRole} from "../utils"
      */
 
 async function login_req(data){
-  var resp = await axios({method:'POST',url:'http://localhost:8080/api/login/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-    setToken(data.Token);
-    setRole(data.FRole);
-    return true;
-  })
-  .catch(function (error) {
-    return error.response.data;
-  });
+  var resp = await post_request('/login/',data)
+  if (resp.error) resp = resp.data 
+  else{
+    setToken(resp.data.Token)
+    setRole(resp.data.FRole)
+    resp = true
+  }
 
   return resp;
 }

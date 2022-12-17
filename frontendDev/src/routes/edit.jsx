@@ -3,6 +3,7 @@ import {useState,useEffect} from "react";
 import axios from "axios"
 import Login from "./login"
 import {getToken,getRole,getWallet,parseDate} from "../utils"
+import {post_request,get_request} from "../requests"
 
 
 		/**
@@ -12,16 +13,13 @@ import {getToken,getRole,getWallet,parseDate} from "../utils"
      */
 export async function loader({params}){
 	const token = params.perfilid;
-	var ret;
+	let ret;
 	if(token == "undefined"){ret = null;}
-	else ret = await axios({method:'GET',url:'http://localhost:8080/api/profileInfo/',params:{"ApostadorID":token}}) 
-  		.then(function (response) {
-    		const data = response.data;
-    		return data;
-  		})
-  		.catch(function (error) {
-    		return null;
-  		}); 
+	else ret = await get_request("/profileInfo/",{"ApostadorID":token})
+	if (ret.error) ret = null
+	else ret = ret.data
+
+	console.log(ret)
 	return ret;
 }
 
@@ -32,15 +30,10 @@ export async function loader({params}){
      */
 
 async function edit(data){
-	var res = await axios({method:'POST',url:'http://localhost:8080/api/editProfile/',data:data}) 
-	  .then(function (response) {
-	    const data = response.data;
-	    return response;
-	  })
-	  .catch(function (error) {
-	    return false;
-	  });
-	  return res;
+	let ret = await post_request('/editProfile/',data) 
+	if(ret.error) ret = false
+	else ret = ret.data
+	return ret;
 }
 
 		/**

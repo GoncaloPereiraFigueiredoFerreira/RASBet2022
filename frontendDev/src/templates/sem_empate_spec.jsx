@@ -1,6 +1,7 @@
 import { Form } from 'react-router-dom'
 import { getToken,parseDate} from '../utils'
 import axios from 'axios'
+import {post_request} from "../requests"
 
     /**
      * Post request to specialist register an odds to an event
@@ -9,13 +10,9 @@ import axios from 'axios'
      */
 
 async function register_bet(data){
-  let ret = await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
-  .then(function (response) {
-    return response;
-  })
-  .catch(function (error) {
-    return false;
-  });
+  let ret = await post_request('/addEventOdd/',data)
+  if(ret.error) ret = false
+  else ret = ret.data
 
   return ret
 }

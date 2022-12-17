@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {getToken,parseDate} from  "../utils"
 import {useLoaderData} from 'react-router-dom';
+import {get_request} from "../requests"
 
     /**
      * Fetch the historic of transaction data of the user
@@ -12,14 +13,9 @@ export async function loader({params}){
   const token = params.perfilid;
   var ret;
   if(token == "undefined"){ret = null;}
-  else ret = await axios({method:'GET',url:'http://localhost:8080/api/transHist/',params:{"ApostadorID":token}}) 
-      .then(function (response) {
-        const data = response.data;
-        return data;
-      })
-      .catch(function (error) {
-        return null;
-      }); 
+  else ret = await get_request('/transHist/',{"ApostadorID":token})
+  if (ret.error) ret = null
+  else ret = ret.data
   return ret;
 }
 

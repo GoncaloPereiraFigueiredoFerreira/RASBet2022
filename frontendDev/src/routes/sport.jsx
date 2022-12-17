@@ -3,6 +3,7 @@ import {useLoaderData,Form} from 'react-router-dom';
 import axios from "axios"	
 
 import {getToken,getRole,getDate,getWallet} from "../utils"
+import {post_request,get_request} from "../requests"
 
 import Bet from "../templates/Bet"
 import Bet_spec from "../templates/Bet_spec"
@@ -15,13 +16,9 @@ import Bet_admin from "../templates/Bet_admin"
      */
 
 async function add_cod(data){
-  var resp = axios({method:'POST',url:'http://localhost:8080/api/addPromocao/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-  })
-  .catch(function (error) {
-    return null;
-  });
+  var resp = await post_request('/addPromocao/',data)
+  if (resp.error) resp = null
+  else resp = resp.data
 
   return resp;
 }
@@ -33,13 +30,9 @@ async function add_cod(data){
      */
 
 async function rm_cod(data){
-  var resp = axios({method:'POST',url:'http://localhost:8080/api/remPromocao/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-  })
-  .catch(function (error) {
-    return null;
-  });
+  var resp = await post_request('/remPromocao/',data)
+  if (resp.error) resp = null
+  else resp = resp.data
 
   return resp;
 }
@@ -51,14 +44,9 @@ async function rm_cod(data){
      */
 
 async function used_cod(data){
-  var resp = axios({method:'GET',url:'http://localhost:8080/api/usedCod/',params:data}) 
-  .then(function (response) {
-    const data = response.data;
-    return data;
-  })
-  .catch(function (error) {
-    return null;
-  });
+  var resp = await get_request('/usedCod/',data)
+  if (resp.error) resp = null
+  else resp = resp.data
 
   return resp;
 }
@@ -71,15 +59,10 @@ async function used_cod(data){
 
 export async function loader({params}){
 	const token = getToken();
-	var ret = await axios({method:'GET',url:'http://localhost:8080/api/eventList/',params:{"token":token,"sport":params.sportid}}) 
-	  .then(function (response) {
-	    const data = {sportid:(params.sportid)?params.sportid:"FUT",sport:response.data.EventList,ligas:response.data.Leagues};
-	    return data;
-	  })
-	  .catch(function (error) {
-	    return null;
-	  });
-	  if(getRole() == "Admin"){ret.cods =  await getCods()}
+	var ret = await get_request('/eventList/',{"token":token,"sport":params.sportid})
+	if(ret.error) ret = null;
+	else ret = {sportid:(params.sportid)?params.sportid:"FUT",sport:ret.data.EventList,ligas:ret.data.Leagues}
+	if(getRole() == "Admin"){ret.cods =  await getCods()}
 	return ret;
 }
 
@@ -90,14 +73,10 @@ export async function loader({params}){
      */
 
 async function getCods(){
-	const ret = await axios({method:'GET',url:'http://localhost:8080/api/getpromocoes/',params:{"Token":getToken()}}) 
-	  .then(function (response) {
-	    const data = response.data;
-	    return data;
-	  })
-	  .catch(function (error) {
-	    return null;
-	  });
+	let ret = await get_request('/getpromocoes/',{"Token":getToken()})
+	if (ret.error) ret = null
+  else ret = ret.data
+
 	return ret;
 }
 

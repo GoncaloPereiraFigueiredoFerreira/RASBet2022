@@ -1,6 +1,7 @@
 import { Form } from 'react-router-dom'
 import { getToken,parseDate} from "../utils"
 import axios from 'axios'
+import {post_request} from "../requests"
 
     /**
      * Function that aggregates odd an name of a pilot
@@ -21,13 +22,11 @@ function test (part,odds){
      */
 
 async function register_bet(data){
-  await axios({method:'POST',url:'http://localhost:8080/api/addEventOdd/',data:data}) 
-  .then(function (response) {
-    return response;
-  })
-  .catch(function (error) {
-    return false;
-  });
+  let ret = await post_request('/addEventOdd/',data)
+  if(ret.error) ret = false
+  else ret = ret.data
+
+  return ret
 }
 
     /**

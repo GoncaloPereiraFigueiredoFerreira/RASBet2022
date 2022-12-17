@@ -2,6 +2,7 @@ import {Form} from "react-router-dom"
 import {useState} from "react"
 import axios from "axios"
 import {getDate,getToken} from "../utils"
+import {post_request} from "../requests"
 
     /**
      * Component that render the wallet page
@@ -18,14 +19,9 @@ export default function Wallet() {
 
     function Levantar(){
       var data={Valor:input.Valor,Tipo:"Levantamento_Conta",ApostadorID:getToken(),DataTr:getDate()};
-      var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
-      .then(function (response) {
-        const data = response.data;
-        //setWallet(data.Balance);
-        //set({Valor:data.Balance});
-      })
-      .catch(function (error) {
-      });
+      var resp = post_request('/transaction/',data)
+      if (!resp.error) resp = resp.data
+
     }
 
     /**
@@ -35,14 +31,8 @@ export default function Wallet() {
 
     function Depositar(){
       var data={Valor:input.Valor,Tipo:"Deposito_Conta",ApostadorID:getToken(),DataTr:getDate()};
-      var resp = axios({method:'POST',url:'http://localhost:8080/api/transaction/',data:data}) 
-      .then(function (response) {
-        const data = response.data;
-        //setWallet(data.Balance);
-        //set({Valor:data.Balance});
-      })
-      .catch(function (error) {
-      });
+      var resp = post_request('/transaction/',data)
+      if (!resp.error) resp = resp.data
     }
 
   /**

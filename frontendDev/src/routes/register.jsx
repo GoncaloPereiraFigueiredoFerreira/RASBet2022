@@ -4,6 +4,7 @@ import axios from 'axios'
 import './login.css'
 
 import {setToken,setRole,getDate_min} from "../utils"
+import {post_request} from "../requests"
 
     /**
      * Post request to register a new user
@@ -13,16 +14,13 @@ import {setToken,setRole,getDate_min} from "../utils"
 
 
 async function register_req(data){
-  var resp = await axios({method:'POST',url:'http://localhost:8080/api/register/',data:data}) 
-  .then(function (response) {
-    const data = response.data;
-    setToken(data.Token);
-    setRole("apostador");
-    return true;
-  })
-  .catch(function (error) {
-    return error.response.data;
-  });
+  var resp = await post_request('/register/',data)
+  if (resp.error) resp = resp.data
+  else {
+    setToken(resp.data.Token)
+    setRole("apostador")
+    resp = true
+  }
 
   return resp;
 }
