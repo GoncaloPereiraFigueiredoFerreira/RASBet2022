@@ -17,6 +17,27 @@ export async function setToken(userToken) {
 
 export function getToken(){
   const tokenString = sessionStorage.getItem('token');
+  const userToken = tokenString != undefined ? JSON.parse(tokenString):"";
+  //const ret = userToken?.token;
+  return userToken;
+}
+
+    /**
+     * Save Refresh Token of the user in localStorage
+     * @params token of the user 
+     */
+
+export async function setRToken(userToken) {
+  sessionStorage.setItem('Rtoken', JSON.stringify(userToken));
+}
+
+    /**
+     * get Refresh Token of the user in localStorage
+     * @returns user token
+     */
+
+export function getRToken(){
+  const tokenString = sessionStorage.getItem('Rtoken');
   const userToken = JSON.parse(tokenString);
   //const ret = userToken?.token;
   return userToken;

@@ -12,22 +12,22 @@ export class AuthenticationHandler{
 
     authenticateToken(req:any,res:any,next:any){
         
-        //const token = req.headers.accesstoken
+        const token = req.query.token?req.query.token:(req.headers.accesstoken?req.headers.accesstoken:null)
         
-        const token = req.query.ApostadorID? req.query.ApostadorID:
+        /*const token = req.query.ApostadorID? req.query.ApostadorID:
                      (req.query.token? req.query.token: 
                      (req.query.Token? req.query.Token: 
                      (req.body.Token? req.body.Token:
                      (req.body.token? req.body.token: 
                      (req.body.ApostadorID? req.body.ApostadorID:
-                     (req.body.Aposta.ApostadorID? req.body.Aposta.ApostadorID: null))))))
+                     (req.body.Aposta.ApostadorID? req.body.Aposta.ApostadorID: null))))))*/
                      
         //console.log(`Authentication: ${token}`)
         if(token == null) return res.sendStatus(401)
     
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err:any,Info:any)=>{
             if (err) return res.sendStatus(403)
-            //console.log(`Authentication: ${Info}`)
+            console.log(`Authentication: ${Info}`)
             req.email = Info.userInfo.email
             req.role = Info.userInfo.role
             next()
@@ -70,7 +70,7 @@ export class AuthenticationHandler{
     }
     
     generateAccessToken(userInfo:any){
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'600s'})
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5s'})
     }
 
 }

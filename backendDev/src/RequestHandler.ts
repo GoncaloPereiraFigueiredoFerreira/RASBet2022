@@ -114,7 +114,7 @@ export class RequestHandler implements IRequestHandler{
 
     refreshTokenFunction(request:any,response:any){
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        const accessToken = authHandler.refreshAccessToken(request.body.token)
+        const accessToken = authHandler.refreshAccessToken(request.body.refreshtoken)
         if(accessToken==null) response.sendStatus(400)
         else response.status(200).send({'AccessToken':accessToken})
     }

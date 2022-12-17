@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react'
 import {Link ,Form,useNavigate,redirect} from 'react-router-dom'
 import axios from 'axios'
 import './login.css'
-import {setToken,setRole} from "../utils"
+import {setToken,setRole,setRToken} from "../utils"
 import {post_request} from "../requests"
 
     /**
@@ -15,8 +15,10 @@ async function login_req(data){
   var resp = await post_request('/login/',data)
   if (resp.error) resp = resp.data 
   else{
+    console.log(resp)
     setToken(resp.data.Token)
     setRole(resp.data.FRole)
+    setRToken(resp.data.RefreshToken)
     resp = true
   }
 

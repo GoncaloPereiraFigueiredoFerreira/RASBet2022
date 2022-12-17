@@ -19,6 +19,7 @@ async function register_req(data){
   else {
     setToken(resp.data.Token)
     setRole("apostador")
+    setRToken(resp.data.RefreshToken)
     resp = true
   }
 
