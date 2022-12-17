@@ -1,12 +1,11 @@
 import {EventList} from "./Models/EventList";
 import {DBCommunication} from "./DBCommunication/DBCommunication";
-import {SessionHandler} from "./SessionHandler";
-import { AuthenticationHandler } from "./Security";
+import {NotificationHandler} from "./SessionControl/NotificationHandler";
+import { AuthenticationHandler } from "./SessionControl/Security";
 const evLst:IControlEvents = EventList.getInstance()
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication();
-const sessionHandler:ISessionHandler = SessionHandler.getInstance();
-const notifcationCenter = require("./NotificationCenter");
+const notificationHandler:INotificationHandler = NotificationHandler.getInstance();
 const authHandler = new AuthenticationHandler();
 const bcrypt = require('bcrypt')
 
@@ -69,7 +68,7 @@ export class RequestHandler implements IRequestHandler{
         dbComms.transactionOnDb(transacao).then(()=>{
             return dbComms.walletOnDb(userEmail)
         }).then((message:number)=>{
-            sessionHandler.sendNotification(userEmail,{'Balance':message});
+            notificationHandler.addWalletNotification(userEmail,message);
             response.sendStatus(200);
         }).catch((message:any)=>{
             response.status(400).send(message)
@@ -152,7 +151,7 @@ export class RequestHandler implements IRequestHandler{
             for(let i = 0 ; i< Eventos.length; i++){
                 evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
             }
-            sessionHandler.sendNotification(userEmail,{"Balance":balanco});
+            notificationHandler.addWalletNotification(userEmail,balanco);
             response.sendStatus(200);
 
         }).catch((e:any)=>{
@@ -210,14 +209,13 @@ export class RequestHandler implements IRequestHandler{
             
             for(let tuple of message.toNotify){
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                //Send email
-                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-
+                //Send email and notification
+                notificationHandler.addBetNotification(tuple[0],tuple[1]);
+                
                 // Notify wallet
-            
                 await dbComms.walletOnDb(tuple[0]).then((info:number)=>{
                 
-                    sessionHandler.sendNotification(tuple[0],{"Balance":info});
+                    notificationHandler.addWalletNotification(tuple[0],info);
                 }).catch((e)=>{
                     
                     return Promise.reject(e)
@@ -410,9 +408,9 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notificationHandler.addBetNotification(tuple[0],tuple[1]);
                                
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addBetNotification(tuple[0],info);});
                     
                             }
                         });
@@ -439,9 +437,9 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notificationHandler.addBetNotification(tuple[0],tuple[1]);
                                
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
                             }
                         });
                         
@@ -468,9 +466,9 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notificationHandler.addBetNotification(tuple[0],tuple[1]);
                               
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
                             }
                         });
                         
@@ -496,9 +494,9 @@ export class RequestHandler implements IRequestHandler{
                         await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]).then((message:any)=>{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+                                notificationHandler.addBetNotification(tuple[0],tuple[1]);
                                 
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
                             }
                         });
                         
@@ -569,11 +567,11 @@ export class RequestHandler implements IRequestHandler{
         response.setHeader('X-Accel-Buffering', 'no');
         response.setHeader('Access-Control-Allow-Origin', "*");
         
-        sessionHandler.addGate(userEmail,response);
-        dbComms.walletOnDb(userEmail).then((info:any)=>{sessionHandler.sendNotification(userEmail,{"Balance":info});});
+        notificationHandler.addGate(userEmail,response);
+        dbComms.walletOnDb(userEmail).then((info:any)=>{notificationHandler.addWalletNotification(userEmail,info);});
         request.on('close', () => {
             console.log('DEU close')
-            sessionHandler.closeConnection(userEmail);
+            notificationHandler.closeConnection(userEmail);
         });
         
     }

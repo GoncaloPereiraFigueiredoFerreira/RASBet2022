@@ -1,5 +1,5 @@
 
-interface ISessionHandler{
+interface INotificationHandler{
     
     /**
      * Adds a communication gate to the session
@@ -14,13 +14,8 @@ interface ISessionHandler{
      */
     closeConnection(token:string):void;
 
-    /**
-     * Send a SSE to a user
-     * @param token Token of the user
-     * @param info Information to be sent
-     */
-    sendNotification(token:string,info:object):void;
+    addWalletNotification(email:string,value:number):void;
 
-
+    addBetNotification(email:string,msg:string):void;
 
 }
