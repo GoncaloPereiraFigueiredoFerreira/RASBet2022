@@ -5,7 +5,7 @@ USE RASBET;
 
 CREATE TABLE IF NOT EXISTS Funcionario (
     Email VARCHAR(75) NOT NULL UNIQUE,
-    PlvPasse VARCHAR(75) NOT NULL,
+    PlvPasse VARCHAR(200) NOT NULL,
     FRole ENUM("Admin","Special"),
     PRIMARY KEY(Email)
 );
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Apostador (
     Morada VARCHAR(120) NOT NULL,
     DataNascimento DATE NOT NULL,
     Balance decimal(15,2) NOT NULL,
-    PlvPasse VARCHAR(75) NOT NULL,
+    PlvPasse VARCHAR(200) NOT NULL,
     CC VARCHAR(8) NOT NULL UNIQUE,
     PRIMARY KEY(Email)   
 );
@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 		REFERENCES Evento(ID,Desporto)
 );
 
-INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","12345","Special");
-INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("admin@coisas.pt","12345","Admin");
+INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","$2b$10$2jKkxIjlvdNISUFt3MDcJOZsYx.I.YgbR6dfBF.nhKYmoCXc8bfyq","Special");
+INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("admin@coisas.pt","$2b$10$WGqE.NFdUqjs3DqUixJmt.2ls6r/J5OwXHz2YKz7Ex/J5sxLQQbnu","Admin");
 INSERT INTO Apostador(Email,NIF,Telemovel,Nome,Morada,DataNascimento,Balance,PlvPasse,CC) 
-    VALUES ("user@coisas.pt","123456789","123456789","Couto dos Santos","Paraíso","1999-9-7",2000,"12345","12345678");
+    VALUES ("user@coisas.pt","123456789","123456789","Couto dos Santos","Paraíso","1999-9-7",2000,"$2b$10$FJSCi9UpkGKBoDmxmCp7lO0nNy6fM59MChbe0KysiSNLGEGgkafWa","12345678");
 

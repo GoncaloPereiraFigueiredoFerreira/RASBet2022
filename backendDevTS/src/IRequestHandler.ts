@@ -105,4 +105,8 @@ interface IRequestHandler{
      * Handler responsible for establishing the SSE
      */
       eventHandler(request:any,response:any,next:any):void;
+      /**
+       * Method that generates a new accessToken only if the refreshToken given is valid
+       */
+      refreshTokenFunction(request:any,response:any):void;
     }

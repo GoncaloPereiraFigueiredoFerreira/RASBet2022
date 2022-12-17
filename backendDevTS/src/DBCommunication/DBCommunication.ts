@@ -3,6 +3,7 @@ const fs = require('fs');
 const EventList = require('../Models/EventList');
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBclasses';
 import { IDBCommunication } from './IDBCommunication';
+const bcrypt = require('bcrypt')
 
 export class DBCommunication implements IDBCommunication{
     db: any;
@@ -130,34 +131,25 @@ export class DBCommunication implements IDBCommunication{
     loginOnDb(email: string,pass: string){
         return new Promise((resolve,reject)=>{
             
-            this.mysqlQuery('SELECT * FROM Funcionario WHERE Email=?',email).then((message:any)=>{
-                if(message.length==0){
-                    this.mysqlQuery('SELECT * FROM Apostador WHERE Email=?',email).then((message:any)=>{
-                        if(message.length==0){
+            this.mysqlQuery('SELECT PlvPasse,FRole FROM Funcionario WHERE Email=?',email).then(async(func_message:any)=>{
+                if(func_message.length==0){
+                    this.mysqlQuery('SELECT PlvPasse FROM Apostador WHERE Email=?',email).then(async(apostador_message:any)=>{
+                        if(apostador_message.length==0){
                             reject({'error':'Email não registado'})
                         }
                         else{
-                            this.mysqlQuery('SELECT * FROM Apostador where Email=? AND PlvPasse=? ',[email,pass]).then((message:any)=>{
-                                if(message.length==0){
-                                    reject({error:"Password errada"})
-                                }
-                                else resolve({'FRole':'apostador'})
-                            }).catch((e)=>{
-                                reject(e)
-                            })
+                            if(await bcrypt.compare(pass,apostador_message[0].PlvPasse)){
+                                resolve({'FRole':'apostador'})
+                            }
+                            else reject({error:"Password errada"})
                         }
                     })
                 }
                 else{
-                    this.mysqlQuery('SELECT * FROM Funcionario where Email=? AND PlvPasse=? ',[email,pass]).then((message:any)=>{
-                        if(message.length==0){
-                            reject({error:"Password errada"})
-                        }
-                        else resolve({'FRole':message[0].FRole})
-                    }).catch((e)=>{
-                        reject(e)
-                    })
-                    
+                    if(await bcrypt.compare(pass,func_message[0].PlvPasse)){
+                        resolve({'FRole':func_message[0].FRole})
+                    }
+                    else reject({error:"Password errada"})
                 }
             }).catch((e)=>{
                 reject(e)

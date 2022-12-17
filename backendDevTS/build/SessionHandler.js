@@ -8,56 +8,18 @@ class SessionHandler {
         this.sessions = {};
     }
     /**
-     *
-     * @param {String} hash Hash to be verified if it corresponds to an user
-     * @returns Returns a tuple that contains the email and role of a user with the given hash, and throws an error in case
-     * the hash is not yet resgistered
-     */
-    verifyUser(hash) {
-        if (this.sessions[hash] != undefined) {
-            return ([this.sessions[hash]["Email"], this.sessions[hash]["Role"]]);
-        }
-        else {
-            return "Hash not found";
-        }
-    }
-    /**
-     * Adds a new user session
-     * @param {string} email Email of the user
-     * @param {string} role Role of the user
-     * @returns Returns a token
-     */
-    addUser(email, role) {
-        let hash = sha1(email + 12 + email + 13);
-        this.sessions[hash] = { Email: email, "Role": role, "Gate": undefined };
-        return hash;
-    }
-    /**
-     *
-     * @param email String representation of a registered email
-     * @returns Returns the token for the given email
-     */
-    getToken(email) {
-        for (let [key, value] of Object.entries(this.sessions)) {
-            if (value.Email == email) {
-                return key;
-            }
-        }
-        return "";
-    }
-    /**
      * Adds a communication gate to the session
      * @param token Token of the user
      * @param gate Gate for communication
      */
-    addGate(token, gate) {
-        this.sessions[token]["Gate"] = gate;
+    addGate(email, gate) {
+        this.sessions[email] = gate;
     }
     /**
      * Closes the connection to the user
      * @param token Token
      */
-    closeConnection(token) {
+    closeConnection(email) {
         //removes from token from sessions
         //delete this.sessions[token]
     }
@@ -66,10 +28,10 @@ class SessionHandler {
      * @param token Token of the user
      * @param info Information to be sent
      */
-    sendNotification(token, info) {
-        if (this.sessions[token] != undefined) {
+    sendNotification(email, info) {
+        if (this.sessions[email] != undefined) {
             const data = `data: ${JSON.stringify(info)}\n\n`;
-            this.sessions[token]["Gate"].write(data);
+            this.sessions[email].write(data);
         }
     }
     /**

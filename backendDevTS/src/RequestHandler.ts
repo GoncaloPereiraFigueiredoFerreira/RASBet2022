@@ -1,11 +1,16 @@
 import {EventList} from "./Models/EventList";
 import {DBCommunication} from "./DBCommunication/DBCommunication";
 import {SessionHandler} from "./SessionHandler";
+import { AuthenticationHandler } from "./Security";
 const evLst:IControlEvents = EventList.getInstance()
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication();
 const sessionHandler:ISessionHandler = SessionHandler.getInstance();
 const notifcationCenter = require("./NotificationCenter");
+const authHandler = new AuthenticationHandler();
+const bcrypt = require('bcrypt')
+
+require("dotenv").config();
 
 
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBCommunication/DBclasses';
@@ -14,24 +19,36 @@ export class RequestHandler implements IRequestHandler{
     constructor(){
         this.updateEvents = this.updateEvents.bind(this);
         this.updateResults = this.updateResults.bind(this);
+        
     }
 
     dummyFunction(request:any,response:any){
         response.status(200).send("Dummy here! But connection worked!")
     }
 
+    
+
     /**
      * Function that deals with a http request to register an account in the database
      * 
      */
-    registerFunction(request:any,response:any){
+    async registerFunction(request:any,response:any){
 
         let apostador = new Apostador(request.body)
+        apostador.PlvPasse = await bcrypt.hash(apostador.PlvPasse,10)
         apostador.Balance=0
         
+        const userInfo = {
+            userInfo:{
+                email:apostador.Email,
+                role:'apostador'
+            }
+        }
         dbComms.registerOnDb(apostador).then(()=>{
-            let token=sessionHandler.addUser(apostador.Email,'apostador')
-            response.status(200).send({"Token":token})
+            const token = authHandler.generateAccessToken(userInfo)
+            const refreshToken = authHandler.generateRefreshToken(userInfo)
+            //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
+            response.status(200).send({"Token":token,"RefreshToken":refreshToken})
         }).catch((message:any)=>{
             response.status(400).send(message)
         })
@@ -42,27 +59,22 @@ export class RequestHandler implements IRequestHandler{
     /**
      * Function that deals with a http request to make a transaction 
      */
+
     transactionFunction(request:any,response:any){
-
+        
         let transacao = new Transacao(request.body)
+        let userEmail = request.email
 
-        let token = transacao.ApostadorID;
-        let user = sessionHandler.verifyUser(transacao.ApostadorID);
-
-        if(user[0] && user[1]=='apostador'){
-            transacao.ApostadorID = user[0]
-            dbComms.transactionOnDb(transacao).then(()=>{
-                return dbComms.walletOnDb(user[0])
-            }).then((message:number)=>{
-                sessionHandler.sendNotification(token,{'Balance':message});
-                response.sendStatus(200);
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        transacao.ApostadorID = userEmail
+        dbComms.transactionOnDb(transacao).then(()=>{
+            return dbComms.walletOnDb(userEmail)
+        }).then((message:number)=>{
+            sessionHandler.sendNotification(userEmail,{'Balance':message});
+            response.sendStatus(200);
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
+        
     }
 
 
@@ -76,13 +88,35 @@ export class RequestHandler implements IRequestHandler{
 
         dbComms.loginOnDb(Email,PlvPasse).then((message:any)=>{
             
-            message['Token']=sessionHandler.addUser(Email,message.FRole)
+            const userInfo={
+                userInfo:{
+                    email:Email,
+                    role:message.FRole
+                }
+            }
+            
+            //message['AccessToken'] = authHandler.generateAccessToken(userInfo)
+            message['Token'] = authHandler.generateAccessToken(userInfo)
+            message['RefreshToken'] = authHandler.generateRefreshToken(userInfo)
             response.status(200).send(message)
 
         }).catch((message:any)=>{
             response.status(400).send(message)
         })
 
+    }
+
+    logoutFunction(request:any,response:any){
+        //TODO - mudar para header
+        authHandler.delete(request.body.token)
+        response.sendStatus(200)
+    }
+
+    refreshTokenFunction(request:any,response:any){
+        //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
+        const accessToken = authHandler.refreshAccessToken(request.body.token)
+        if(accessToken==null) response.sendStatus(400)
+        else response.status(200).send({'AccessToken':accessToken})
     }
 
 
@@ -94,46 +128,37 @@ export class RequestHandler implements IRequestHandler{
         let list:Evento[]=[]
         let aposta = new Aposta(request.body.Aposta)
         let Eventos = request.body.Eventos
+        let userEmail = request.email
 
         for(let i = 0 ; i< Eventos.length; i++){
             list.push(new Evento(evLst.getEventDB(Eventos[i].Desporto,Eventos[i].EventoID)))
         }
+            
+        aposta.ApostadorID= userEmail
         
-        let user = sessionHandler.verifyUser(aposta.ApostadorID)
-        let token = aposta.ApostadorID;
-        if(user[0] && user[1]=='apostador' && Eventos.length>0){
+        dbComms.usedCodOnDb(aposta.ApostadorID,aposta.Codigo).then((message:any)=>{
+        
+            if(message.Res=="Sim"){ 
             
-            aposta.ApostadorID= user[0]
-            
-            dbComms.usedCodOnDb(aposta.ApostadorID,aposta.Codigo).then((message:any)=>{
-            
-                if(message.Res=="Sim"){ 
+                return Promise.reject({"error":"Codigo promocional ja utilizado"})
+            }
+            return dbComms.registerEventOnDb(list)
+        }).then(()=>{
+            return  dbComms.registerBetOnDb(aposta,Eventos,aposta.Codigo)
+        }).then(()=>{
+            return dbComms.walletOnDb(userEmail)
+        }).then((balanco:any)=>{
                 
-                    return Promise.reject({"error":"Codigo promocional ja utilizado"})
-                }
-                return dbComms.registerEventOnDb(list)
-            }).then(()=>{
-                
-                return  dbComms.registerBetOnDb(aposta,Eventos,aposta.Codigo)
-            }).then(()=>{
-                return dbComms.walletOnDb(user[0])
-            }).then((balanco:any)=>{
-                    
-                for(let i = 0 ; i< Eventos.length; i++){
-                    evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
-                }
-                sessionHandler.sendNotification(token,{"Balance":balanco});
-                response.sendStatus(200);
+            for(let i = 0 ; i< Eventos.length; i++){
+                evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
+            }
+            sessionHandler.sendNotification(userEmail,{"Balance":balanco});
+            response.sendStatus(200);
 
-            }).catch((e:any)=>{
-            
-                response.status(400).send(e)
-            })
-            
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        }).catch((e:any)=>{
+        
+            response.status(400).send(e)
+        })   
     }
 
 
@@ -158,20 +183,15 @@ export class RequestHandler implements IRequestHandler{
             size--
             if(size>0)list+=','
         }
-
-        let user = sessionHandler.verifyUser(request.body.ApostadorID)
         
-        if(user[0] && user[1]=='apostador'){
-            dbComms.editProfileOnDb(list,user[0]).then((message:any)=>{
-                
-                response.status(200).send(message)
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        let userEmail = request.email
+        
+        dbComms.editProfileOnDb(list,userEmail).then((message:any)=>{
+            
+            response.status(200).send(message)
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
 
@@ -183,188 +203,120 @@ export class RequestHandler implements IRequestHandler{
 
         let EventoID= request.body.Evento.EventoID
         let Desporto= request.body.Evento.Desporto
-
-        let user = sessionHandler.verifyUser(request.body.Token)
-        if(user[0] && user[1]=='Admin'){
-            dbComms.closeEventOnDb(EventoID,Desporto).then(async(message:any)=>{
+        
+        dbComms.closeEventOnDb(EventoID,Desporto).then(async(message:any)=>{
+        
+            evLst.closeEvent(Desporto,EventoID);
             
-                evLst.closeEvent(Desporto,EventoID);
-                
-                for(let tuple of message.toNotify){
-                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                    //Send email
-                    notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
+            for(let tuple of message.toNotify){
+                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+                //Send email
+                notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
 
-                    // Notify wallet
-                    let token = sessionHandler.getToken(tuple[0]);
+                // Notify wallet
+            
+                await dbComms.walletOnDb(tuple[0]).then((info:number)=>{
                 
-                    await dbComms.walletOnDb(tuple[0]).then((info:number)=>{
+                    sessionHandler.sendNotification(tuple[0],{"Balance":info});
+                }).catch((e)=>{
                     
-                        sessionHandler.sendNotification(token,{"Balance":info});
-                    }).catch((e)=>{
-                        
-                        return Promise.reject(e)
-                    });
-                }
-                response.status(200).send({'Res':message.Res})
-                
-            }).catch((message:any)=>{
-                
-                response.status(400).send(message)
+                    return Promise.reject(e)
+                });
+            }
+            response.status(200).send({'Res':message.Res})
+            
+        }).catch((message:any)=>{
+            
+            response.status(400).send(message)
 
-            }) 
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
-    }
-
-    /**
-     * Function that deals with a http request to finalize an event
-     */
-    finEventFunction(request:any,response:any){
-
-        let EventoID = request.body.Evento.EventoID
-        let Desporto = request.body.Evento.Desporto
-        let Resultado = request.body.Evento.Resultado
-        let Descricao = 'nova descricao'
-
-        let user = sessionHandler.verifyUser(request.body.Token)
-        //mudar para admin
-        if(user[0] && user[1]=='Admin'){
-            dbComms.finEventOnDb(EventoID,Desporto,Resultado,Descricao).then((message:any)=>{
-                for(let tuple of message.toNotify){
-                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                    notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-
-                    // Notify wallet
-                    let token = sessionHandler.getToken(tuple[0]);
-                    dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
-                    
-                }
-                
-                response.status(200).send({'Res':message.Res})
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            }) 
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        }) 
     }
 
     /**
      * Function that deals with a http request to add a promocional code to the database
      */
     addPromocaoFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.body.Token)
+
         let promocao = new Promocao(request.body.Promocao)
-        if(user[0] && user[1]=='Admin'){
-            dbComms.addPromocaoOnDb(promocao).then((message:any)=>{
-                response.status(200).send(message)
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+
+        dbComms.addPromocaoOnDb(promocao).then((message:any)=>{
+            response.status(200).send(message)
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
+        
     }
 
     /**
      * Function that deals with a http request to remove a promocional code from the database
      */
     remPromocaoFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.body.Token)
-        
-        if(user[0] && user[1]=='Admin'){
-            dbComms.remPromocaoOnDb(request.body.Codigo).then((message:any)=>{
-                response.status(200).send(message)
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+       
+        dbComms.remPromocaoOnDb(request.body.Codigo).then((message:any)=>{
+            response.status(200).send(message)
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
     /**
      * Function that deals with a http request to get all existing promocional codes in the database
      */
     getpromocaoFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.Token)
-        
-        if(user[0] && user[1]=='Admin'){
             
-            dbComms.getPromocaoOnDb().then((message:any)=>{
-                response.status(200).send(message)
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        dbComms.getPromocaoOnDb().then((message:any)=>{
+            response.status(200).send(message)
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
+    
     }
 
     /**
      * Function that deals with a http request to check if a given better already used a given promocional code
      */
     usedCodFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.ApostadorID)
+        
+        let userEmail = request.email
     
-        if(user[0] && user[1]=='apostador'){
-            dbComms.usedCodOnDb(user[0],request.query.Codigo).then((message:any)=>{
-                
-                response.status(200).send(message)
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        dbComms.usedCodOnDb(userEmail,request.query.Codigo).then((message:any)=>{
+            
+            response.status(200).send(message)
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
     /**
      * Function that deals with a http request to get the profile of a given account
      */
     profileInfoFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.ApostadorID)
+      
+        let userEmail = request.email
+        console.log(`ProfileInfoFunction: ${userEmail}`)
         
-        if(user[0] && user[1]=='apostador'){
-            dbComms.profileInfoOnDb(user[0]).then((message:any)=>{
-                
-                response.status(200).send(message) 
+        dbComms.profileInfoOnDb(userEmail).then((message:any)=>{
+            
+            response.status(200).send(message) 
 
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
-
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
     /**
      * Function that deals with a http request to get the bet history of a given better
      */
     betHistoryFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.ApostadorID)
+
+        let userEmail = request.email
         
-        if(user[0] && user[1]=='apostador'){
-            dbComms.betHistoryOnDb(user[0]).then(async(message:any)=>{
-                
-                response.status(200).send({'lista':message})
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        dbComms.betHistoryOnDb(userEmail).then(async(message:any)=>{
+            
+            response.status(200).send({'lista':message})
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
 
@@ -373,28 +325,25 @@ export class RequestHandler implements IRequestHandler{
      * Function that deals with a http request to get the transaction history of a given better
      */
     transHistFunction(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.ApostadorID)
-        if(user[0] && user[1]=='apostador'){
-            
-            dbComms.transHistOnDb(user[0]).then((message:any)=>{
-                
-                response.status(200).send({'lista':message})
-            }).catch((message:any)=>{
-                response.status(400).send(message)
-            })
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
         
+        let userEmail = request.email
+            
+        dbComms.transHistOnDb(userEmail).then((message:any)=>{
+            
+            response.status(200).send({'lista':message})
+        }).catch((message:any)=>{
+            response.status(400).send(message)
+        })
     }
 
     /**
      *  Handler for the request of a event list. This event list changes based on the user thats requesting it and 
      */
     returnEventList(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.token);
-        if (user[1]== 'Admin'){
+        
+        let userRole = request.role
+      
+        if (userRole== 'Admin'){
             let lst = evLst.getBETEvents(request.query.sport).concat( evLst.getNODDEvents(request.query.sport));
             response.status(200).send(
                 {
@@ -402,14 +351,14 @@ export class RequestHandler implements IRequestHandler{
                     "Leagues": evLst.getLeagues(request.query.sport)
                 });
         }
-        else if (user[1] == 'apostador') {
+        else if (userRole == 'apostador') {
             response.status(200).send(
                 {
                     "EventList": evLst.getBETEvents(request.query.sport),
                     "Leagues": evLst.getLeagues(request.query.sport)
                 });
         }
-        else if (user[1] == 'Special' ){// Especialista
+        else if (userRole == 'Special' ){// Especialista
             response.status(200).send(
                 {
                     "EventList": evLst.getNODDEvents(request.query.sport),
@@ -424,15 +373,10 @@ export class RequestHandler implements IRequestHandler{
      * Handler for the request to add odds to a event (needs to be a specialist)
      */
     addEventOdds(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.body.token);
-        if (user[1] == 'Special'){
-            let flag = evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
-            if (flag) response.status(200).send("Odds for event " + request.body.EventoId+ "were added");
-            else response.status(404).send("Event not found");
-        }    
-        else{
-            response.status(400).send('Permission denied')
-        }
+        
+        let flag = evLst.changeEventOdd(request.body.sport,request.body.EventoId,request.body.Odds);
+        if (flag) response.status(200).send("Odds for event " + request.body.EventoId+ "were added");
+        else response.status(404).send("Event not found");
     }
 
 
@@ -467,8 +411,8 @@ export class RequestHandler implements IRequestHandler{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                                 //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-                                let token = sessionHandler.getToken(tuple[0]);
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                               
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
                     
                             }
                         });
@@ -496,8 +440,8 @@ export class RequestHandler implements IRequestHandler{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                                 notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-                                let token = sessionHandler.getToken(tuple[0]);
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                               
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
                             }
                         });
                         
@@ -525,8 +469,8 @@ export class RequestHandler implements IRequestHandler{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                                 notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-                                let token = sessionHandler.getToken(tuple[0]);
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                              
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
                             }
                         });
                         
@@ -553,8 +497,8 @@ export class RequestHandler implements IRequestHandler{
                             for(let tuple of message.toNotify){
                                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
                                 notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-                                let token = sessionHandler.getToken(tuple[0]);
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
+                                
+                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{sessionHandler.sendNotification(tuple[0],{"Balance":info});});
                             }
                         });
                         
@@ -588,29 +532,20 @@ export class RequestHandler implements IRequestHandler{
      */
 
     updateEvents(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.query.token);
-        if (user[1] == "Admin" ){
-            this.updateResults();
-            apiComms.updateEventLst();
-            response.sendStatus(200);     
-        }
-        else{
-            response.status(400).send('Permission denied')
-        }
+        
+        this.updateResults();
+        apiComms.updateEventLst();
+        response.sendStatus(200);     
     }
 
     /**
      * Method responsible for activating super odds in a event
      */
     activateSuperOdds(request:any,response:any){
-        let user = sessionHandler.verifyUser(request.body.token);
-        if (user[1] == "Admin"){
-            let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
-            if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
-            else response.status(404).send("Event not found");
-        }else{
-            response.status(400).send('Permission denied')
-        }
+       
+        let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
+        if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+        else response.status(404).send("Event not found");
     }
 
     /**
@@ -625,20 +560,22 @@ export class RequestHandler implements IRequestHandler{
      * Handler responsible for establishing the SSE
      */
     eventHandler(request:any,response:any,next:any){
-        let token = request.query.token;
-        let user = sessionHandler.verifyUser(token);
-        if (user[1] == "apostador"){
-            response.setHeader('Content-Type', 'text/event-stream');
-            response.setHeader('Connection', 'keep-alive');
-            response.setHeader('Cache-Control', 'no-cache');
-            response.setHeader('X-Accel-Buffering', 'no');
-            response.setHeader('Access-Control-Allow-Origin', "*");
-            sessionHandler.addGate(token,response);
-            dbComms.walletOnDb(user[0]).then((info:any)=>{sessionHandler.sendNotification(token,{"Balance":info});});
-            request.on('close', () => {
-                sessionHandler.closeConnection(token);
-            });
-        }
+        
+        let userEmail = request.email
+       
+        response.setHeader('Content-Type', 'text/event-stream');
+        response.setHeader('Connection', 'keep-alive');
+        response.setHeader('Cache-Control', 'no-cache');
+        response.setHeader('X-Accel-Buffering', 'no');
+        response.setHeader('Access-Control-Allow-Origin', "*");
+        
+        sessionHandler.addGate(userEmail,response);
+        dbComms.walletOnDb(userEmail).then((info:any)=>{sessionHandler.sendNotification(userEmail,{"Balance":info});});
+        request.on('close', () => {
+            console.log('DEU close')
+            sessionHandler.closeConnection(userEmail);
+        });
+        
     }
 
 }
