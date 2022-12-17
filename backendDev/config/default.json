@@ -1,7 +1,7 @@
 {
     "API_AUTH_KEY" : "2f8603aeec2f808a4c80c4b465f187b1",
 
-    "responsePath": "./APICommunication/APIResponses/",
+    "responsePath": "./src/APICommunication/APIResponses/",
 
     "update_on_startup" : false,
 
