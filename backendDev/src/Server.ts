@@ -2,7 +2,7 @@ var cors = require('cors')
 const express = require("express");
 const bodyParser = require("body-parser");
 import {RequestHandler} from "./RequestHandler"
-import { AuthenticationHandler } from "./Security";
+import { AuthenticationHandler } from "./SessionControl/Security";
 
 
 class Server{
