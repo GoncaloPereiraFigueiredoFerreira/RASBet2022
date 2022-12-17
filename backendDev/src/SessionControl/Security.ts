@@ -1,5 +1,3 @@
-
-
 require("dotenv").config();
 const jwt = require('jsonwebtoken')
 
@@ -12,8 +10,9 @@ export class AuthenticationHandler{
 
     authenticateToken(req:any,res:any,next:any){
         
-        const token = req.query.token?req.query.token:(req.headers.accesstoken?req.headers.accesstoken:null)
+        const token = req.headers.accesstoken?req.headers.accesstoken:(req.query.token?req.query.token:null)
         
+
         /*const token = req.query.ApostadorID? req.query.ApostadorID:
                      (req.query.token? req.query.token: 
                      (req.query.Token? req.query.Token: 
@@ -26,8 +25,9 @@ export class AuthenticationHandler{
         if(token == null) return res.sendStatus(401)
     
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err:any,Info:any)=>{
+           
             if (err) return res.sendStatus(403)
-            console.log(`Authentication: ${Info}`)
+            //console.log(`Authentication: ${Info}`)
             req.email = Info.userInfo.email
             req.role = Info.userInfo.role
             next()
@@ -39,8 +39,8 @@ export class AuthenticationHandler{
             if(!req?.role) return res.sendStatus(401)
             const rolesArray = [...allowedRoles]
             const result = rolesArray.includes(req.role)
-            console.log(`VerifyRoles: ${rolesArray}`)
-            console.log(`VerifyRoles: ${result}`)
+            //console.log(`VerifyRoles: ${rolesArray}`)
+            //console.log(`VerifyRoles: ${result}`)
             if(!result) return res.sendStatus(401)
             next()
         }
@@ -70,7 +70,7 @@ export class AuthenticationHandler{
     }
     
     generateAccessToken(userInfo:any){
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5s'})
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'600s'})
     }
 
 }

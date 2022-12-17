@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var cors = require('cors');
 const express = require("express");
 const bodyParser = require("body-parser");
 const RequestHandler_1 = require("./RequestHandler");
-const Security_1 = require("./Security");
+const Security_1 = require("./SessionControl/Security");
 class Server {
     constructor() {
         this.port = 8080;
         const app = express();
+        app.use(cors());
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use((req, res, next) => {

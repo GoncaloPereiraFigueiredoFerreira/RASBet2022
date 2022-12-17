@@ -32,8 +32,8 @@ class Transacao {
 }
 exports.Transacao = Transacao;
 class Aposta {
-    constructor(aposta) {
-        this.ApostadorID = aposta.ApostadorID;
+    constructor(email, aposta) {
+        this.ApostadorID = email;
         this.Odd = aposta.Odd;
         this.Montante = aposta.Montante;
         this.Estado = 'PEN';

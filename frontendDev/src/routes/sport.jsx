@@ -137,17 +137,17 @@ export default function Sport(){
      */
 
 		async function reg_bet(data){
-		  var resp = axios({method:'POST',url:'http://localhost:8080/api/registerBet/',data:data}) 
-		  .then(function (response) {
-		    const data = response.data;
-		    let ninput = {...input};
+		  console.log(data)
+		  var resp = await post_request("/registerBet/",data)
+		  if (resp.error){
+			resp = null
+		  }
+		  else {
+			const data = resp.data
+			let ninput = {...input};
 		    ninput.check = false;
 		    setInput(ninput);
-		  })
-		  .catch(function (error) {
-		    return null;
-		  });
-
+		  }
 		  return resp;
 		}
 

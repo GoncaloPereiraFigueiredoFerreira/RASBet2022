@@ -125,15 +125,13 @@ export class RequestHandler implements IRequestHandler{
     registerBetFunction(request:any,response:any){
 
         let list:Evento[]=[]
-        let aposta = new Aposta(request.body.Aposta)
-        let Eventos = request.body.Eventos
         let userEmail = request.email
-
+        let aposta = new Aposta(userEmail,request.body.Aposta)
+        let Eventos = request.body.Eventos
+        
         for(let i = 0 ; i< Eventos.length; i++){
             list.push(new Evento(evLst.getEventDB(Eventos[i].Desporto,Eventos[i].EventoID)))
         }
-            
-        aposta.ApostadorID= userEmail
         
         dbComms.usedCodOnDb(aposta.ApostadorID,aposta.Codigo).then((message:any)=>{
         

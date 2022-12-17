@@ -56,8 +56,8 @@ export class Aposta{
     Codigo: string;
     DateAp: string;
 
-    constructor(aposta:{ ApostadorID: string,Odd: number,Montante: number,Estado: "PEN"|"WON"|"LOST"|"CLS", Codigo: string, DataAp: string}){
-        this.ApostadorID = aposta.ApostadorID
+    constructor(email:string,aposta:{ ApostadorID: string,Odd: number,Montante: number,Estado: "PEN"|"WON"|"LOST"|"CLS", Codigo: string, DataAp: string}){
+        this.ApostadorID = email
         this.Odd = aposta.Odd;
         this.Montante = aposta.Montante;
         this.Estado = 'PEN'

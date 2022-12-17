@@ -12,13 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestHandler = void 0;
 const EventList_1 = require("./Models/EventList");
 const DBCommunication_1 = require("./DBCommunication/DBCommunication");
-const SessionHandler_1 = require("./SessionHandler");
-const Security_1 = require("./Security");
+const NotificationHandler_1 = require("./SessionControl/NotificationHandler");
+const Security_1 = require("./SessionControl/Security");
 const evLst = EventList_1.EventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication_1.DBCommunication();
-const sessionHandler = SessionHandler_1.SessionHandler.getInstance();
-const notifcationCenter = require("./NotificationCenter");
+const notificationHandler = NotificationHandler_1.NotificationHandler.getInstance();
 const authHandler = new Security_1.AuthenticationHandler();
 const bcrypt = require('bcrypt');
 require("dotenv").config();
@@ -66,7 +65,7 @@ class RequestHandler {
         dbComms.transactionOnDb(transacao).then(() => {
             return dbComms.walletOnDb(userEmail);
         }).then((message) => {
-            sessionHandler.sendNotification(userEmail, { 'Balance': message });
+            notificationHandler.addWalletNotification(userEmail, message);
             response.sendStatus(200);
         }).catch((message) => {
             response.status(400).send(message);
@@ -100,7 +99,7 @@ class RequestHandler {
     }
     refreshTokenFunction(request, response) {
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        const accessToken = authHandler.refreshAccessToken(request.body.token);
+        const accessToken = authHandler.refreshAccessToken(request.body.refreshtoken);
         if (accessToken == null)
             response.sendStatus(400);
         else
@@ -111,13 +110,12 @@ class RequestHandler {
      */
     registerBetFunction(request, response) {
         let list = [];
-        let aposta = new DBclasses_1.Aposta(request.body.Aposta);
-        let Eventos = request.body.Eventos;
         let userEmail = request.email;
+        let aposta = new DBclasses_1.Aposta(userEmail, request.body.Aposta);
+        let Eventos = request.body.Eventos;
         for (let i = 0; i < Eventos.length; i++) {
             list.push(new DBclasses_1.Evento(evLst.getEventDB(Eventos[i].Desporto, Eventos[i].EventoID)));
         }
-        aposta.ApostadorID = userEmail;
         dbComms.usedCodOnDb(aposta.ApostadorID, aposta.Codigo).then((message) => {
             if (message.Res == "Sim") {
                 return Promise.reject({ "error": "Codigo promocional ja utilizado" });
@@ -131,7 +129,7 @@ class RequestHandler {
             for (let i = 0; i < Eventos.length; i++) {
                 evLst.updateOddBet(Eventos[i].Desporto, Eventos[i].EventoID, aposta.Montante, Eventos[i].Escolha);
             }
-            sessionHandler.sendNotification(userEmail, { "Balance": balanco });
+            notificationHandler.addWalletNotification(userEmail, balanco);
             response.sendStatus(200);
         }).catch((e) => {
             response.status(400).send(e);
@@ -178,11 +176,11 @@ class RequestHandler {
             evLst.closeEvent(Desporto, EventoID);
             for (let tuple of message.toNotify) {
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                //Send email
-                notifcationCenter.sendMail(tuple[0], 'Finalizacao Aposta', tuple[1], null);
+                //Send email and notification
+                notificationHandler.addBetNotification(tuple[0], tuple[1]);
                 // Notify wallet
                 yield dbComms.walletOnDb(tuple[0]).then((info) => {
-                    sessionHandler.sendNotification(tuple[0], { "Balance": info });
+                    notificationHandler.addWalletNotification(tuple[0], info);
                 }).catch((e) => {
                     return Promise.reject(e);
                 });
@@ -331,8 +329,8 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(fixture, "FUT", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    //notifcationCenter.sendMail(tuple[0],'Finalizacao Aposta',tuple[1],null)
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { sessionHandler.sendNotification(tuple[0], { "Balance": info }); });
+                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addBetNotification(tuple[0], info); });
                                 }
                             });
                         }
@@ -355,8 +353,8 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(race, "F1", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notifcationCenter.sendMail(tuple[0], 'Finalizacao Aposta', tuple[1], null);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { sessionHandler.sendNotification(tuple[0], { "Balance": info }); });
+                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
                     }
@@ -378,8 +376,8 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(game, "BSK", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notifcationCenter.sendMail(tuple[0], 'Finalizacao Aposta', tuple[1], null);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { sessionHandler.sendNotification(tuple[0], { "Balance": info }); });
+                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
                         }
@@ -402,8 +400,8 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(game, "FUTPT", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notifcationCenter.sendMail(tuple[0], 'Finalizacao Aposta', tuple[1], null);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { sessionHandler.sendNotification(tuple[0], { "Balance": info }); });
+                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
                         }
@@ -460,11 +458,11 @@ class RequestHandler {
         response.setHeader('Cache-Control', 'no-cache');
         response.setHeader('X-Accel-Buffering', 'no');
         response.setHeader('Access-Control-Allow-Origin', "*");
-        sessionHandler.addGate(userEmail, response);
-        dbComms.walletOnDb(userEmail).then((info) => { sessionHandler.sendNotification(userEmail, { "Balance": info }); });
+        notificationHandler.addGate(userEmail, response);
+        dbComms.walletOnDb(userEmail).then((info) => { notificationHandler.addWalletNotification(userEmail, info); });
         request.on('close', () => {
             console.log('DEU close');
-            sessionHandler.closeConnection(userEmail);
+            notificationHandler.closeConnection(userEmail);
         });
     }
 }
