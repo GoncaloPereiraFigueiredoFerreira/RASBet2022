@@ -10,8 +10,6 @@ const authHandler = new AuthenticationHandler();
 const bcrypt = require('bcrypt')
 
 require("dotenv").config();
-
-
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBCommunication/DBclasses';
 
 export class RequestHandler implements IRequestHandler{
@@ -551,6 +549,23 @@ export class RequestHandler implements IRequestHandler{
         response.status(200).send(evLst.getOdds(request.body.sport,request.body.EventoID))
     }
 
+
+    addGameFollower(request:any,response:any){
+        let userEmail = request.email
+        let sport = request.sport;
+        let id = request.id;
+        let flag= evLst.addGameFollower(sport,id,userEmail);
+        if (flag) response.status(200).send("Follow adicionado");
+        else response.status(200).send("Follow Não adicionado");
+    }
+    removeGameFollower(request:any,response:any):void{
+        let userEmail = request.email
+        let sport = request.sport;
+        let id = request.id;
+        let flag = evLst.removeGameFollower(sport,id,userEmail);
+        if (flag) response.status(200).send("Follow removido");
+        else response.status(200).send("Follow Não removido");
+    }
 
     /**
      * Handler responsible for establishing the SSE

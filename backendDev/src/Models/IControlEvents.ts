@@ -122,4 +122,11 @@ interface IControlEvents{
       * @param {string} sport Sport from which to delete all past event
       */
     removePastEvents(sport: string ):void;
+
+
+    addGameFollower(sport:string, id:string,email:string):boolean;
+
+    getGameFollowers(sport:string,id:string):string[];
+
+    removeGameFollower(sport:string, id:string,email:string):boolean;
 }

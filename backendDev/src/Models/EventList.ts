@@ -6,6 +6,7 @@ import {RaceEvent} from "./RaceEvent"
 import {NoTieEvent} from "./NoTieEvent"
 import { TieEvent } from "./TieEvent";
 import { SportEvent } from "./SportEvent";
+import { stringify } from "querystring";
 
  
 const IMPACT_ODDS_INICIAIS = 1000;
@@ -15,11 +16,14 @@ let instance: IControlEvents | IUpdateEvents | undefined = undefined;
  
 export class EventList implements IControlEvents,IUpdateEvents{
      eventList: { [sport: string]: {[id: string]: SportEvent | NoTieEvent | RaceEvent | TieEvent }; };
-     leagues: { [sport: string] : string[]};
+     leagues:   { [sport: string] : string[]};
+
+     followers: {[sport:string] : {[id:string]:string[]}}
  
      private constructor(){
          this.eventList = {};
          this.leagues ={};
+         this.followers={};
      }
 
  
@@ -398,5 +402,34 @@ export class EventList implements IControlEvents,IUpdateEvents{
          
      }
  
+     ///////FOLLOWING GAME FUNCTIONALITY
+
+     addGameFollower(sport:string, id:string,email:string):boolean{
+         if (this.eventList[sport]!=undefined && this.eventList[sport][id]!=undefined){
+             if (this.followers[sport]== undefined) this.followers[sport]={}
+             if (this.followers[sport][id]==undefined) this.followers[sport][id]=[]
+             this.followers[sport][id].push(email);
+             return true;
+         }
+         return false;
+     }
+
+     getGameFollowers(sport:string,id:string):string[]{
+        if (this.followers[sport]!= undefined && this.followers[sport][id]!= undefined  )
+            return this.followers[sport][id].slice();
+        return [];
+     }
+
+     removeGameFollower(sport:string, id:string,email:string):boolean{
+        if (this.followers[sport]!= undefined && this.followers[sport][id]!= undefined  ){
+            let index:number =0;
+            index = this.followers[sport][id].indexOf(email);
+            if (index != -1) {this.followers[sport][id].splice(index,1);return true;}
+
+         }
+         return false;
+     }
+
+
  }
  

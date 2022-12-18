@@ -40,7 +40,9 @@ class Server{
         app.post(api + "addPromocao",authHandler.authenticateToken,authHandler.verifyRoles('Admin'),reqHandler.addPromocaoFunction);
         app.post(api + "remPromocao",authHandler.authenticateToken,authHandler.verifyRoles('Admin'),reqHandler.remPromocaoFunction);
         app.post(api + "superOdds"  ,authHandler.authenticateToken,authHandler.verifyRoles('Admin'),reqHandler.activateSuperOdds); 
-        app.post(api + "token"      ,reqHandler.refreshTokenFunction);   
+        app.post(api + "token"      ,reqHandler.refreshTokenFunction);
+        app.post(api + "addFollow"  ,authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.addGameFollower);
+        app.post(api + "removeFollow",authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.addGameFollower);
         
         // GET Methods
         app.get(api + "usedCod"     ,authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.usedCodFunction);
@@ -55,6 +57,9 @@ class Server{
         //app.get(api + "events", reqHandler.eventHandler);
         app.get(api + "events"      ,authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.eventHandler);
 
+
+
+        
         // Start Server
         app.listen(this.port, () => {
             console.log("Server started at local host");

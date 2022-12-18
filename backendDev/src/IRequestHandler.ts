@@ -109,4 +109,8 @@ interface IRequestHandler{
        * Method that generates a new accessToken only if the refreshToken given is valid
        */
       refreshTokenFunction(request:any,response:any):void;
+
+      addGameFollower(request:any,response:any):void;
+
+      removeGameFollower(request:any,response:any):void;
     }
