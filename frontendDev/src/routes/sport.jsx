@@ -336,7 +336,7 @@ export default function Sport(){
 						<div>
 							<p>{()=>{let m = [];for(let i = 0;(i < sport.size /40);i++){m.push(i)};return m;}}</p>
 						</div>
-						<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state}/>
+						<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state} follow={follow} clickFollow={clickFollow}/>
 					</div>
 					
 					<div id="overlay-main">
