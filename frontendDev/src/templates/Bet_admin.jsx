@@ -42,14 +42,22 @@ function Aux({evento,sport,update,ind}){
 	var desc = "";
 	if(evento.Tipo == "RaceEvent") desc = `${evento.Liga}`;
 	else desc = `${evento.Participantes[0]} - ${evento.Participantes[1]}`
-	var input={token:getToken(),sport:sport,EventoID:evento.EventoId.toString()};
+	//let input={token:getToken(),sport:sport,EventoID:evento.EventoId.toString()};
+	const [input,setInput] = useState({token:getToken(),sport:sport,EventoID:evento.EventoId.toString()})
+	const [error,setError] = useState("")
 
 	function handleChange({target}){
 		input[target.name] = target.value;
 	}
 
 	function handleSubmit(){
-		add_Super_Odds(input);
+		if(input.multiplier){
+			add_Super_Odds(input);
+			setError("")
+		}
+		else{
+			setError("Intruduza um valor")
+		}
 	}
 
 	const width = window.innerWidth;
@@ -81,7 +89,8 @@ function Aux({evento,sport,update,ind}){
 		            <div className="drawmatchodds"style={{'width':'30%'}}>
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
 					    <p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','fontSize':'25px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>x</p>
-						<input type="text" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
+						<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d+(\.\d+|)"/>
+						{(error != "")?<p>{error}</p>:null}
 						<button style={{"height":"fit-content","width":"45%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0','float':'right'}}>Confirmar</button>
 		              </Form>
 		            </div>
@@ -114,7 +123,8 @@ function Aux({evento,sport,update,ind}){
 					<p>Estado:{evento.Estado}</p>
 				<div className="drawmatchodds">
 				  <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
-					<input type="text" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" onChange={handleChange} pattern="\d*(.\d+|)"/>
+					<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d*(.\d+|)"/>
+					{(error != "")?<p>{error}</p>:null}
 					<button style={{"height":"fit-content","width":"100%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0'}} type="submit">Confirmar</button>
 					<button type="button" style={{"height":"fit-content","width":"100%",'backgroundColor':'red','marginLeft':'auto','marginRight':'0','marginTop':'10px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Cancelar evento</button>
 				  </Form>

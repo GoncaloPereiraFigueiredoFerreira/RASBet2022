@@ -61,7 +61,7 @@ export async function loader({params}){
 	const token = getToken();
 	var ret = await get_request('/eventList/',{"token":token,"sport":params.sportid})
 	if(ret.error) ret = null;
-	else ret = {sportid:(params.sportid)?params.sportid:"FUT",sport:ret.data.EventList,ligas:ret.data.Leagues}
+	else ret = {sportid:(params.sportid)?params.sportid:"FUT",sport:ret.data.EventList,ligas:ret.data.Leagues,rfollow:(ret.data.Followed)?ret.data.Followed.map((e)=>(parseInt(e))):null}
 	if(getRole() == "Admin"){ret.cods =  await getCods()}
 	return ret;
 }
@@ -86,15 +86,16 @@ async function getCods(){
      */
 
 export default function Sport(){
-	let {sportid,sport,cods,ligas} = useLoaderData();
+	let {sportid,sport,cods,ligas,rfollow} = useLoaderData();
 	const [apostas,setApostas] = useState({simples:null,mult:[]});
 	const [state,setState] = useState(true);
 	const [input,setInput] = useState({Valor:0});
 	const [filter,setFilter] = useState({"name":"","ligas":new Set([]),"sportid":sportid})
+	const [follow,setFollow] = useState(rfollow)
 	const stateUpdate = useState(0);
 	const width = window.innerWidth;
 
-	function update(ind){stateUpdate[1](stateUpdate[0] + 1);sport = sport.splice(ind,1);}
+	function update(ind,num = 1){stateUpdate[1](stateUpdate[0] + 1);sport = sport.splice(ind,num);}
 
 	useEffect(()=>{
 		if (sportid != filter.sportid){
@@ -237,7 +238,8 @@ export default function Sport(){
 			}
 			else{
 				aposta.Evento.Desporto = sportid;
-				if(!apostas.mult.map((e)=>(e.Evento.EventoID + e.Evento.Escolha)).includes(aposta.Evento.EventoID.toString()+aposta.Evento.Escolha.toString()))
+				let aux = aposta.Evento.EventoID.toString()+aposta.Evento.Escolha.toString()
+				if(!apostas.mult.map((e)=>(e.Evento.EventoID + e.Evento.Escolha)).includes(aux) && apostas.mult.length < 20)
 					napostas.mult.push(aposta);
 				setApostas(napostas);
 			}
@@ -249,6 +251,22 @@ export default function Sport(){
 			napostas.mult = apostas.mult.filter((e)=>{if(e.Evento.EventoID != aposta.Evento.EventoID || e.Evento.Escolha != aposta.Evento.Escolha) return aposta});
 			setApostas(napostas);			
 		}
+
+		async function clickFollow(followed,evento){
+			let data = {"sport": sportid,"id":evento}
+			if(!followed){
+				let nfollow = [... follow];
+				nfollow.push(evento)
+				setFollow(nfollow)
+
+				await post_request("/addFollow/",data);
+			}
+			else{
+				await post_request("/removeFollow/",data);
+				let nfollow = follow.filter((e)=>{return e != evento})
+				setFollow(nfollow)	
+			}
+		} 
 
 		function on() {
 			document.getElementById("overlay-main").style.display = "flex";
@@ -263,7 +281,7 @@ export default function Sport(){
 				<>
 					{sidebar()}
 					<div className="betpage">
-						<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state}/>
+						<Bet data={sport} addBet={addBet} filter={filter} apostas={apostas} state={state} follow={follow} clickFollow={clickFollow}/>
 					</div>
 					
 					<div className="betzone" id="Rightbar">

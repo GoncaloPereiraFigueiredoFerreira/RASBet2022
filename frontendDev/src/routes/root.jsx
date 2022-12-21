@@ -16,6 +16,7 @@ export default function Root() {
   const token = getToken();
   const [ listening, setListening ] = useState(false);
   const [ myWallet,setMy ] = useState({Valor:getWallet()});
+  const [ notify,setNotify ] = useState([]);
 
   useEffect( () => {
     if (getRole() == "apostador" && !listening) {
@@ -25,6 +26,12 @@ export default function Root() {
 
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
+
+        if(parsedData.betInfo !== undefined){
+          let nnotify = [... notify]
+          nnotify.push(parsedData.betInfo)
+          setNotify(nnotify)
+        }
 
         if(parsedData.Balance !== undefined){
           setMy({Valor:parsedData.Balance});
@@ -100,12 +107,15 @@ export default function Root() {
               </div>
             </div>:null}
            
-            {(getRole() == "apostador")?
+            {(getRole() == "apostador")?(<>
               <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
                 </button>
-              </li>:null}
+              </li>
+              <li style={{"float":"right","padding":"12px"}}>
+                <p>{notify.length}</p>
+              </li></>):null}
             {(getRole() == "Admin")?
             <>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>

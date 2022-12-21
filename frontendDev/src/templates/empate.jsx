@@ -6,10 +6,11 @@ import {parseBet,parseDate} from "../utils"
      * @returns Returns HTML for the component 
      */
 
-export default function Empate({evento,addAposta,escolhas}){
+export default function Empate({evento,addAposta,escolhas,follow,clickFollow}){
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
+		            	<button className='odd-button' style={{"backgroundColor":(follow)?"orange":"beige","color":(follow)?"white":"black"}} onClick={()=>(clickFollow(follow,evento.EventoId))}>Follow</button>
 						<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 		              	<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 							<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>

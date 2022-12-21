@@ -407,7 +407,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
          if (this.eventList[sport]!=undefined && this.eventList[sport][id]!=undefined){
              if (this.followers[sport]== undefined) this.followers[sport]={}
              if (this.followers[sport][id]==undefined) this.followers[sport][id]=[]
-             this.followers[sport][id].push(email);
+             if (!this.followers[sport][id].includes(email)) this.followers[sport][id].push(email);
              return true;
          }
          return false;
@@ -422,7 +422,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
      getGamesFollowed(sport:string,userMail:string):string[]{
         let ret:string[] = [];
         if (this.followers[sport]!= undefined){
-            for (let key of Object.keys(this.followers[sport])){
+            for (let key in (this.followers[sport])){
                 if (this.followers[sport][key].includes(userMail)) ret.push(key);
             }
         }

@@ -13,10 +13,10 @@ import NPags from "./NPags"
    * @param array that contain selected bets
    */
 
-function aux(evento,addAposta,ind,escolhas){
-	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
-	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
-	else if(evento.Tipo == 'NoTieEvent') return(<SemEmpate evento={evento} addAposta={addAposta} escolhas={escolhas} key={evento.EventoId.toString() + evento.Tipo}/>);
+function aux(evento,addAposta,ind,escolhas,follow,clickFollow){
+	if(evento.Tipo == 'RaceEvent') return(<Race evento={evento} addAposta={addAposta} escolhas={escolhas} follow={follow} clickFollow={clickFollow} key={evento.EventoId.toString() + evento.Tipo}/>);
+	else if(evento.Tipo == 'TieEvent') return(<Empate evento={evento} addAposta={addAposta} escolhas={escolhas} follow={follow} clickFollow={clickFollow} key={evento.EventoId.toString() + evento.Tipo}/>);
+	else if(evento.Tipo == 'NoTieEvent') return(<SemEmpate evento={evento} addAposta={addAposta} escolhas={escolhas} follow={follow} clickFollow={clickFollow} key={evento.EventoId.toString() + evento.Tipo}/>);
 }
 
   /**
@@ -75,7 +75,7 @@ export default function Bet(props){
 
 	return (
 		<>
-			{array.map((evento,ind)=>(aux(evento,props.addBet,ind,selecionados(evento))))}
+			{array.map((evento,ind)=>(aux(evento,props.addBet,ind,selecionados(evento),props.follow.includes(evento.EventoId),props.clickFollow)))}
 			<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
 		</>);
 }

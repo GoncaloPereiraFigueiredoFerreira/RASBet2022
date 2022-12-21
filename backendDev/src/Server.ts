@@ -42,7 +42,7 @@ class Server{
         app.post(api + "superOdds"  ,authHandler.authenticateToken,authHandler.verifyRoles('Admin'),reqHandler.activateSuperOdds); 
         app.post(api + "token"      ,reqHandler.refreshTokenFunction);
         app.post(api + "addFollow"  ,authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.addGameFollower);
-        app.post(api + "removeFollow",authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.addGameFollower);
+        app.post(api + "removeFollow",authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.removeGameFollower);
         
         // GET Methods
         app.get(api + "usedCod"     ,authHandler.authenticateToken,authHandler.verifyRoles('apostador'),reqHandler.usedCodFunction);
