@@ -16,6 +16,7 @@ export default function Root() {
   const token = getToken();
   const [ listening, setListening ] = useState(false);
   const [ myWallet,setMy ] = useState({Valor:getWallet()});
+  const [ notify,setNotify ] = useState([]);
 
   useEffect( () => {
     if (getRole() == "apostador" && !listening) {
@@ -25,6 +26,12 @@ export default function Root() {
 
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
+
+        if(parsedData.betInfo !== undefined){
+          let nnotify = [... notify]
+          nnotify.push(parsedData.betInfo)
+          setNotify(nnotify)
+        }
 
         if(parsedData.Balance !== undefined){
           setMy({Valor:parsedData.Balance});
@@ -101,27 +108,28 @@ export default function Root() {
             </div>:null}
 
             {(getRole() == "apostador")?
-
-              <div className="dropdown" style={{'marginBottom':'0'}}>
-                <a href="#" class="notification">
-                  <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
-                  <span class="badge">3</span>
-                </a>
-                <div className="dropdown-content" style={{'top':'60px'}}>
-                  <p>dsmakmdksamd</p>
-                  <p>dsmakmdksamd</p>
-                  <p>dsmakmdksamd</p>
-                  <p>dsmakmdksamd</p>
+            <div className="dropdown" style={{'marginBottom':'0'}}>
+                  <a href="#" class="notification">
+                    <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
+                    <span class="badge">{notify.length!=0}</span>
+                  </a>
+                  <div className="dropdown-content" style={{'top':'60px'}}>
+                    <p>dsmakmdksamd</p>
+                    <p>dsmakmdksamd</p>
+                    <p>dsmakmdksamd</p>
+                    <p>dsmakmdksamd</p>
+                  </div>
                 </div>
-              </div>
-            :null}
+              :null}
 
-            {(getRole() == "apostador")?
+            {(getRole() == "apostador")?<>
               <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
                 </button>
-              </li>:null}
+              </li>
+              </>:null}
+
             {(getRole() == "Admin")?
             <>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
@@ -135,6 +143,7 @@ export default function Root() {
                 </button>
               </li>
             </>:null}
+
             {(getRole() == "Special")?
             <>
               <li style={{"float":"right","padding":"12px"}}>
@@ -203,7 +212,7 @@ export default function Root() {
                 <div className="dropdown" style={{'marginBottom':'0'}}>
                   <a href="#" class="notification">
                     <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
-                    <span class="badge">3</span>
+                    <span class="badge">{notify.length!=0}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}}>
                     <p>dsmakmdksamd</p>

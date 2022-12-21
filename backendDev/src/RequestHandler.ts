@@ -360,7 +360,7 @@ export class RequestHandler implements IRequestHandler{
                 {
                     "EventList": evLst.getBETEvents(request.query.sport),
                     "Leagues": evLst.getLeagues(request.query.sport),
-                    "Followed": evLst.getGamesFollowed(request.query.sport,request.mail)
+                    "Followed": evLst.getGamesFollowed(request.query.sport,request.email)
                 });
         }
         else if (userRole == 'Special' ){// Especialista
@@ -547,7 +547,6 @@ export class RequestHandler implements IRequestHandler{
      * Method responsible for activating super odds in a event
      */
     activateSuperOdds(request:any,response:any){
-       
         let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
         if (flag) {
             let followers = evLst.getGameFollowers(request.body.sport,request.body.EventoID)

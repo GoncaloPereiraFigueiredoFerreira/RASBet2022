@@ -18,7 +18,7 @@ function test (part,odds){
      * @returns Returns HTML for the component 
      */
 
-export default function Race({evento,addAposta,escolhas}){
+export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
   function on() {
     document.getElementById("overlay").style.display = "flex";
   }
@@ -30,6 +30,7 @@ export default function Race({evento,addAposta,escolhas}){
   return(<>
   		<div className="bet-element" key={evento.EventoId.toString()}>
           <div className="racematch">
+          <button className='odd-button' style={{"backgroundColor":(follow)?"orange":"beige","color":(follow)?"white":"black"}} onClick={()=>(clickFollow(follow,evento.EventoId))}>Follow</button>
             <img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             <div>
                 <p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
