@@ -129,4 +129,6 @@ interface IControlEvents{
     getGameFollowers(sport:string,id:string):string[];
 
     removeGameFollower(sport:string, id:string,email:string):boolean;
+
+    getGamesFollowed(sport:string,userMail:string):string[];
 }

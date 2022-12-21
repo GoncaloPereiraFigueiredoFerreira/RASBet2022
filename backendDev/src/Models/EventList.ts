@@ -6,7 +6,6 @@ import {RaceEvent} from "./RaceEvent"
 import {NoTieEvent} from "./NoTieEvent"
 import { TieEvent } from "./TieEvent";
 import { SportEvent } from "./SportEvent";
-import { stringify } from "querystring";
 
  
 const IMPACT_ODDS_INICIAIS = 1000;
@@ -419,6 +418,17 @@ export class EventList implements IControlEvents,IUpdateEvents{
             return this.followers[sport][id].slice();
         return [];
      }
+
+     getGamesFollowed(sport:string,userMail:string):string[]{
+        let ret:string[] = [];
+        if (this.followers[sport]!= undefined){
+            for (let key of Object.keys(this.followers[sport])){
+                if (this.followers[sport][key].includes(userMail)) ret.push(key);
+            }
+        }
+        return ret;
+     }
+
 
      removeGameFollower(sport:string, id:string,email:string):boolean{
         if (this.followers[sport]!= undefined && this.followers[sport][id]!= undefined  ){

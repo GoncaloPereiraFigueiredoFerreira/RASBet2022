@@ -359,7 +359,8 @@ export class RequestHandler implements IRequestHandler{
             response.status(200).send(
                 {
                     "EventList": evLst.getBETEvents(request.query.sport),
-                    "Leagues": evLst.getLeagues(request.query.sport)
+                    "Leagues": evLst.getLeagues(request.query.sport),
+                    "Followed": evLst.getGamesFollowed(request.query.sport,request.mail)
                 });
         }
         else if (userRole == 'Special' ){// Especialista
