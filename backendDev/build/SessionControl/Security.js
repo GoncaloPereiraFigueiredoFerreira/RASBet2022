@@ -20,10 +20,8 @@ class AuthenticationHandler {
         if (token == null)
             return res.sendStatus(401);
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, Info) => {
-            console.log('Deu 40000000000000000003');
             if (err)
                 return res.sendStatus(403);
-            console.log('nao quis saber e estou a continuar');
             //console.log(`Authentication: ${Info}`)
             req.email = Info.userInfo.email;
             req.role = Info.userInfo.role;
@@ -62,7 +60,7 @@ class AuthenticationHandler {
         this.refreshTokens = this.refreshTokens.filter(t => t !== token);
     }
     generateAccessToken(userInfo) {
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' });
     }
 }
 exports.AuthenticationHandler = AuthenticationHandler;

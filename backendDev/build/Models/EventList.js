@@ -15,6 +15,7 @@ class EventList {
     constructor() {
         this.eventList = {};
         this.leagues = {};
+        this.followers = {};
     }
     /**
      * Creates an instance of the EventList class if it does not exist,
@@ -367,6 +368,34 @@ class EventList {
         for (let id of lst) {
             delete this.eventList[sport][id];
         }
+    }
+    ///////FOLLOWING GAME FUNCTIONALITY
+    addGameFollower(sport, id, email) {
+        if (this.eventList[sport] != undefined && this.eventList[sport][id] != undefined) {
+            if (this.followers[sport] == undefined)
+                this.followers[sport] = {};
+            if (this.followers[sport][id] == undefined)
+                this.followers[sport][id] = [];
+            this.followers[sport][id].push(email);
+            return true;
+        }
+        return false;
+    }
+    getGameFollowers(sport, id) {
+        if (this.followers[sport] != undefined && this.followers[sport][id] != undefined)
+            return this.followers[sport][id].slice();
+        return [];
+    }
+    removeGameFollower(sport, id, email) {
+        if (this.followers[sport] != undefined && this.followers[sport][id] != undefined) {
+            let index = 0;
+            index = this.followers[sport][id].indexOf(email);
+            if (index != -1) {
+                this.followers[sport][id].splice(index, 1);
+                return true;
+            }
+        }
+        return false;
     }
 }
 exports.EventList = EventList;

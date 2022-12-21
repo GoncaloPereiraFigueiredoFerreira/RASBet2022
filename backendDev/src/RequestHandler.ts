@@ -146,6 +146,16 @@ export class RequestHandler implements IRequestHandler{
                 
             for(let i = 0 ; i< Eventos.length; i++){
                 evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
+
+                let followers = evLst.getGameFollowers(Eventos[i].Desporto,Eventos[i].EventoID)
+                if( followers.length == 0){
+                    let odds = evLst.getOdds(Eventos[i].Desporto,Eventos[i].EventoID)
+                    let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`
+
+                    for( let j = 0; j< followers.length;j++){
+                        notificationHandler.addBetNotification(followers[j],message)
+                    }
+                } 
             }
             notificationHandler.addWalletNotification(userEmail,balanco);
             response.sendStatus(200);
@@ -538,7 +548,15 @@ export class RequestHandler implements IRequestHandler{
     activateSuperOdds(request:any,response:any){
        
         let flag = evLst.superOdds(request.body.sport,request.body.EventoID,request.body.multiplier);
-        if (flag) response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+        if (flag) {
+            let followers = evLst.getGameFollowers(request.body.sport,request.body.EventoID)
+            let message = `A promocao SuperOdds foi aplicada ao evento de ${request.body.sport} com id ${request.body.EventoID}`
+            console.log(message)
+            for( let j = 0; j< followers.length;j++){
+                notificationHandler.addBetNotification(followers[j],message)
+            }
+            response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
+        }
         else response.status(404).send("Event not found");
     }
 
@@ -552,16 +570,16 @@ export class RequestHandler implements IRequestHandler{
 
     addGameFollower(request:any,response:any){
         let userEmail = request.email
-        let sport = request.sport;
-        let id = request.id;
+        let sport = request.body.sport;
+        let id = request.body.id;
         let flag= evLst.addGameFollower(sport,id,userEmail);
         if (flag) response.status(200).send("Follow adicionado");
         else response.status(200).send("Follow Não adicionado");
     }
     removeGameFollower(request:any,response:any):void{
         let userEmail = request.email
-        let sport = request.sport;
-        let id = request.id;
+        let sport = request.body.sport;
+        let id = request.body.id;
         let flag = evLst.removeGameFollower(sport,id,userEmail);
         if (flag) response.status(200).send("Follow removido");
         else response.status(200).send("Follow Não removido");
