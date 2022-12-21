@@ -148,7 +148,7 @@ export class RequestHandler implements IRequestHandler{
                 evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
 
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto,Eventos[i].EventoID)
-                if( followers.length == 0){
+                if( followers.length > 0){
                     let odds = evLst.getOdds(Eventos[i].Desporto,Eventos[i].EventoID)
                     let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`
 
