@@ -10,7 +10,6 @@ export default function SemEmpate({evento,addAposta,escolhas,follow,clickFollow}
 	return(
 			<div className="bet-element" key={evento.EventoId.toString()}>
 		        <div className="drawmatch">
-		        <button className='odd-button' style={{"backgroundColor":(follow)?"orange":"beige","color":(follow)?"white":"black"}} onClick={()=>(clickFollow(follow,evento.EventoId))}>Follow</button>
 					<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 		          	<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 						<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
@@ -22,7 +21,11 @@ export default function SemEmpate({evento,addAposta,escolhas,follow,clickFollow}
 	            <div className="drawmatchodds">
 				  <button className="odd-button" style={{"backgroundColor":(escolhas.includes(0))?"orange":"beige","color":(escolhas.includes(0))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
 	              <button className="odd-button" style={{"backgroundColor":(escolhas.includes(1))?"orange":"beige","color":(escolhas.includes(1))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
-	            </div>
+				  	<div>
+			        	<img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
+
+					</div>
+				</div>
 	          </div>
 	);
 }

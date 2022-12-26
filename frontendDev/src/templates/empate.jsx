@@ -23,7 +23,7 @@ export default function Empate({evento,addAposta,escolhas,follow,clickFollow}){
 			              	<button className='odd-button' style={{"backgroundColor":(escolhas.includes(2))?"orange":"beige","color":(escolhas.includes(2))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2].toFixed(2)}</button>
 							<button className='odd-button' style={{"backgroundColor":(escolhas.includes(1))?"orange":"beige","color":(escolhas.includes(1))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
 		            	<div>
-			            	<button className='odd-button' style={{"backgroundColor":(follow)?"orange":"beige","color":(follow)?"white":"black"}} onClick={()=>(clickFollow(follow,evento.EventoId))}>Follow</button>
+			            	<img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
 
 						</div>
 					</div>

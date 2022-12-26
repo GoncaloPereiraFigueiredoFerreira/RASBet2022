@@ -30,7 +30,6 @@ export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
   return(<>
   		<div className="bet-element" key={evento.EventoId.toString()}>
           <div className="racematch">
-          <button className='odd-button' style={{"backgroundColor":(follow)?"orange":"beige","color":(follow)?"white":"black"}} onClick={()=>(clickFollow(follow,evento.EventoId))}>Follow</button>
             <img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             <div>
                 <p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
@@ -54,9 +53,12 @@ export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
                 </>))}                
               </div>
               <button style={{"height":"fitContent",'backgroundColor':'orange','marginTop':'0','marginRight':'10px','marginBottom':'auto','marginLeft':'auto'}} onClick={()=>(off())} type="button">Sair</button>
-            </div>
+          </div>
 
-            <button type="button" style={{"marginBottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>
+          <button type="button" style={{"marginBottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>
+          <div>
+			      <img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
+					</div>
       </div></>
   );
 }
