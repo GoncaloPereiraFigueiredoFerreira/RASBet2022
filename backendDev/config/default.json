@@ -5,6 +5,8 @@
 
     "update_on_startup" : false,
 
+    "time_between_updates_in_sec": 0, 
+
     "futebol_league_id": 
     {
         "WORLD_CUP_FUT" : 1,
