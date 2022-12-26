@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 import {RequestHandler} from "./RequestHandler"
 import { AuthenticationHandler } from "./SessionControl/Security";
-
+const cnf          = require('config');
 
 class Server{
     port = 8080;
@@ -25,6 +25,9 @@ class Server{
         const authHandler:AuthenticationHandler = new AuthenticationHandler();
         /// Init the event list
         reqHandler.initEventLst();
+        const time = cnf.get("time_between_updates_in_sec");
+        reqHandler.periodicUpdate(time);
+        
         
         ///Routing
         // POST Methods

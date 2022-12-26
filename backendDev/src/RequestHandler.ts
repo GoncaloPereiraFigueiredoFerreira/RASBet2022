@@ -530,6 +530,17 @@ export class RequestHandler implements IRequestHandler{
         });
     }
 
+    async periodicUpdate(time:number){
+        if (time > 0){
+            setTimeout(() => {
+                console.log('Update Time!');
+                this.updateEvents(undefined,undefined)
+                this.periodicUpdate(time);
+            }, time*1000);
+        }
+    }
+
+
 
 
     /**
@@ -537,10 +548,9 @@ export class RequestHandler implements IRequestHandler{
      */
 
     updateEvents(request:any,response:any){
-        
         this.updateResults();
         apiComms.updateEventLst();
-        response.sendStatus(200);     
+        if (request!=undefined) response.sendStatus(200);     
     }
 
     /**

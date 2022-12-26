@@ -113,4 +113,6 @@ interface IRequestHandler{
       addGameFollower(request:any,response:any):void;
 
       removeGameFollower(request:any,response:any):void;
+
+      periodicUpdate(time:number):void;
     }

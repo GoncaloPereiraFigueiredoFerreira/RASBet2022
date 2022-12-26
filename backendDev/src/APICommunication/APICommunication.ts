@@ -27,7 +27,7 @@ const rspPath = cnf.get("responsePath");
  */
  function makeRequest(request:any,callback:Function){
     return new Promise<void>((resolve,reject)=>{
-      axios(request)
+      axios(request, {timeout: 90})
       .then( (response:any) => {
           if (response == null && response.status!=200){
             console.error("Error found in the request response.\n")
@@ -75,13 +75,16 @@ const rspPath = cnf.get("responsePath");
  */
 function fetchPTFootballEvents(startUp:boolean){  
     let futPTpath = rspPath + "futPT.json";
-    if (startUp){
+    let configFlag = cnf.get("update_on_startup");
+    let existsFile = fs.existsSync(futPTpath);
+    if (!existsFile || (startUp && configFlag) || !startUp){
       let req = getRequests.genFUTPTRequest();
       makeRequest(req,(json:any) => {
         let noErrors =parser.parsePTFutResp(json);
         if (noErrors) fs.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () =>{});
       })
       .catch((error)=>{
+          console.log("Error in connection: "+ error.message)
           if (fs.existsSync(futPTpath)){
               console.warn("Cant acess API! Reading cached file")
               let futptJson = JSON.parse(fs.readFileSync(futPTpath,"utf-8"));
@@ -169,7 +172,7 @@ function initEventLst(){
     fetchF1Events(true);
     fetchFootballEvents(true);
     fetchNBAEvents(true);
-    fetchPTFootballEvents(false);
+    fetchPTFootballEvents(true);
 }
 
 /**
@@ -265,7 +268,7 @@ function updateFUTPTResults(games:string[]){
         parser.parsePTFutResultResp(json,games)
         resolve();
       }).catch(()=>
-      console.error("Can't acess FUTPT API for updates")
+      console.error("Can't acess FUTPT API for result updates")
     );
     });
 }
