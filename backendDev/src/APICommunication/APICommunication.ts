@@ -73,23 +73,29 @@ const rspPath = cnf.get("responsePath");
  * Fills the event list with Footbal events from the portuguese league
  * @param {boolean} startUp Boolean value that defines if this fetch is made at start up
  */
-function fetchPTFootballEvents(){  
+function fetchPTFootballEvents(startUp:boolean){  
     let futPTpath = rspPath + "futPT.json";
-    let req = getRequests.genFUTPTRequest();
-    makeRequest(req,(json:any) => {
-      let noErrors =parser.parsePTFutResp(json);
-      if (noErrors) fs.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () =>{});
-    })
-    .catch((error)=>{
-        if (fs.existsSync(futPTpath)){
-            console.warn("Cant acess API! Reading cached file")
-            let futptJson = JSON.parse(fs.readFileSync(futPTpath,"utf-8"));
-            parser.parsePTFutResp(futptJson);
-        }
-        else {
-            console.error("Cant find file or contact API FUTPT")
-        }
-    });
+    if (startUp){
+      let req = getRequests.genFUTPTRequest();
+      makeRequest(req,(json:any) => {
+        let noErrors =parser.parsePTFutResp(json);
+        if (noErrors) fs.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () =>{});
+      })
+      .catch((error)=>{
+          if (fs.existsSync(futPTpath)){
+              console.warn("Cant acess API! Reading cached file")
+              let futptJson = JSON.parse(fs.readFileSync(futPTpath,"utf-8"));
+              parser.parsePTFutResp(futptJson);
+          }
+          else {
+              console.error("Cant find file or contact API FUTPT")
+          }
+      });
+    } 
+    else{
+      let json = JSON.parse(fs.readFileSync(futPTpath,"utf-8"));
+      parser.parsePTFutResp(json);
+    }
 }
 
 /**
@@ -163,7 +169,7 @@ function initEventLst(){
     fetchF1Events(true);
     fetchFootballEvents(true);
     fetchNBAEvents(true);
-    fetchPTFootballEvents();
+    fetchPTFootballEvents(false);
 }
 
 /**
@@ -173,7 +179,7 @@ function updateEventLst(){
     fetchF1Events(false);
     fetchFootballEvents(false);
     fetchNBAEvents(false);
-    fetchPTFootballEvents();
+    fetchPTFootballEvents(false);
 }
 
 
