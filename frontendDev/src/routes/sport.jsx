@@ -294,7 +294,7 @@ export default function Sport(){
 								{state?(<>	
 									{apostas.simples?(
 										<div className="bet">
-											<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
+											<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','cursor': 'pointer'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
 											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 												{apostas.simples.Desc.Evento}</p>
 											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
@@ -305,7 +305,7 @@ export default function Sport(){
 
 							{apostas.mult.map((evento)=>(
 								<div className="bet" key={"a_"+evento.Evento.EventoID+evento.Evento.Escolha}>
-									<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
+									<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','cursor': 'pointer'}} onClick={()=>(rmBet(evento))}>x</p>
 									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 										{evento.Desc.Evento}</p>
 									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
@@ -349,7 +349,7 @@ export default function Sport(){
 								{state?(<>	
 									{apostas.simples?(
 										<div className="bet">
-											<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
+											<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','cursor': 'pointer'}} onClick={()=>(rmBet(apostas.simples))}>x</p>
 											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 												{apostas.simples.Desc.Evento}</p>
 											<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
@@ -360,7 +360,7 @@ export default function Sport(){
 
 							{apostas.mult.map((evento)=>(
 								<div className="bet" key={"a_"+evento.Evento.EventoID+evento.Evento.Escolha}>
-									<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold'}} onClick={()=>(rmBet(evento))}>x</p>
+									<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','cursor': 'pointer'}} onClick={()=>(rmBet(evento))}>x</p>
 									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray'}}>
 										{evento.Desc.Evento}</p>
 									<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black'}}>
@@ -446,7 +446,7 @@ export default function Sport(){
 							</div>
 						{cods.map((cod,ind)=>(
 							<div className="bet" key={cod}>
-								<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red'}} onClick={()=>{rm_cod({Token:getToken(),Codigo:cod.Codigo});update();cods = cods.splice(ind,1);}}>x</p>
+								<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','cursor': 'pointer'}} onClick={()=>{rm_cod({Token:getToken(),Codigo:cod.Codigo});update();cods = cods.splice(ind,1);}}>x</p>
 								<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
 								<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
 							</div>
@@ -478,7 +478,7 @@ export default function Sport(){
 						</div>
 					{cods.map((cod)=>(
 						<div className="bet" key={cod}>
-							<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
+							<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','cursor': 'pointer'}} onClick={()=>rm_cod({Token:getToken(),Codigo:cod.Codigo})}>x</p>
 
 							<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
 							<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>

@@ -5,7 +5,9 @@ let URL = "http://localhost:8080/api"
 
 export async function post_request(path, params, token = null){
 	token = (token)?token:getToken() 
+
 	let ret = await axios({method:'POST',url: URL+path,data:params,headers:{"accesstoken":token}})
+
 	    .then(function(response) {
 	    	let data = {}
 	    	data.error = false
@@ -35,6 +37,8 @@ export async function get_request(path, params, token = null){
 	token = (token)?token:getToken() 
 	let ret = await axios({method:'GET',url: URL+path,params:params,headers:{"accesstoken":token}})
 	    .then(function(response) {
+			console.log(response)
+
 	    	let data = {}
 	    	data.error = false
 	    	data.data = response.data

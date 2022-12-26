@@ -108,22 +108,19 @@ export default function Root() {
             </div>:null}
 
             {(getRole() == "apostador")?
-            <div className="dropdown" style={{'marginBottom':'0'}}>
+            <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotify(n)}}>
                   <a href="#" class="notification">
                     <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
-                    <span class="badge">{notify.length!=0}</span>
+                    <span class="badge">{notify.length==0? null:notify.length}</span>
                   </a>
-                  <div className="dropdown-content" style={{'top':'60px'}}>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
+                  <div className="dropdown-content" style={{'top':'60px'}} >
+                    {notify.map((e)=>(<p style={{'cursor': 'pointer'}}>{e}</p>))}
                   </div>
                 </div>
               :null}
 
             {(getRole() == "apostador")?<>
-              <li style={{"float":"right","padding":"12px"}}>
+              <li style={{"float":"right","padding":"12px",'cursor': 'pointer'}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
                 </button>
@@ -209,16 +206,13 @@ export default function Root() {
 
              {(getRole() == "apostador")?
 
-                <div className="dropdown" style={{'marginBottom':'0'}}>
+                <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotify(n)}}>
                   <a href="#" class="notification">
                     <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
-                    <span class="badge">{notify.length!=0}</span>
+                    <span class="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}}>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
-                    <p>dsmakmdksamd</p>
+                    {notify.map((e)=>(<p style={{'cursor': 'pointer'}}>{e}</p>))}
                   </div>
                 </div>
               :null}

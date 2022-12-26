@@ -10,6 +10,7 @@ body {
 
 .logo{
     display:flex;
+    cursor: pointer;
 }
 
 
