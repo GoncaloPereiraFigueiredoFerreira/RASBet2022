@@ -169,7 +169,7 @@ export default function Bet(props){
 
 	return(
 		<>
-		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport} update={props.update} ind={ind} key={ind.toString()}/>))}
+		{array.map((evento,ind)=>(<Aux evento={evento} sport={props.sport} update={props.update} ind={ind} key={ind.toString()+evento.EventoId}/>))}
 		<NPags paginas={filter.length/elem} func={setPage} atual={page}/>
 		</>);
 }
