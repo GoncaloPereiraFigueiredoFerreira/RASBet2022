@@ -578,5 +578,35 @@ class DBCommunication {
             });
         });
     }
+    pushTokenOnDb(token, email) {
+        return new Promise((resolve, reject) => {
+            this.mysqlQuery("INSERT INTO RefreshTokens(Email,Token) VALUES (?,?)", [email, token]).then((result) => {
+                resolve(result);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+    getTokenOnDb(token) {
+        return new Promise((resolve, reject) => {
+            this.mysqlQuery("SELECT Token FROM RefreshTokens WHERE Token=?", [token]).then((result) => {
+                if (result.length == 0)
+                    resolve(false);
+                else
+                    resolve(true);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+    deleteTokensOnDb(email) {
+        return new Promise((resolve, reject) => {
+            this.mysqlQuery("DELETE FROM RefreshTokens WHERE Email = ?", [email]).then((result) => {
+                resolve(result);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
 }
 exports.DBCommunication = DBCommunication;

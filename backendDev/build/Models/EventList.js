@@ -376,7 +376,8 @@ class EventList {
                 this.followers[sport] = {};
             if (this.followers[sport][id] == undefined)
                 this.followers[sport][id] = [];
-            this.followers[sport][id].push(email);
+            if (!this.followers[sport][id].includes(email))
+                this.followers[sport][id].push(email);
             return true;
         }
         return false;
@@ -385,6 +386,16 @@ class EventList {
         if (this.followers[sport] != undefined && this.followers[sport][id] != undefined)
             return this.followers[sport][id].slice();
         return [];
+    }
+    getGamesFollowed(sport, userMail) {
+        let ret = [];
+        if (this.followers[sport] != undefined) {
+            for (let key in (this.followers[sport])) {
+                if (this.followers[sport][key].includes(userMail))
+                    ret.push(key);
+            }
+        }
+        return ret;
     }
     removeGameFollower(sport, id, email) {
         if (this.followers[sport] != undefined && this.followers[sport][id] != undefined) {

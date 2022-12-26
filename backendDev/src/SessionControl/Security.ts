@@ -1,12 +1,9 @@
 require("dotenv").config();
 const jwt = require('jsonwebtoken')
+import {DBCommunication} from "../DBCommunication/DBCommunication";
 
 export class AuthenticationHandler{
-    refreshTokens:string[];
-
-    constructor(){
-        this.refreshTokens=[]
-    }
+    
 
     authenticateToken(req:any,res:any,next:any){
         
@@ -47,26 +44,37 @@ export class AuthenticationHandler{
     }
 
 
-    generateRefreshToken(userInfo:any){
+    generateRefreshToken(userInfo:any,dbComms:DBCommunication){
         const refreshToken = jwt.sign(userInfo,process.env.REFRESH_TOKEN_SECRET)
-        this.refreshTokens.push(refreshToken)
-        return refreshToken
-    }
-
-    refreshAccessToken(refreshToken:any){
+        console.log(refreshToken)
+        return dbComms.pushTokenOnDb(refreshToken,userInfo.userInfo.email).then(()=>{
+            return Promise.resolve(refreshToken)
+        }).catch((e:any)=>{
+            return Promise.reject(e)
+        })
         
-        if(!this.refreshTokens.includes(refreshToken)){
-            return null
-        }
-        return (jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err:any,Info:any)=>{
-            if(err) return null
-            return this.generateAccessToken({userInfo:{email:Info.userInfo.email,role:Info.userInfo.role}})
-        }))
        
     }
 
-    delete(token:any){
-        this.refreshTokens= this.refreshTokens.filter(t => t !== token)
+    refreshAccessToken(refreshToken:string,dbComms:DBCommunication){
+        return dbComms.getTokenOnDb(refreshToken).then((result:any)=>{
+            if(!result){
+                return Promise.resolve(null)
+            }
+            return (jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err:any,Info:any)=>{
+                if(err) return Promise.resolve(null)
+                return Promise.resolve(this.generateAccessToken({userInfo:{email:Info.userInfo.email,role:Info.userInfo.role}}))
+            }))
+        }).catch((e:any)=>{
+            return Promise.reject(e)
+        })
+        
+       
+    }
+
+    delete(email:string,dbComms:DBCommunication){
+
+        dbComms.deleteTokensOnDb(email).catch((e:any)=>{console.log(e)})
     }
     
     generateAccessToken(userInfo:any){
@@ -74,4 +82,3 @@ export class AuthenticationHandler{
     }
 
 }
-

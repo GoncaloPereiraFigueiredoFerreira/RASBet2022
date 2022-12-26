@@ -613,6 +613,39 @@ export class DBCommunication implements IDBCommunication{
             })
         })
     }
+
+    pushTokenOnDb(token:string,email:string){
+        return new Promise((resolve,reject)=>{
+            this.mysqlQuery("INSERT INTO RefreshTokens(Email,Token) VALUES (?,?)",[email,token]).then((result)=>{
+                resolve(result)
+            }).catch((e)=>{
+                reject(e)
+            })
+        })
+    }
+
+    getTokenOnDb(token:string){
+        return new Promise((resolve,reject)=>{
+            this.mysqlQuery("SELECT Token FROM RefreshTokens WHERE Token=?",[token]).then((result:any)=>{
+                if(result.length==0) resolve(false)
+                else resolve(true)
+            }).catch((e)=>{
+                reject(e)
+            })
+        })
+    }
+
+    deleteTokensOnDb(email:string){
+        return new Promise((resolve,reject)=>{
+            this.mysqlQuery("DELETE FROM RefreshTokens WHERE Email = ?",[email]).then((result)=>{
+                resolve(result)
+            }).catch((e)=>{
+                reject(e)
+            })
+        })
+    }
+
+
      
 
 }

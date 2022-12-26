@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const RequestHandler_1 = require("./RequestHandler");
 const Security_1 = require("./SessionControl/Security");
+const cnf = require('config');
 class Server {
     constructor() {
         this.port = 8080;
@@ -21,6 +22,8 @@ class Server {
         const authHandler = new Security_1.AuthenticationHandler();
         /// Init the event list
         reqHandler.initEventLst();
+        const time = cnf.get("time_between_updates_in_sec");
+        reqHandler.periodicUpdate(time);
         ///Routing
         // POST Methods
         let api = "/api/";
@@ -37,7 +40,7 @@ class Server {
         app.post(api + "superOdds", authHandler.authenticateToken, authHandler.verifyRoles('Admin'), reqHandler.activateSuperOdds);
         app.post(api + "token", reqHandler.refreshTokenFunction);
         app.post(api + "addFollow", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.addGameFollower);
-        app.post(api + "removeFollow", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.addGameFollower);
+        app.post(api + "removeFollow", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.removeGameFollower);
         // GET Methods
         app.get(api + "usedCod", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.usedCodFunction);
         app.get(api + "profileInfo", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.profileInfoFunction);

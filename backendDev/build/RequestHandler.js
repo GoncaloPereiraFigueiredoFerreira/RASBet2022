@@ -47,7 +47,7 @@ class RequestHandler {
             };
             dbComms.registerOnDb(apostador).then(() => {
                 const token = authHandler.generateAccessToken(userInfo);
-                const refreshToken = authHandler.generateRefreshToken(userInfo);
+                const refreshToken = authHandler.generateRefreshToken(userInfo, dbComms);
                 //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
                 response.status(200).send({ "Token": token, "RefreshToken": refreshToken });
             }).catch((message) => {
@@ -86,24 +86,26 @@ class RequestHandler {
             };
             //message['AccessToken'] = authHandler.generateAccessToken(userInfo)
             message['Token'] = authHandler.generateAccessToken(userInfo);
-            message['RefreshToken'] = authHandler.generateRefreshToken(userInfo);
-            response.status(200).send(message);
+            return authHandler.generateRefreshToken(userInfo, dbComms).then((refreshToken) => {
+                message['RefreshToken'] = refreshToken;
+                response.status(200).send(message);
+            }).catch((e) => {
+                return Promise.reject(e);
+            });
         }).catch((message) => {
             response.status(400).send(message);
         });
     }
-    logoutFunction(request, response) {
-        //TODO - mudar para header
-        authHandler.delete(request.body.token);
-        response.sendStatus(200);
-    }
     refreshTokenFunction(request, response) {
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        const accessToken = authHandler.refreshAccessToken(request.body.refreshtoken);
-        if (accessToken == null)
-            response.sendStatus(400);
-        else
-            response.status(200).send({ 'AccessToken': accessToken });
+        authHandler.refreshAccessToken(request.body.refreshtoken, dbComms).then((accessToken) => {
+            if (accessToken == null)
+                response.sendStatus(400);
+            else
+                response.status(200).send({ 'AccessToken': accessToken });
+        }).catch((e) => {
+            response.status(400).send(e);
+        });
     }
     /**
      * Function that deals with a http request to register a bet
@@ -129,7 +131,7 @@ class RequestHandler {
             for (let i = 0; i < Eventos.length; i++) {
                 evLst.updateOddBet(Eventos[i].Desporto, Eventos[i].EventoID, aposta.Montante, Eventos[i].Escolha);
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto, Eventos[i].EventoID);
-                if (followers.length == 0) {
+                if (followers.length > 0) {
                     let odds = evLst.getOdds(Eventos[i].Desporto, Eventos[i].EventoID);
                     let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`;
                     for (let j = 0; j < followers.length; j++) {
@@ -289,7 +291,8 @@ class RequestHandler {
         else if (userRole == 'apostador') {
             response.status(200).send({
                 "EventList": evLst.getBETEvents(request.query.sport),
-                "Leagues": evLst.getLeagues(request.query.sport)
+                "Leagues": evLst.getLeagues(request.query.sport),
+                "Followed": evLst.getGamesFollowed(request.query.sport, request.email)
             });
         }
         else if (userRole == 'Special') { // Especialista
@@ -432,13 +435,25 @@ class RequestHandler {
             resolve();
         });
     }
+    periodicUpdate(time) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (time > 0) {
+                setTimeout(() => {
+                    console.log('Update Time!');
+                    this.updateEvents(undefined, undefined);
+                    this.periodicUpdate(time);
+                }, time * 1000);
+            }
+        });
+    }
     /**
      * Method responsible for updating the events in the backend
      */
     updateEvents(request, response) {
         this.updateResults();
         apiComms.updateEventLst();
-        response.sendStatus(200);
+        if (request != undefined)
+            response.sendStatus(200);
     }
     /**
      * Method responsible for activating super odds in a event
@@ -497,6 +512,7 @@ class RequestHandler {
         dbComms.walletOnDb(userEmail).then((info) => { notificationHandler.addWalletNotification(userEmail, info); });
         request.on('close', () => {
             console.log('DEU close');
+            authHandler.delete(userEmail, dbComms);
             notificationHandler.closeConnection(userEmail);
         });
     }

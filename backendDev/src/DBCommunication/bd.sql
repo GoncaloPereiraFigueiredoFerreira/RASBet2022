@@ -87,8 +87,13 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 		REFERENCES Evento(ID,Desporto)
 );
 
+CREATE TABLE IF NOT EXISTS RefreshTokens(
+    Email VARCHAR(75) NOT NULL,
+    Token VARCHAR(200) NOT NULL,
+    PRIMARY KEY(Token)
+);
+
 INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("special@coisas.pt","$2b$10$2jKkxIjlvdNISUFt3MDcJOZsYx.I.YgbR6dfBF.nhKYmoCXc8bfyq","Special");
 INSERT INTO Funcionario(Email,PlvPasse,FRole) VALUES ("admin@coisas.pt","$2b$10$WGqE.NFdUqjs3DqUixJmt.2ls6r/J5OwXHz2YKz7Ex/J5sxLQQbnu","Admin");
 INSERT INTO Apostador(Email,NIF,Telemovel,Nome,Morada,DataNascimento,Balance,PlvPasse,CC) 
-    VALUES ("user@coisas.pt","123456789","123456789","Couto dos Santos","Paraíso","1999-9-7",2000,"$2b$10$FJSCi9UpkGKBoDmxmCp7lO0nNy6fM59MChbe0KysiSNLGEGgkafWa","12345678");
-
+    VALUES ("user@coisas.pt","123456789","123456789","Couto dos Santos","ParaÃ­so","1999-9-7",2000,"$2b$10$FJSCi9UpkGKBoDmxmCp7lO0nNy6fM59MChbe0KysiSNLGEGgkafWa","12345678");

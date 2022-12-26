@@ -36,7 +36,7 @@ const rspPath = cnf.get("responsePath");
  */
 function makeRequest(request, callback) {
     return new Promise((resolve, reject) => {
-        (0, axios_1.default)(request)
+        (0, axios_1.default)(request, { timeout: 90 })
             .then((response) => {
             if (response == null && response.status != 200) {
                 console.error("Error found in the request response.\n");
@@ -81,24 +81,33 @@ function fetchFootballEvents(startUp) {
  * Fills the event list with Footbal events from the portuguese league
  * @param {boolean} startUp Boolean value that defines if this fetch is made at start up
  */
-function fetchPTFootballEvents() {
+function fetchPTFootballEvents(startUp) {
     let futPTpath = rspPath + "futPT.json";
-    let req = getRequests.genFUTPTRequest();
-    makeRequest(req, (json) => {
-        let noErrors = parser.parsePTFutResp(json);
-        if (noErrors)
-            fs_1.default.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
-    })
-        .catch((error) => {
-        if (fs_1.default.existsSync(futPTpath)) {
-            console.warn("Cant acess API! Reading cached file");
-            let futptJson = JSON.parse(fs_1.default.readFileSync(futPTpath, "utf-8"));
-            parser.parsePTFutResp(futptJson);
-        }
-        else {
-            console.error("Cant find file or contact API FUTPT");
-        }
-    });
+    let configFlag = cnf.get("update_on_startup");
+    let existsFile = fs_1.default.existsSync(futPTpath);
+    if (!existsFile || (startUp && configFlag) || !startUp) {
+        let req = getRequests.genFUTPTRequest();
+        makeRequest(req, (json) => {
+            let noErrors = parser.parsePTFutResp(json);
+            if (noErrors)
+                fs_1.default.writeFile(futPTpath, JSON.stringify(json.data), { flag: 'w+' }, () => { });
+        })
+            .catch((error) => {
+            console.log("Error in connection: " + error.message);
+            if (fs_1.default.existsSync(futPTpath)) {
+                console.warn("Cant acess API! Reading cached file");
+                let futptJson = JSON.parse(fs_1.default.readFileSync(futPTpath, "utf-8"));
+                parser.parsePTFutResp(futptJson);
+            }
+            else {
+                console.error("Cant find file or contact API FUTPT");
+            }
+        });
+    }
+    else {
+        let json = JSON.parse(fs_1.default.readFileSync(futPTpath, "utf-8"));
+        parser.parsePTFutResp(json);
+    }
 }
 /**
  * Fills the event list with F1 events
@@ -171,7 +180,7 @@ function initEventLst() {
     fetchF1Events(true);
     fetchFootballEvents(true);
     fetchNBAEvents(true);
-    fetchPTFootballEvents();
+    fetchPTFootballEvents(true);
 }
 /**
  * Function responsible for fetching new events for the event list
@@ -180,7 +189,7 @@ function updateEventLst() {
     fetchF1Events(false);
     fetchFootballEvents(false);
     fetchNBAEvents(false);
-    fetchPTFootballEvents();
+    fetchPTFootballEvents(false);
 }
 /**
  * Updates the status of a given list of futebol events
@@ -247,7 +256,7 @@ function updateFUTPTResults(games) {
         makeRequest(req, (json) => {
             parser.parsePTFutResultResp(json, games);
             resolve();
-        }).catch(() => console.error("Can't acess FUTPT API for updates"));
+        }).catch(() => console.error("Can't acess FUTPT API for result updates"));
     }));
 }
 module.exports = { initEventLst, updateFutResults, updateF1Results, updateBSKResults, updateFUTPTResults, updateEventLst };

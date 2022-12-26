@@ -4,9 +4,6 @@ exports.AuthenticationHandler = void 0;
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 class AuthenticationHandler {
-    constructor() {
-        this.refreshTokens = [];
-    }
     authenticateToken(req, res, next) {
         const token = req.headers.accesstoken ? req.headers.accesstoken : (req.query.token ? req.query.token : null);
         /*const token = req.query.ApostadorID? req.query.ApostadorID:
@@ -41,23 +38,31 @@ class AuthenticationHandler {
             next();
         };
     }
-    generateRefreshToken(userInfo) {
+    generateRefreshToken(userInfo, dbComms) {
         const refreshToken = jwt.sign(userInfo, process.env.REFRESH_TOKEN_SECRET);
-        this.refreshTokens.push(refreshToken);
-        return refreshToken;
+        console.log(refreshToken);
+        return dbComms.pushTokenOnDb(refreshToken, userInfo.userInfo.email).then(() => {
+            return Promise.resolve(refreshToken);
+        }).catch((e) => {
+            return Promise.reject(e);
+        });
     }
-    refreshAccessToken(refreshToken) {
-        if (!this.refreshTokens.includes(refreshToken)) {
-            return null;
-        }
-        return (jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, Info) => {
-            if (err)
-                return null;
-            return this.generateAccessToken({ userInfo: { email: Info.userInfo.email, role: Info.userInfo.role } });
-        }));
+    refreshAccessToken(refreshToken, dbComms) {
+        return dbComms.getTokenOnDb(refreshToken).then((result) => {
+            if (!result) {
+                return Promise.resolve(null);
+            }
+            return (jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, Info) => {
+                if (err)
+                    return Promise.resolve(null);
+                return Promise.resolve(this.generateAccessToken({ userInfo: { email: Info.userInfo.email, role: Info.userInfo.role } }));
+            }));
+        }).catch((e) => {
+            return Promise.reject(e);
+        });
     }
-    delete(token) {
-        this.refreshTokens = this.refreshTokens.filter(t => t !== token);
+    delete(email, dbComms) {
+        dbComms.deleteTokensOnDb(email).catch((e) => { console.log(e); });
     }
     generateAccessToken(userInfo) {
         return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' });

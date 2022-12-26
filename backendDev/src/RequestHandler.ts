@@ -43,14 +43,12 @@ export class RequestHandler implements IRequestHandler{
         }
         dbComms.registerOnDb(apostador).then(()=>{
             const token = authHandler.generateAccessToken(userInfo)
-            const refreshToken = authHandler.generateRefreshToken(userInfo)
+            const refreshToken = authHandler.generateRefreshToken(userInfo,dbComms)
             //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
             response.status(200).send({"Token":token,"RefreshToken":refreshToken})
         }).catch((message:any)=>{
             response.status(400).send(message)
         })
-
-        
     }
 
     /**
@@ -94,26 +92,28 @@ export class RequestHandler implements IRequestHandler{
             
             //message['AccessToken'] = authHandler.generateAccessToken(userInfo)
             message['Token'] = authHandler.generateAccessToken(userInfo)
-            message['RefreshToken'] = authHandler.generateRefreshToken(userInfo)
-            response.status(200).send(message)
+            return authHandler.generateRefreshToken(userInfo,dbComms).then((refreshToken:string)=>{
+                message['RefreshToken'] = refreshToken
+                response.status(200).send(message)
+            }).catch((e:any)=>{
+                return Promise.reject(e)
+            })
 
         }).catch((message:any)=>{
             response.status(400).send(message)
         })
-
     }
 
-    logoutFunction(request:any,response:any){
-        //TODO - mudar para header
-        authHandler.delete(request.body.token)
-        response.sendStatus(200)
-    }
+  
 
     refreshTokenFunction(request:any,response:any){
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        const accessToken = authHandler.refreshAccessToken(request.body.refreshtoken)
-        if(accessToken==null) response.sendStatus(400)
-        else response.status(200).send({'AccessToken':accessToken})
+        authHandler.refreshAccessToken(request.body.refreshtoken,dbComms).then((accessToken:any)=>{
+            if(accessToken==null) response.sendStatus(400)
+            else response.status(200).send({'AccessToken':accessToken})
+        }).catch((e:any)=>{
+            response.status(400).send(e)
+        })
     }
 
 
@@ -612,6 +612,7 @@ export class RequestHandler implements IRequestHandler{
         dbComms.walletOnDb(userEmail).then((info:any)=>{notificationHandler.addWalletNotification(userEmail,info);});
         request.on('close', () => {
             console.log('DEU close')
+            authHandler.delete(userEmail,dbComms);
             notificationHandler.closeConnection(userEmail);
         });
         
