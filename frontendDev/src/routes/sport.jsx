@@ -61,7 +61,7 @@ export async function loader({params}){
 	const token = getToken();
 	var ret = await get_request('/eventList/',{"token":token,"sport":params.sportid})
 	if(ret.error) ret = null;
-	else ret = {sportid:(params.sportid)?params.sportid:"FUT",sport:ret.data.EventList,ligas:ret.data.Leagues,rfollow:(ret.data.Followed)?ret.data.Followed.map((e)=>(parseInt(e))):null}
+	else ret = {sportid:(params.sportid)?params.sportid:"FUT",sport:ret.data.EventList,ligas:ret.data.Leagues,rfollow:(ret.data.Followed)?ret.data.Followed.map((e)=>(e.toString())):null}
 	if(getRole() == "Admin"){ret.cods =  await getCods()}
 	return ret;
 }
@@ -138,7 +138,6 @@ export default function Sport(){
      */
 
 		async function reg_bet(data){
-		  console.log(data)
 		  var resp = await post_request("/registerBet/",data)
 		  if (resp.error){
 			resp = null

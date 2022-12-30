@@ -37,7 +37,6 @@ export async function get_request(path, params, token = null){
 	token = (token)?token:getToken() 
 	let ret = await axios({method:'GET',url: URL+path,params:params,headers:{"accesstoken":token}})
 	    .then(function(response) {
-			console.log(response)
 
 	    	let data = {}
 	    	data.error = false

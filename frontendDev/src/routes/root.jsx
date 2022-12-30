@@ -11,12 +11,12 @@ import {getToken,getWallet,getRole,setWallet as set} from "../utils"
      * @returns Returns HTML for the component 
      */
 
-export default function Root() {
+export default function Root({notify,setNotify}) {
   const navigation = useNavigate();
   const token = getToken();
   const [ listening, setListening ] = useState(false);
   const [ myWallet,setMy ] = useState({Valor:getWallet()});
-  const [ notify,setNotify ] = useState([]);
+  //const [ notify,setNotify ] = useState([]);
 
   useEffect( () => {
     if (getRole() == "apostador" && !listening) {
@@ -114,7 +114,7 @@ export default function Root() {
                     <span class="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}} >
-                    {notify.map((e)=>(<p style={{'cursor': 'pointer'}}>{e}</p>))}
+                    {notify.map((e,ind)=>(<p style={{'cursor': 'pointer'}} key={ind}>{e}</p>))}
                   </div>
                 </div>
               :null}

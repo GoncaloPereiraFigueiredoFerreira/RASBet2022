@@ -24,11 +24,12 @@ import {getRole} from "./utils"
 
 function App(){
 	const [flag,setFlag] = useState(false);
+	const [notify,setNotify] = useState([]);
 	const defaultPage = ((getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>);
 	const router = createBrowserRouter([
 	  {
 	    path: "/",
-	    element: <Root/>,
+	    element: <Root notify={notify} setNotify={setNotify}/>,
 	    errorElement: <ErrorPage />,
 	    children: [
 	      { index: true, element: defaultPage},
