@@ -1,5 +1,10 @@
 
-//sessionStorage.clear() 
+    /**
+     * Clear all local storeage
+     */
+export async function clear_storage(){
+    sessionStorage.clear() 
+}
 
     /**
      * Save Token of the user in localStorage
@@ -84,6 +89,30 @@ export function getWallet(){
   //const ret = userToken?.token;
   return userToken;
 }
+
+//sessionStorage.clear() 
+
+    /**
+     * Save notificações of the user in localStorage
+     * @params token of the user 
+     */
+
+export async function setNotification(notification) {
+  sessionStorage.setItem('notify', JSON.stringify(notification));
+}
+
+    /**
+     * get notificações of the user in localStorage
+     * @returns user token
+     */
+
+export function getNotification(){
+  const tokenString = sessionStorage.getItem('notify');
+  const userToken = tokenString != undefined ? JSON.parse(tokenString):[];
+  //const ret = userToken?.token;
+  return userToken;
+}
+
 
     /**
      * Funtion that parses the frontend bet so the bacak end can read it

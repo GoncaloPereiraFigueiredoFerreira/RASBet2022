@@ -2,25 +2,27 @@ import { Outlet,Link,useLoaderData,Form,redirect,NavLink,useNavigate} from "reac
 import Login from "./login";
 import axios from "axios";
 import { useEffect,useState } from "react";
-import {get_request} from "../requests"
+import {get_request,post_request} from "../requests"
 
-import {getToken,getWallet,getRole,setWallet as set} from "../utils"
+import {getRToken,getToken,getWallet,getRole,setWallet as set,setNotification,getNotification,clear_storage} from "../utils"
 
     /**
      * Component that render the root page(this page is the bar)
      * @returns Returns HTML for the component 
      */
 
-export default function Root({notify,setNotify}) {
+
+export default function Root() {
   const navigation = useNavigate();
   const token = getToken();
   const [ listening, setListening ] = useState(false);
   const [ myWallet,setMy ] = useState({Valor:getWallet()});
-  //const [ notify,setNotify ] = useState([]);
+  const [ notify,setNotify ] = useState(getNotification());
+  let events;
 
   useEffect( () => {
     if (getRole() == "apostador" && !listening) {
-      const events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
+      events = new EventSource("http://localhost:8080/api/events/?token="+getToken());
 
       //events.onerror = (error) => {console.log("error sse:",error);}
 
@@ -28,9 +30,10 @@ export default function Root({notify,setNotify}) {
         const parsedData = JSON.parse(event.data);
 
         if(parsedData.betInfo !== undefined){
-          let nnotify = [... notify]
+          let nnotify = getNotification();
           nnotify.push(parsedData.betInfo)
-          setNotify(nnotify)
+          setNotify(nnotify);
+          setNotification(nnotify);
         }
 
         if(parsedData.Balance !== undefined){
@@ -51,6 +54,10 @@ export default function Root({notify,setNotify}) {
 
   async function refresh(){
     const ret = await get_request('/update/',{"token":getToken()})
+  }
+
+  async function logout_request(){
+     post_request("/logout/",{"refreshToken":getRToken()})
   }
 
   if(getRole() == "apostador"){
@@ -103,12 +110,12 @@ export default function Root({notify,setNotify}) {
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
                 <Link to={`histA/${token}`}>Histórico Apostas</Link>
-                <Link to={`login`}>Ir para login</Link>
+                <Link to={`login`} onClick={()=>{logout_request();clear_storage();events.close()}}>Ir para login</Link>
               </div>
             </div>:null}
 
             {(getRole() == "apostador")?
-            <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotify(n)}}>
+            <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]);setNotify(n)}}>
                   <a href="#" class="notification">
                     <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
                     <span class="badge">{notify.length==0? null:notify.length}</span>
@@ -130,7 +137,7 @@ export default function Root({notify,setNotify}) {
             {(getRole() == "Admin")?
             <>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
-                <button onClick={()=>{navigation(`login`)}}>
+                <button onClick={()=>{events.close();logout_request();clear_storage();navigation(`login`);}}>
                   Ir para Login
                 </button>
               </li>
@@ -144,7 +151,7 @@ export default function Root({notify,setNotify}) {
             {(getRole() == "Special")?
             <>
               <li style={{"float":"right","padding":"12px"}}>
-                <button onClick={()=>{navigation(`login`)}}>
+                <button onClick={()=>{events.close();logout_request();clear_storage();navigation(`login`);}}>
                   Ir para Login
                 </button>
               </li>
@@ -206,7 +213,7 @@ export default function Root({notify,setNotify}) {
 
              {(getRole() == "apostador")?
 
-                <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotify(n)}}>
+                <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]) ;setNotify(n)}}>
                   <a href="#" class="notification">
                     <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
                     <span class="badge">{notify.length==0? null:notify.length}</span>
