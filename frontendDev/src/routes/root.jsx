@@ -137,7 +137,7 @@ export default function Root() {
             {(getRole() == "Admin")?
             <>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
-                <button onClick={()=>{events.close();logout_request();clear_storage();navigation(`login`);}}>
+                <button onClick={()=>{logout_request();clear_storage();navigation(`login`);}}>
                   Ir para Login
                 </button>
               </li>
@@ -151,7 +151,7 @@ export default function Root() {
             {(getRole() == "Special")?
             <>
               <li style={{"float":"right","padding":"12px"}}>
-                <button onClick={()=>{events.close();logout_request();clear_storage();navigation(`login`);}}>
+                <button onClick={()=>{logout_request();clear_storage();navigation(`login`);}}>
                   Ir para Login
                 </button>
               </li>
