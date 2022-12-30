@@ -157,6 +157,15 @@ export class DBCommunication implements IDBCommunication{
         })
     }
 
+    logoutOnDb(refreshToken:string){
+        return new Promise((resolve,reject)=>{
+            
+            this.mysqlQuery('DELETE FROM RefreshTokens WHERE Token=?',[refreshToken]).catch((e)=>{
+                reject(e)
+            })
+        })
+    }
+
     /**
      * this function registers events in the database
      * @param {Evento[]} eventos Set of events 

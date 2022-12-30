@@ -28,17 +28,19 @@ class NotificationHandler {
             this.sendNotification(email, { Balance: value });
         }
     }
-    addBetNotification(email, msg) {
-        let obj = { betInfo: msg };
-        if (this.sessions[email] != undefined) {
-            this.sendNotification(email, obj);
+    addBetNotification(emails, msg) {
+        for (let j = 0; j < emails.length; j++) {
+            let obj = { betInfo: msg };
+            if (this.sessions[emails[j]] != undefined) {
+                this.sendNotification(emails[j], obj);
+            }
+            else {
+                if (this.notificationQueue[emails[j]] != undefined)
+                    this.notificationQueue[emails[j]] = [];
+                this.notificationQueue[emails[j]].push(obj);
+            }
+            //emailHandler.sendMail(emails[j],"Atualização do estado da Aposta",msg,null);
         }
-        else {
-            if (this.notificationQueue[email] != undefined)
-                this.notificationQueue[email] = [];
-            this.notificationQueue[email].push(obj);
-        }
-        //emailHandler.sendMail(email,"Atualização do estado da Aposta",msg,null);
     }
     /**
      * Closes the connection to the user

@@ -32,16 +32,20 @@ export class NotificationHandler implements INotificationHandler{
         }
     }
 
-    addBetNotification(email:string,msg:string){
-        let obj = {betInfo:msg};
-        if (this.sessions[email]!=undefined){
-            this.sendNotification(email,obj);
-        }else{
-            if (this.notificationQueue[email]!=undefined) this.notificationQueue[email]=[];
-            this.notificationQueue[email].push(obj);
-        }
-        //emailHandler.sendMail(email,"Atualização do estado da Aposta",msg,null);
+    addBetNotification(emails:string[],msg:string){
+        
+        for( let j = 0; j< emails.length;j++){
 
+            let obj = {betInfo:msg};
+            
+            if (this.sessions[emails[j]]!=undefined){
+                this.sendNotification(emails[j],obj);
+            }else{
+                if (this.notificationQueue[emails[j]]!=undefined) this.notificationQueue[emails[j]]=[];
+                this.notificationQueue[emails[j]].push(obj);
+            }
+            //emailHandler.sendMail(emails[j],"Atualização do estado da Aposta",msg,null);
+        }
     }
 
 

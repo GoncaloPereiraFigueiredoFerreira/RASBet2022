@@ -41,6 +41,7 @@ class Server {
         app.post(api + "token", reqHandler.refreshTokenFunction);
         app.post(api + "addFollow", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.addGameFollower);
         app.post(api + "removeFollow", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.removeGameFollower);
+        app.post(api + "logout", reqHandler.logoutFunction);
         // GET Methods
         app.get(api + "usedCod", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.usedCodFunction);
         app.get(api + "profileInfo", authHandler.authenticateToken, authHandler.verifyRoles('apostador'), reqHandler.profileInfoFunction);

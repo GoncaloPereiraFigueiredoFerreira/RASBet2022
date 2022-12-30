@@ -16,6 +16,6 @@ interface INotificationHandler{
 
     addWalletNotification(email:string,value:number):void;
 
-    addBetNotification(email:string,msg:string):void;
+    addBetNotification(email:string[],msg:string):void;
 
 }

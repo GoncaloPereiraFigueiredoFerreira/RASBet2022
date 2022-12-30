@@ -96,6 +96,12 @@ class RequestHandler {
             response.status(400).send(message);
         });
     }
+    logoutFunction(request, response) {
+        const refreshToken = request.body.refreshToken;
+        dbComms.logoutOnDb(refreshToken).catch((e) => {
+            response.status(400).send(e);
+        });
+    }
     refreshTokenFunction(request, response) {
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
         authHandler.refreshAccessToken(request.body.refreshtoken, dbComms).then((accessToken) => {
@@ -130,14 +136,11 @@ class RequestHandler {
         }).then((balanco) => {
             for (let i = 0; i < Eventos.length; i++) {
                 evLst.updateOddBet(Eventos[i].Desporto, Eventos[i].EventoID, aposta.Montante, Eventos[i].Escolha);
+                let odds = evLst.getOdds(Eventos[i].Desporto, Eventos[i].EventoID);
+                let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`;
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto, Eventos[i].EventoID);
-                if (followers.length > 0) {
-                    let odds = evLst.getOdds(Eventos[i].Desporto, Eventos[i].EventoID);
-                    let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`;
-                    for (let j = 0; j < followers.length; j++) {
-                        notificationHandler.addBetNotification(followers[j], message);
-                    }
-                }
+                if (followers.length > 0)
+                    notificationHandler.addBetNotification(followers, message);
             }
             notificationHandler.addWalletNotification(userEmail, balanco);
             response.sendStatus(200);
@@ -187,7 +190,7 @@ class RequestHandler {
             for (let tuple of message.toNotify) {
                 console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
                 //Send email and notification
-                notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                notificationHandler.addBetNotification([tuple[0]], tuple[1]);
                 // Notify wallet
                 yield dbComms.walletOnDb(tuple[0]).then((info) => {
                     notificationHandler.addWalletNotification(tuple[0], info);
@@ -340,8 +343,8 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(fixture, "FUT", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addBetNotification(tuple[0], info); });
+                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
+                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
                         }
@@ -364,7 +367,7 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(race, "F1", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
                                     dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
@@ -387,7 +390,7 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(game, "BSK", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
                                     dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
@@ -411,7 +414,7 @@ class RequestHandler {
                             yield dbComms.finEventOnDb(game, "FUTPT", event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let tuple of message.toNotify) {
                                     console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification(tuple[0], tuple[1]);
+                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
                                     dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
                                 }
                             });
@@ -463,10 +466,7 @@ class RequestHandler {
         if (flag) {
             let followers = evLst.getGameFollowers(request.body.sport, request.body.EventoID);
             let message = `A promocao SuperOdds foi aplicada ao evento de ${request.body.sport} com id ${request.body.EventoID}`;
-            console.log(message);
-            for (let j = 0; j < followers.length; j++) {
-                notificationHandler.addBetNotification(followers[j], message);
-            }
+            notificationHandler.addBetNotification(followers, message);
             response.status(200).send("Super odds for event " + request.body.EventoID + " added");
         }
         else

@@ -115,4 +115,6 @@ interface IRequestHandler{
       removeGameFollower(request:any,response:any):void;
 
       periodicUpdate(time:number):void;
+
+      logoutFunction(request:any,response:any):void;
     }
