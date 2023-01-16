@@ -31,10 +31,10 @@ export default function Perfil(){
 
 	const width = window.innerWidth;
 
-	if(width>1000){
+
 		return(
 		<>
-		<div className = "box" style={{'margin':'25%','marginTop':'20px','paddingTop':'30px'}}>
+		<div className = "box" style={{'margin':(width>1000)?'25%':'5%','marginTop':'20px','paddingTop':'30px'}}>
 			<div className = "loginbox">
 			<div className='bemvindo'>
 				<p>Perfil</p>
@@ -53,28 +53,7 @@ export default function Perfil(){
 		</div>
 		</>
 		);
-	}
-	else{
-		return(
-		<>
-		<div className = "box" style={{'margin':'5%','marginTop':'20px','paddingTop':'30px'}}>
-			<div className = "loginbox">
-			<div className='bemvindo'>
-				<p>Perfil</p>
-			</div>
-			<p>Nome Completo:{perfil.Nome}</p>
-			<p>Email:{perfil.Email}</p>
-			<p>Data de nascimeto:{parseDate(perfil.DataNascimento)} </p>
-			<p>Nif:{perfil.NIF}</p>
-			<p>CC:{perfil.CC}</p>
-			<p>Morada:{perfil.Morada}</p>
-			<p>Telemovel:{perfil.Telemovel}</p>
+	
 
-			<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}} onClick={()=>(navigate(`/edit/${getToken()}`))}>Edit</button>
-			</div>
-		</div>
-		</>
-		);
-	}
 }
 

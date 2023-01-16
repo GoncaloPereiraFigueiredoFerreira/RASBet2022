@@ -73,39 +73,45 @@ export default function Root() {
       <header>
         <nav>
           <ul>
-            <li>    
+            <li style={{"marginRight":"10px"}}>    
               <div className="logo"> 
-                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
-                <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"15px","marginTop":"20px"}}> RASBet</p>        
+                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} 
+                    className="logoimg" style={{'margin':'5px',"marginRight":"1px"}}/>
+                <p className="logoname" style={{"marginBottom":"15px","marginTop":"20px"}}> RASBet</p>        
               </div>     
             </li>
             <li>
               <Link to='/sport/FUTPT'>
-              <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/football.png' className="sporticon"/>
               FutebolPT
               </Link>
             </li>
             <li>
               <Link to='/sport/FUT'>
-              <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/football.png' className="sporticon"/>
               Futebol
               </Link>
             </li>
             <li>
               <Link to='/sport/F1'>
-              <img alt="" src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/formula1.png' className="sporticon"/>
               Formula 1
               </Link>
             </li>
             <li>
               <Link to='/sport/BSK'>
-              <img alt="" src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
+              <img alt="" src='/basketball.png' className="sporticon"/>
               Basquetebol</Link>
+            </li>
+            <li>
+              <Link to='/sport/NFL'>
+              <img alt="" src='/Ragby.png' className="sporticon"/>
+              Ragby</Link>
             </li>
 
             {(getRole() == "apostador")?
             <div className="dropdown" style={{'marginBottom':'0'}}>
-              <img alt="" src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px','marginBottom':'0'}}/>
+              <img alt="" src='/perfil.png' className="profile" style={{'marginBottom':'0'}}/>
               <div className="dropdown-content">
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -117,7 +123,7 @@ export default function Root() {
             {(getRole() == "apostador")?
             <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]);setNotify(n)}}>
                   <a href="#" class="notification">
-                    <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
+                    <span><img alt="" src='/bell.png' className="bell"/></span>
                     <span class="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}} >
@@ -127,7 +133,7 @@ export default function Root() {
               :null}
 
             {(getRole() == "apostador")?<>
-              <li style={{"float":"right","padding":"12px",'cursor': 'pointer'}}>
+              <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
                 </button>
@@ -173,7 +179,8 @@ export default function Root() {
            <ul>
             <li>
               <div className="logo"> 
-                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} style={{'width':'50px','height':'50px','margin':'5px',"marginRight":"1px"}}/>
+                <img alt="" src='/logo.png' onClick={()=>{navigation('/');}} 
+                    className="logoimg" style={{'margin':'5px',"marginRight":"1px"}}/>
               </div>
             </li>
 
@@ -181,19 +188,19 @@ export default function Root() {
                 <div className="dropbtn">Desportos</div>
                 <div class="dropdown-content" style={{"left":"0"}}>
                   <Link to={`/sport/FUTPT`}>               
-                    <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/football.png' className="sporticon"/>
                     FutebolPT
                   </Link>                  
                   <Link to={`/sport/FUT`}>               
-                    <img alt="" src='/football.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/football.png' className="sporticon"/>
                     Futebol
                   </Link>
                   <Link to={`/sport/F1`}>               
-                    <img alt="" src='/formula1.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/formula1.png' className="sporticon"/>
                     Formula 1
                   </Link>                  
                   <Link to={`/sport/BSK`}>               
-                    <img alt="" src='/basketball.png' style={{'width':'25px','height':'25px'}}/>
+                    <img alt="" src='/basketball.png' className="sporticon"/>
                     Basquetebol
                   </Link>
                 </div>
@@ -201,7 +208,7 @@ export default function Root() {
  
              {(getRole() == "apostador")?
              <div className="dropdown">
-               <img alt="" src='/perfil.png' style={{'width':'52.5px','height':'52.5px','margin':'5px'}}/>
+               <img alt="" src='/perfil.png' className="profile"/>
                <div class="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>
@@ -215,7 +222,7 @@ export default function Root() {
 
                 <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]) ;setNotify(n)}}>
                   <a href="#" class="notification">
-                    <span><img alt="" src='/bell.png' style={{'width':'40px','height':'40px','margin':'5px','marginTop':'12.5px','border': '3px solid darkgreen'}}/></span>
+                    <span><img alt="" src='/bell.png' className="bell"/></span>
                     <span class="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}}>

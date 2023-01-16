@@ -8,7 +8,7 @@ import {parseBet,parseDate} from "../utils"
 
 export default function Empate({evento,addAposta,escolhas,follow,clickFollow}){
 	return(
-				<div className="bet-element" style={{"backgroundColor":(evento.SuperOdds)?"yellow":"white"}}>
+				<div className="bet-element" style={{"backgroundColor":(evento.SuperOdds)?"lightyellow":"white"}}>
 		            <div className="drawmatch">
 						<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
 		              	<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
@@ -22,11 +22,13 @@ export default function Empate({evento,addAposta,escolhas,follow,clickFollow}){
 				            <button className='odd-button' style={{"backgroundColor":(escolhas.includes(0))?"orange":"beige","color":(escolhas.includes(0))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
 			              	<button className='odd-button' style={{"backgroundColor":(escolhas.includes(2))?"orange":"beige","color":(escolhas.includes(2))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,2)))}>draw {evento.Odds[2].toFixed(2)}</button>
 							<button className='odd-button' style={{"backgroundColor":(escolhas.includes(1))?"orange":"beige","color":(escolhas.includes(1))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
-		            	<div>
+		            	<div style={{"display":"flex","flexDirection":"column","justifyContent":"space-between"}}>
 			            	<img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
-
+							<span class="badge">{evento.SuperOdds? "SuperOdd":null}</span>
 						</div>
+						
 					</div>
+
 	          	</div>
 	);
 }

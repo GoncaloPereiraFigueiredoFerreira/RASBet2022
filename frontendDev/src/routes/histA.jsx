@@ -46,25 +46,25 @@ export default function HistA() {
             </tr>
           {list.map((evento)=>(
 
-            <tr id={evento.Aridade} key={evento.ID} style={{'fontWeight':'normal'}}>
-              <th style={{'fontWeight':'normal'}}>{evento.Aridade}</th>
-              <th style={{'fontWeight':'normal'}}>   
+            <tr id={evento.Aridade} key={evento.ID} className='tablefont'>
+              <th className='tablefont'>{evento.Aridade}</th>
+              <th className='tablefont'>   
                 {evento.Jogos.map((jogo,ind)=>(
                   <div style={{"margin":"2px"}} key={ind.toString()}>
                       <p style={{'fontWeight':'bold'}}>{jogo.Liga}:</p>
                       <p>{jogo.Descricao}</p>            
                   </div>
                   ))}</th>
-              <th style={{'fontWeight':'normal'}}>{evento.Montante}</th>
-              <th style={{'fontWeight':'normal'}}>{parseDate(evento.DateAp)}</th>
-              <th style={{'fontWeight':'normal'}}>   
+              <th className='tablefont'>{evento.Montante}</th>
+              <th className='tablefont'>{parseDate(evento.DateAp)}</th>
+              <th className='tablefont'>   
                 {evento.Jogos.map((jogo,ind)=>(
                   <div style={{"margin":"2px"}} key={ind.toString()}>
                       <p style={{'fontWeight':'bold'}}>{jogo.Escolha}</p>          
                   </div>
                   ))}</th>
-              <th style={{'fontWeight':'normal'}}>{evento.Estado}</th>
-              <th style={{'fontWeight':'normal'}}>{evento.Odd}</th>
+              <th className='tablefont'>{evento.Estado}</th>
+              <th className='tablefont'>{evento.Odd}</th>
             </tr>
 
           ))}

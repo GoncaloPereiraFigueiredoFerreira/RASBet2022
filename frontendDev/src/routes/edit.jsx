@@ -72,34 +72,10 @@ export default function Perfil(props){
 	useEffect(()=>{if(flag)navigate(-1)});
 
 	const width = window.innerWidth;
-
-	if(width>1000){
 		return(
 		<>
-		<div className = "box" style={{'margin':'25%','marginTop':'2vh','paddingTop':'3vh'}}>
+		<div className = "box" style={{'margin':(width>1000)?'25%':'5%','marginTop':'2vh','paddingTop':'3vh'}}>
 			<div className = "loginbox">
-			<div className='bemvindo'>
-				<p>Perfil</p>
-			</div>
-			<Form onSubmit={handleSubmit}>
-				<p>Nome Completo:</p>
-				<input placeholder={perfil.Nome} onChange={handleChange} name="Nome"/>
-				<p>Morada:</p>
-				<input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
-				<p>Telemovel:</p>
-				<input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d{9}" title="São necessário 9 números"/>
-				<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}}>Save</button>
-			</Form>
-			</div>
-		</div>
-		</>
-		);
-	}
-	else{
-		return(
-			<>
-			<div className = "box" style={{'margin':'5%','marginTop':'2vh','paddingTop':'3vh'}}>
-				<div className = "loginbox">
 				<div className='bemvindo'>
 					<p>Perfil</p>
 				</div>
@@ -110,11 +86,12 @@ export default function Perfil(props){
 					<input placeholder={perfil.Morada} onChange={handleChange} name="Morada"/>
 					<p>Telemovel:</p>
 					<input placeholder={perfil.Telemovel} onChange={handleChange} name="Telemovel" pattern="\d{9}" title="São necessário 9 números"/>
-					<button className = "button" type="submit" style={{'display': 'flex','justifyContent': 'center','alignItems': 'center'}}>Save</button>
+					<button className = "button" type="submit" 
+							style={{'display': 'flex','justifyContent': 'center','alignItems': 'center',"marginTop":"10px"}}>Save</button>
 				</Form>
-				</div>
 			</div>
-			</>
+		</div>
+		</>
 		);
-	}
+	
 }
