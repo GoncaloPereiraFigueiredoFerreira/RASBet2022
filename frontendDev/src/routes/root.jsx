@@ -108,11 +108,6 @@ export default function Root() {
               <img alt="" src='/nfl.png' className="sporticon"/>
               NFL</Link>
             </li>
-            <li>
-              <Link to='/sport/NFL'>
-              <img alt="" src='/Ragby.png' className="sporticon"/>
-              Ragby</Link>
-            </li>
 
             {(getRole() == "apostador")?
             <div className="dropdown" style={{'marginBottom':'0'}}>
