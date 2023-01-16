@@ -122,9 +122,9 @@ export default function Root() {
 
             {(getRole() == "apostador")?
             <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]);setNotify(n)}}>
-                  <a href="#" class="notification">
+                  <a href="#" className="notification">
                     <span><img alt="" src='/bell.png' className="bell"/></span>
-                    <span class="badge">{notify.length==0? null:notify.length}</span>
+                    <span className="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}} >
                     {notify.map((e,ind)=>(<p style={{'cursor': 'pointer'}} key={ind}>{e}</p>))}
@@ -186,7 +186,7 @@ export default function Root() {
 
             <div className="dropdown" style={{"float":"left"}}>
                 <div className="dropbtn">Desportos</div>
-                <div class="dropdown-content" style={{"left":"0"}}>
+                <div className="dropdown-content" style={{"left":"0"}}>
                   <Link to={`/sport/FUTPT`}>               
                     <img alt="" src='/football.png' className="sporticon"/>
                     FutebolPT
@@ -213,7 +213,7 @@ export default function Root() {
              {(getRole() == "apostador")?
              <div className="dropdown">
                <img alt="" src='/perfil.png' className="profile"/>
-               <div class="dropdown-content">
+               <div className="dropdown-content">
                  <Link to={`perfil/${token}`}>Perfil</Link>
                  <Link to={`histT/${token}`}>Histórico Transações</Link>
                  <Link to={`histA/${token}`}>Histórico Apostas</Link>
@@ -225,9 +225,9 @@ export default function Root() {
              {(getRole() == "apostador")?
 
                 <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]) ;setNotify(n)}}>
-                  <a href="#" class="notification">
+                  <a href="#" className="notification">
                     <span><img alt="" src='/bell.png' className="bell"/></span>
-                    <span class="badge">{notify.length==0? null:notify.length}</span>
+                    <span className="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}}>
                     {notify.map((e)=>(<p style={{'cursor': 'pointer'}}>{e}</p>))}

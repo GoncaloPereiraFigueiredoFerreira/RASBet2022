@@ -417,14 +417,14 @@ export default function Sport(){
 					{cods.map((cod,ind)=>(
 						<div className="bet" key={cod}>
 							<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','cursor': 'pointer'}} onClick={()=>{rm_cod({Token:getToken(),Codigo:cod.Codigo});update();cods = cods.splice(ind,1);}}>x</p>
-							<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'black','font-size':'large'}}>{cod.Codigo}</p>
-							<p style={{"margin":"10px",'padding-left':'10px','fontWeight':'bold','color':'gray','font-size':'large'}}>{cod.Valor}€</p>
+							<p style={{"margin":"10px",'paddingLeft':'10px','fontWeight':'bold','color':'black','fontSize':'large'}}>{cod.Codigo}</p>
+							<p style={{"margin":"10px",'paddingLeft':'10px','fontWeight':'bold','color':'gray','fontSize':'large'}}>{cod.Valor}€</p>
 						</div>
 					))}
 					<Form onSubmit={handleSubmit}>
-						<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Código' name="Codigo" onChange={handleChange}/>
-						<input style={{'marginLeft':'5%','width':'90%','margin-top':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
-						<button style={{"margin":"3px",'width':'80%','marginLeft':'10%','margin-top':'10px','backgroundColor':'green','color':'white'}} type="subit">Criar</button>
+						<input style={{'marginLeft':'5%','width':'90%','marginTop':'10px'}} type="value" placeholder='Código' name="Codigo" onChange={handleChange}/>
+						<input style={{'marginLeft':'5%','width':'90%','marginTop':'10px'}} type="value" placeholder='Valor' name="Valor" pattern="\d*(\.\d{1,2}|)" title="Intruduza montante válido" onChange={handleChange}/>
+						<button style={{"margin":"3px",'width':'80%','marginLeft':'10%','marginTop':'10px','backgroundColor':'green','color':'white'}} type="subit">Criar</button>
 					</Form>
 					</div>
 					{(width>1000)? null:exitbuttonadmin()}
