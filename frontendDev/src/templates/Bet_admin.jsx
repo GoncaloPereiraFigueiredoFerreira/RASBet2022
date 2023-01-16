@@ -86,6 +86,7 @@ function Aux({evento,sport,update,ind}){
 					  	</>:null}
 		            </div>
 		            <p>Estado:{evento.Estado}</p>
+                <p>SuperOdd:{evento.SuperOdds.toString()}</p>
 		            <div className="drawmatchodds"style={{'width':'30%'}}>
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
 					    <p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','fontSize':'25px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>x</p>
@@ -121,6 +122,7 @@ function Aux({evento,sport,update,ind}){
 					  </>:null}
 				</div>
 					<p>Estado:{evento.Estado}</p>
+					<p>SuperOdd:{evento.SuperOdds.toString()}</p>
 				<div className="drawmatchodds">
 				  <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
 					<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d*(.\d+|)"/>
