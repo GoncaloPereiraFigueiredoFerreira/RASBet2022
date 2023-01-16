@@ -62,7 +62,21 @@ function Aux({evento,sport,update,ind}){
 
 	const width = window.innerWidth;
 
-	if(width>1000){
+	function phoneCancelButton(){
+		return(
+			<button type="button" style={{"height":"fit-content","width":"100%",'backgroundColor':'red','marginLeft':'auto','marginRight':'0','marginTop':'10px'}}
+			 onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Cancelar evento</button>
+
+		)
+	}
+
+	function computerCancelButton(){
+		return(
+			<p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','fontSize':'25px','cursor': 'pointer'}} 
+			onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>x</p>
+		)
+	}
+
 	return(
 				<div className="bet-element">
 		            <div className="drawmatch">
@@ -85,53 +99,26 @@ function Aux({evento,sport,update,ind}){
 							<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
 					  	</>:null}
 		            </div>
-		            <p>Estado:{evento.Estado}</p>
-		            <div className="drawmatchodds"style={{'width':'30%'}}>
+					<div>
+		            	<p>Estado:{evento.Estado}</p>
+						<p>SuperOdds: {(evento.SuperOdds)? "Aplied":"Not aplied"}</p>
+					</div>
+
+		            <div className="drawmatchodds" style={(width>1000)? {'width':'30%'}:{}}>
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
-					    <p style={{"margin":"0","marginRight":"10px",'float':'right','fontWeight':'bold','color':'red','fontSize':'25px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>x</p>
+						{(width>1000)? computerCancelButton():null}
 						<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d+(\.\d+|)"/>
 						{(error != "")?<p>{error}</p>:null}
-						<button style={{"height":"fit-content","width":"45%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0','float':'right'}}>Confirmar</button>
-		              </Form>
+
+						<button style={(width>1000)?
+								{"height":"fit-content","width":"45%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0','float':'right'}:
+								{"height":"fit-content","width":"100%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0'}}>Confirmar</button>
+		              	{(width>1000)? null:phoneCancelButton()}
+					  </Form>
 		            </div>
 	          	</div>
 	);
-	}
-	else{
-		return(
-			<div className="bet-element">
-				<div className="drawmatch">
 
-
-					{(evento.Tipo=="RaceEvent")?<>            
-					<img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
-					<div>
-						<p style={{'fontWeight':'bold'}}>{evento.Liga}</p>
-						<p style={{'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
-						</div>
-					</>:null}
-					  {(evento.Tipo!="RaceEvent")?<>
-						<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
-						<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
-							<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
-							<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
-							<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
-						</div>
-						<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
-					  </>:null}
-				</div>
-					<p>Estado:{evento.Estado}</p>
-				<div className="drawmatchodds">
-				  <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
-					<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d*(.\d+|)"/>
-					{(error != "")?<p>{error}</p>:null}
-					<button style={{"height":"fit-content","width":"100%",'backgroundColor':'orange','marginLeft':'auto','marginRight':'0'}} type="submit">Confirmar</button>
-					<button type="button" style={{"height":"fit-content","width":"100%",'backgroundColor':'red','marginLeft':'auto','marginRight':'0','marginTop':'10px'}} onClick={()=>{if(window.confirm("Deseja cancelar?")){if(cancelar_aposta(evento,sport)!=null);{update(ind);}}}}>Cancelar evento</button>
-				  </Form>
-				</div>
-			  </div>
-		);
-	}
 }
 
   /**

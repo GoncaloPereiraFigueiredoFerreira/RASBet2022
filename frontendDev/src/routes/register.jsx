@@ -70,8 +70,8 @@ export default function Register({set,flag}) {
   return (
     <>
       <div className="logo" onClick={()=>{navigate('/login');}} >
-        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
-        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>        
+        <img alt="" src='logo.png' className="logoimg"/>
+        <p className="logoname"> RASBet</p>        
       </div>
       <div className = "box">
         <div className = "loginbox" style={{"width":"5%"}}>
@@ -111,8 +111,8 @@ else{
   return (
     <>
       <div className="logo" onClick={()=>{navigate('/login');}}>
-        <img alt="" src='logo.png' style={{'width':'50px','height':'50px','margin':'10px',"marginRight":"1px"}}/>
-        <p style={{'display':'inline','width':'fit-content',"color":"gold","marginLeft":"0","marginBottom":"10px","marginTop":"25px"}}> RASBet</p>         
+        <img alt="" src='logo.png' className="logoimg"/>
+        <p className="logoname"> RASBet</p>         
       </div>
       <div className = "box">
         <div className = "loginbox" style={{"width":"100%"}}>

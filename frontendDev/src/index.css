@@ -44,6 +44,11 @@ button {
 button {
   color: black;
   font-weight: 500;
+  cursor: pointer;
+}
+
+#root{
+  height: 100%;
 }
 
 textarea:hover,
@@ -124,8 +129,6 @@ li a:hover{
   color: white;
 }
 
-
-
 /* Style The Dropdown Button */
 .dropbtn {
   display: block;
@@ -192,7 +195,7 @@ li a:hover{
 
 .mainpage{
   width: 100%;
-  height: auto;
+  height: 100%;
   display:flexbox;
   margin-top: 61.25px;
   content: "";
@@ -271,6 +274,38 @@ li a:hover{
     border-radius: 10px;
     justify-content: space-between;
   }
+
+  .bet-element .badge {
+    position: relative;
+    text-align: center;
+    top: -14px;
+    left: -47px;
+    height:0;
+    width:0;
+    border-radius: 10px;
+    font-size: 10px;
+    background: red;
+    color: black;
+    font-size: 18px;
+  } 
+  
+  .bet-element .badge:empty {
+     display: none;
+  }
+  
+  .sporticon{
+    position: relative;
+    width: 25px;
+    height: 25px;
+    top:5px;
+    right: 5px;
+  }
+  
+  .lisport{
+    float: right;
+    padding: 8px;
+  }
+
 }
 @media only screen and (max-width: 500px) {
   .bet-element{
@@ -283,6 +318,37 @@ li a:hover{
     background-color: white;
     border-radius: 10px;
     justify-content: space-between;
+  }
+
+  .bet-element .badge {
+    position: relative;
+    text-align: center;
+    top: -140px;
+    left: -50px;
+    height:0;
+    width:0;
+    border-radius: 10px;
+    font-size: 10px;
+    background: red;
+    color: black;
+    font-size: 18px;
+  } 
+  
+  .bet-element .badge:empty {
+     display: none;
+    }
+    
+  .sporticon{
+    position: relative;
+    width: 20px;
+    height: 20px;
+    top:1px;
+    right: 5px;
+  }
+
+  .lisport{
+    float: right;
+    padding: 12px;
   }
 }
 
@@ -473,4 +539,47 @@ tr:nth-child(even) {
 
 .notification .badge:empty {
    display: none;
+}
+
+.bell{
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  margin-top: 12.5px;
+  border: 3px solid darkgreen;
+}
+
+.profile{
+  width: 52.5px;
+  height: 52.5px;
+  margin: 5px;
+}
+
+.tablefont{
+  font-weight: normal;
+}
+
+.buttonWallet1{
+  display: none;
+  background: red;
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+}
+
+.buttonWallet2{
+  border-radius: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  width: fit-content;
+}
+
+.containerWallet{
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.inputWallet{
+  display: flex;
+  width: 100%;
 }

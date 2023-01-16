@@ -42,9 +42,9 @@ export default function HistT() {
             </tr>
             {list.lista.map((elem)=>(
             <tr id="Simples" key={elem.ID}>
-              <th style={{'fontWeight':'normal'}}>{elem.Valor}</th>
-              <th style={{'fontWeight':'normal'}}>{elem.Tipo}</th> 
-              <th style={{'fontWeight':'normal'}}>{parseDate(elem.DataTr)}</th>               
+              <th className='tablefont'>{elem.Valor}</th>
+              <th className='tablefont'>{elem.Tipo}</th> 
+              <th className='tablefont'>{parseDate(elem.DataTr)}</th>               
             </tr>
             ))}
           </table>

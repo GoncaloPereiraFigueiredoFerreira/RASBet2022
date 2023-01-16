@@ -123,10 +123,14 @@ export default function Wallet() {
           </div>
           
           <div style={{"display":"flex","flexDirection":"column"}}>
-            <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","width":"fit-content"}} onClick={()=>{on();onRet()}}>Levantar</button>
-            <button className = "button" style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","marginTop":"10px","width":"fit-content"}} onClick={()=>{on();onDep()}}>Depositar</button>
+            <button className = "button" 
+                style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","width":"fit-content"}} 
+                onClick={()=>{on();onRet()}}>Levantar</button>
+            <button className = "button" 
+                style={{"borderRadius":"10px","margin-right":"auto","marginLeft":"auto","marginTop":"10px","width":"fit-content"}} 
+                onClick={()=>{on();onDep()}}>Depositar</button>
           </div>
-          <div id="modo" style={{"display":"none","justifyContent":"center","flexDirection":"column","marginTop":"20px"}}>
+          <div id="modo" className="containerWallet" style={{"display":"none","flexDirection":"column"}}>
             <p>Selecionar modo:</p>
             <div style={{"justifyContent":"center","flexDirection":"row"}}>
               <img alt="" src="/MBway.png" style={{"margin":"auto"}} onClick={()=>{onS();onMBW()}}></img>
@@ -134,17 +138,18 @@ export default function Wallet() {
             </div>
           </div>
 
-          <div id="selected" style={{"display":"none","justifyContent":"center","marginTop":"20px"}}>
-            <Form id="selected" style={{"justifyContent":"center","marginTop":"20px"}}>
-              <input style={{"width":"100%"}} type="text" name="Valor" placeholder='Montante €' pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
+          <div id="selected" className="containerWallet" style={{"display":"none"}}>
+            <Form id="selected" className="containerWallet">
+              <input style={{"width":"100%"}} type="text" name="Valor" 
+                  placeholder='Montante €' pattern="\d*(\.\d{1,2}|)" onChange={handleChange}/>
               <div id="mbway" style={{"display":"none"}}>
-                <input style={{"display":"flex","width":"100%"}} type="text" name="Valor" placeholder='Nº de telemovel' pattern="\d*(\.\d{1,2}|)"/>
+                <input className="inputWallet" type="text" name="Valor" placeholder='Nº de telemovel' pattern="\d*(\.\d{1,2}|)"/>
               </div>
               <div id="multibanco" style={{"display":"none"}}>
-                <input style={{"display":"flex","width":"100%"}} type="text" name="Valor" placeholder='IBAN' pattern="\d*(\.\d{1,2}|)"/>
+                <input className="inputWallet" style={{"width":"100%"}} type="text" name="Valor" placeholder='IBAN' pattern="\d*(\.\d{1,2}|)"/>
               </div>
-              <button id="depositar"  style={{"display":"none","backgroundColor":"red","width":"fit-content","margin":"auto","textAlign":"center"}} onClick={()=>handleSubmit_DP()}>Depositar</button>
-              <button id="retirar"    style={{"display":"none","backgroundColor":"red","width":"fit-content","margin":"auto","textAlign":"center"}} onClick={()=>handleSubmit_LV()}>Levantar</button>
+              <button id="depositar"  className="buttonWallet1" onClick={()=>handleSubmit_DP()}>Depositar</button>
+              <button id="retirar"    className="buttonWallet1" onClick={()=>handleSubmit_LV()}>Levantar</button>
             </Form>
           </div>
 
