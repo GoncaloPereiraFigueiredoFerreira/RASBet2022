@@ -16,12 +16,11 @@ let instance: IControlEvents | IUpdateEvents | undefined = undefined;
 export class EventList implements IControlEvents,IUpdateEvents{
      eventList: { [sport: string]: {[id: string]: SportEvent | NoTieEvent | RaceEvent | TieEvent }; };
      leagues:   { [sport: string] : string[]};
-
      followers: {[sport:string] : {[id:string]:string[]}}
  
      private constructor(){
          this.eventList = {};
-         this.leagues ={};
+         this.leagues = {};
          this.followers={};
      }
 
@@ -31,7 +30,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
       * else returns the existing one
       * @returns Returns the singleton instance of this class
       */
-     static getInstance(): IControlEvents  {
+     static getControlEventsInstance(): IControlEvents  {
          if (instance == undefined){
              instance = new EventList();
          }
@@ -387,7 +386,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
       * Removes the events that have past dates (already happened)
       * @param {string} sport Sport from which to delete all past event
       */
-     removePastEvents(sport: string ){
+     removePastEvents(sport: string,except:string[] ){
          let lst = [];
          for (let event of Object.values(this.eventList[sport])){
              let date = event.getDate();
@@ -396,7 +395,7 @@ export class EventList implements IControlEvents,IUpdateEvents{
              }
          }
          for (let id of lst){
-             delete this.eventList[sport][id];
+             if (except.indexOf(id) == -1) delete this.eventList[sport][id];
          }
          
      }
@@ -441,5 +440,8 @@ export class EventList implements IControlEvents,IUpdateEvents{
      }
 
 
+     getAvailableSports(){
+         return Object.keys(this.eventList);
+     }
  }
  

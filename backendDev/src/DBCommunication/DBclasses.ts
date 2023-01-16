@@ -68,14 +68,14 @@ export class Aposta{
 
 export class Evento{
     ID: string;
-    Desporto: "FUT"|"FUTPT"|"BSK"|"F1";
+    Desporto: string;
     Resultado: number;
     Descricao: string;
     Estado: "BET"|"FIN"|"CLS";
     Liga: string;
     DataEvent: string;
     
-    constructor(evento:{ID: string, Desporto: "FUT"|"FUTPT"|"BSK"|"F1", Resultado: number, Descricao: string,Estado: "BET"|"FIN"|"CLS",Liga: string, DataEvent: string}){
+    constructor(evento:{ID: string, Desporto:string, Resultado: number, Descricao: string,Estado: "BET"|"FIN"|"CLS",Liga: string, DataEvent: string}){
         this.ID = evento.ID
         this.Desporto = evento.Desporto;
         this.Resultado = evento.Resultado;

@@ -38,7 +38,7 @@ const rspPath = cnf.get("responsePath");
             resolve();
           }})
     .catch((error:any)=>{
-      //console.error(error);
+
       reject(error);
     })})
 }

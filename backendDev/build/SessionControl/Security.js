@@ -65,7 +65,7 @@ class AuthenticationHandler {
         dbComms.deleteTokensOnDb(email).catch((e) => { console.log(e); });
     }
     generateAccessToken(userInfo) {
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' });
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
     }
 }
 exports.AuthenticationHandler = AuthenticationHandler;

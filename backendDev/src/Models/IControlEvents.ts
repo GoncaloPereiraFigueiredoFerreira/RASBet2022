@@ -56,7 +56,7 @@ interface IControlEvents{
       * @param {string} id Identifier of a sport
       * @returns Returns a JSON that the DB is ready to parse
       */
-    getEventDB(sport: string ,id: string ):  {ID : string,DataEvent : string,Descricao : string,Resultado : number,Estado : "BET" | "CLS" | "FIN",Liga :string,Desporto: "FUT"|"FUTPT"|"BSK"|"F1"};
+    getEventDB(sport: string ,id: string ):  {ID : string,DataEvent : string,Descricao : string,Resultado : number,Estado : "BET" | "CLS" | "FIN",Liga :string,Desporto:string};
 
 
     /**
@@ -121,7 +121,7 @@ interface IControlEvents{
       * Removes the events that have past dates (already happened)
       * @param {string} sport Sport from which to delete all past event
       */
-    removePastEvents(sport: string ):void;
+    removePastEvents(sport: string,except:string[]):void;
 
 
     addGameFollower(sport:string, id:string,email:string):boolean;
@@ -131,4 +131,7 @@ interface IControlEvents{
     removeGameFollower(sport:string, id:string,email:string):boolean;
 
     getGamesFollowed(sport:string,userMail:string):string[];
+
+
+    getAvailableSports():any[];
 }
