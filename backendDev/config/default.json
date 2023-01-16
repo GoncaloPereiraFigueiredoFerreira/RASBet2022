@@ -5,7 +5,9 @@
 
     "update_on_startup" : false,
 
-    "time_between_updates_in_sec": 0, 
+    "store_responses":false,
+
+    "time_between_updates_in_sec": -1, 
 
     "futebol_league_id": 
     {

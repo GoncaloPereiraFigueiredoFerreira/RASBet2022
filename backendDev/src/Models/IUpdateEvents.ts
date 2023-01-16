@@ -65,4 +65,8 @@ interface IUpdateEvents{
     * @returns Returns a list of participants in the event
     */
     getParticipants(sport: string ,id: string ):string[];
+
+
+
+    removePastEvents(sport:string,except:string[]):void;
 }

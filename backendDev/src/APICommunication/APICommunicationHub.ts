@@ -16,11 +16,11 @@ export class APICommunicationHub{
     constructor(){
         const evLst:IUpdateEvents = EventList.getUpdateEventsInstance();
         this.sportsAPIs = {}
-        this.sportsAPIs["FUT"] = new FutebolAPICommunication(evLst,rspPath);
-        this.sportsAPIs["FUTPT"] = new FutPTAPICommunication(evLst,rspPath);
-        this.sportsAPIs["F1"] = new F1APICommunication(evLst,rspPath);
-        this.sportsAPIs["BSK"] = new BasketballAPICommunication(evLst,rspPath);
-        this.sportsAPIs["NFL"] = new NFLAPICommunication(evLst,rspPath);
+        this.sportsAPIs["FUT"]  = new FutebolAPICommunication(evLst,rspPath);
+        this.sportsAPIs["FUTPT"]= new FutPTAPICommunication(evLst,rspPath);
+        this.sportsAPIs["F1"]   = new F1APICommunication(evLst,rspPath);
+        this.sportsAPIs["BSK"]  = new BasketballAPICommunication(evLst,rspPath);
+        this.sportsAPIs["NFL"]  = new NFLAPICommunication(evLst,rspPath);
         this.startup = true;
     }
 
