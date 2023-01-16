@@ -101,7 +101,12 @@ export default function Root() {
             <li>
               <Link to='/sport/BSK'>
               <img alt="" src='/basketball.png' className="sporticon"/>
-              Basquetebol</Link>
+              NBA</Link>
+            </li>
+            <li>
+              <Link to='/sport/NFL'>
+              <img alt="" src='/nfl.png' className="sporticon"/>
+              NFL</Link>
             </li>
 
             {(getRole() == "apostador")?
@@ -196,7 +201,11 @@ export default function Root() {
                   </Link>                  
                   <Link to={`/sport/BSK`}>               
                     <img alt="" src='/basketball.png' className="sporticon"/>
-                    Basquetebol
+                    NBA
+                  </Link>
+                  <Link to={`/sport/NFL`}>               
+                    <img alt="" src='/nfl.png' className="sporticon"/>
+                    NFL
                   </Link>
                 </div>
               </div>
