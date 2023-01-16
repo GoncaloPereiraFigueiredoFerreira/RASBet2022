@@ -14,20 +14,20 @@ const EventList_1 = require("./Models/EventList");
 const DBCommunication_1 = require("./DBCommunication/DBCommunication");
 const NotificationHandler_1 = require("./SessionControl/NotificationHandler");
 const Security_1 = require("./SessionControl/Security");
+const DBclasses_1 = require("./DBCommunication/DBclasses");
+const APICommunicationHub_1 = require("./APICommunication/APICommunicationHub");
 const MessageGenerator_1 = require("./MessageGenerator");
 const MsgGen = new MessageGenerator_1.MessageGenerator();
-const evLst = EventList_1.EventList.getInstance();
-const apiComms = require("./APICommunication/APICommunication");
+const evLst = EventList_1.EventList.getControlEventsInstance();
+const apiComms = new APICommunicationHub_1.APICommunicationHub();
 const dbComms = new DBCommunication_1.DBCommunication();
 const notificationHandler = NotificationHandler_1.NotificationHandler.getInstance();
 const authHandler = new Security_1.AuthenticationHandler();
 const bcrypt = require('bcrypt');
 require("dotenv").config();
-const DBclasses_1 = require("./DBCommunication/DBclasses");
 class RequestHandler {
     constructor() {
-        this.updateEvents = this.updateEvents.bind(this);
-        this.updateResults = this.updateResults.bind(this);
+        //this.updateEvents = this.updateEvents.bind(this);
     }
     dummyFunction(request, response) {
         response.status(200).send("Dummy here! But connection worked!");
@@ -329,138 +329,43 @@ class RequestHandler {
             for (let event of result) {
                 evLst.addEventFromDB(event.Desporto, event.Liga, event.ID, event.Descricao, event.Resultado, event.Estado, event.DataEvent);
             }
-            apiComms.initEventLst();
+            apiComms.fetchEvents();
         }).catch((e) => {
             console.log(e);
         });
     }
-    /**
-     * Handler responsible for updating all the results of football events
-     */
-    updateFUTEvents() {
-        return new Promise((resolve, reject) => {
-            dbComms.startedEventOnDb("FUT").then((result) => {
-                apiComms.updateFutResults(result).then(() => __awaiter(this, void 0, void 0, function* () {
-                    for (let fixture of result) {
-                        let event = evLst.getEventDB("FUT", fixture);
-                        if (event["Estado"] == "FIN") {
-                            yield dbComms.finEventOnDb(fixture, "FUT", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let triple of message.toNotify) {
-                                    const notification = MsgGen.generateMessage(triple[1], triple[2]);
-                                    notificationHandler.addBetNotification([triple[0]], notification);
-                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
-                                }
-                            });
-                        }
-                    }
-                    resolve();
-                }));
-            });
-        });
-    }
-    /**
-     * Handler responsible for updating all the results of F1 events
-     */
-    updateF1Events() {
-        return new Promise((resolve, reject) => {
-            dbComms.startedEventOnDb("F1").then((result) => {
-                apiComms.updateF1Results(result).then(() => __awaiter(this, void 0, void 0, function* () {
-                    for (let race of result) {
-                        let event = evLst.getEventDB("F1", race);
+    updateEvents() {
+        let availableSports = evLst.getAvailableSports();
+        for (let sport of availableSports) {
+            dbComms.startedEventOnDb(sport).then((result) => {
+                apiComms.updateEvents(sport, result).then(() => __awaiter(this, void 0, void 0, function* () {
+                    for (let eventID of result) {
+                        let event = evLst.getEventDB(sport, eventID);
                         if (event["Estado"] == "FIN")
-                            yield dbComms.finEventOnDb(race, "F1", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let triple of message.toNotify) {
-                                    let notification = MsgGen.generateMessage(triple[1], triple[2]);
-                                    notificationHandler.addBetNotification([triple[0]], notification);
-                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
-                                }
-                            });
-                    }
-                    resolve();
-                }));
-            });
-        });
-    }
-    /**
-     * Handler responsible for updating all the results of basketball events
-     */
-    updateBSKEvents() {
-        return new Promise((resolve, reject) => {
-            dbComms.startedEventOnDb("BSK").then((result) => {
-                apiComms.updateBSKResults(result).then(() => __awaiter(this, void 0, void 0, function* () {
-                    for (let game of result) {
-                        let event = evLst.getEventDB("BSK", game);
-                        if (event["Estado"] == "FIN") {
-                            yield dbComms.finEventOnDb(game, "BSK", event["Resultado"], event["Descricao"]).then((message) => {
+                            yield dbComms.finEventOnDb(eventID, sport, event["Resultado"], event["Descricao"]).then((message) => {
                                 for (let triple of message.toNotify) {
                                     const notification = MsgGen.generateMessage(triple[1], triple[2]);
                                     notificationHandler.addBetNotification([triple[0]], notification);
-                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
+                                    dbComms.walletOnDb(triple[0]).then((info) => {
+                                        notificationHandler.addWalletNotification(triple[0], info);
+                                    });
                                 }
                             });
-                        }
                     }
-                    resolve();
                 }));
             });
-        });
-    }
-    /**
-     * Handler responsible for updating all the results of portuguese football events
-     */
-    updateFUTPTEvents() {
-        return new Promise((resolve, reject) => {
-            dbComms.startedEventOnDb("FUTPT").then((result) => {
-                apiComms.updateFUTPTResults(result).then(() => __awaiter(this, void 0, void 0, function* () {
-                    for (let game of result) {
-                        let event = evLst.getEventDB("FUTPT", game);
-                        if (event["Estado"] == "FIN") {
-                            yield dbComms.finEventOnDb(game, "FUTPT", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let triple of message.toNotify) {
-                                    const notification = MsgGen.generateMessage(triple[1], triple[2]);
-                                    notificationHandler.addBetNotification([triple[0]], notification);
-                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
-                                }
-                            });
-                        }
-                    }
-                    resolve();
-                }));
-            });
-        });
-    }
-    /**
-     *
-     * Method responsible for updating the results of events
-     */
-    updateResults() {
-        return new Promise((resolve, reject) => {
-            this.updateFUTEvents().then(() => evLst.removePastEvents("FUT"));
-            this.updateF1Events().then(() => evLst.removePastEvents("F1"));
-            this.updateBSKEvents().then(() => evLst.removePastEvents("BSK"));
-            this.updateFUTPTEvents().then(() => evLst.removePastEvents("FUTPT"));
-            resolve();
-        });
+        }
     }
     periodicUpdate(time) {
         return __awaiter(this, void 0, void 0, function* () {
             if (time > 0) {
                 setTimeout(() => {
                     console.log('Update Time!');
-                    this.updateEvents(undefined, undefined);
+                    this.updateEvents();
                     this.periodicUpdate(time);
                 }, time * 1000);
             }
         });
-    }
-    /**
-     * Method responsible for updating the events in the backend
-     */
-    updateEvents(request, response) {
-        this.updateResults();
-        apiComms.updateEventLst();
-        if (request != undefined)
-            response.sendStatus(200);
     }
     /**
      * Method responsible for activating super odds in a event

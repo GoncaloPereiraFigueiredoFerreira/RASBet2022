@@ -40,7 +40,6 @@ class AuthenticationHandler {
     }
     generateRefreshToken(userInfo, dbComms) {
         const refreshToken = jwt.sign(userInfo, process.env.REFRESH_TOKEN_SECRET);
-        console.log(refreshToken);
         return dbComms.pushTokenOnDb(refreshToken, userInfo.userInfo.email).then(() => {
             return Promise.resolve(refreshToken);
         }).catch((e) => {
@@ -65,7 +64,7 @@ class AuthenticationHandler {
         dbComms.deleteTokensOnDb(email).catch((e) => { console.log(e); });
     }
     generateAccessToken(userInfo) {
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' });
     }
 }
 exports.AuthenticationHandler = AuthenticationHandler;

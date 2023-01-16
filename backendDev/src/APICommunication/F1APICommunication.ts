@@ -41,10 +41,11 @@ export class F1APICommunication implements SportAPICommunication{
     }
 
 
-    updateEvents(events:string[]):void{
+    async updateEvents(events:string[]):Promise<void>{
+
         for (let race of events){
             let req = this.genRaceRankingsRequest(API_AUTH_KEY,race);
-            makeRequest(req,(response:any)=>{
+            await makeRequest(req,(response:any)=>{
                 this.parseUpdateResponse(response);
             }).catch(()=>
             console.error("Error in the formula one update request")

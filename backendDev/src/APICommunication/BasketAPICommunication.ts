@@ -30,10 +30,10 @@ export class BasketballAPICommunication implements SportAPICommunication{
         }else console.error("Error: Can't find cached file for Basketball events")
     }
 
-    updateEvents(events:string[]):void{
+    async updateEvents(events:string[]):Promise<void>{
         for (let game of events){
             let req = this.generateUpdateRequest(API_AUTH_KEY,game);
-            makeRequest(req,(response:any)=>{
+            await makeRequest(req,(response:any)=>{
                 this.parseUpdateResponse(response);
 
             }

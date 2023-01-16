@@ -420,7 +420,8 @@ export class RequestHandler implements IRequestHandler{
     updateEvents(){
         let availableSports = evLst.getAvailableSports();
         for (let sport of availableSports){
-            dbComms.startedEventOnDb(sport).then((result:any)=>{         
+            dbComms.startedEventOnDb(sport).then((result:any)=>{
+                  
                 apiComms.updateEvents(sport,result).then(async()=>{
                     for (let eventID of result){
                         let event = evLst.getEventDB(sport,eventID);

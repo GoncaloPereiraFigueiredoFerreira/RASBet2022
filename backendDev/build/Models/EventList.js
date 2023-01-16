@@ -22,7 +22,7 @@ class EventList {
      * else returns the existing one
      * @returns Returns the singleton instance of this class
      */
-    static getInstance() {
+    static getControlEventsInstance() {
         if (instance == undefined) {
             instance = new EventList();
         }
@@ -357,7 +357,7 @@ class EventList {
      * Removes the events that have past dates (already happened)
      * @param {string} sport Sport from which to delete all past event
      */
-    removePastEvents(sport) {
+    removePastEvents(sport, except) {
         let lst = [];
         for (let event of Object.values(this.eventList[sport])) {
             let date = event.getDate();
@@ -366,7 +366,8 @@ class EventList {
             }
         }
         for (let id of lst) {
-            delete this.eventList[sport][id];
+            if (except.indexOf(id.toString()) == -1)
+                delete this.eventList[sport][id];
         }
     }
     ///////FOLLOWING GAME FUNCTIONALITY
@@ -407,6 +408,9 @@ class EventList {
             }
         }
         return false;
+    }
+    getAvailableSports() {
+        return Object.keys(this.eventList);
     }
 }
 exports.EventList = EventList;

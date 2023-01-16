@@ -33,7 +33,7 @@ export class APICommunicationHub{
     }
     
     updateEvents(sport:string,events:string[]){
-        return new Promise<void>((resolve,reject) =>{ this.sportsAPIs[sport].updateEvents(events); resolve()});
+        return new Promise<void>(async(resolve,reject) =>{ await this.sportsAPIs[sport].updateEvents(events); resolve()});
     }
     
 
