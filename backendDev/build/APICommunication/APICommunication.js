@@ -48,7 +48,6 @@ function makeRequest(request, callback) {
             }
         })
             .catch((error) => {
-            //console.error(error);
             reject(error);
         });
     });

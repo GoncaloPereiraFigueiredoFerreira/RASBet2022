@@ -46,7 +46,7 @@ export class AuthenticationHandler{
 
     generateRefreshToken(userInfo:any,dbComms:DBCommunication){
         const refreshToken = jwt.sign(userInfo,process.env.REFRESH_TOKEN_SECRET)
-        console.log(refreshToken)
+       
         return dbComms.pushTokenOnDb(refreshToken,userInfo.userInfo.email).then(()=>{
             return Promise.resolve(refreshToken)
         }).catch((e:any)=>{

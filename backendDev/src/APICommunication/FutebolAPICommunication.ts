@@ -39,7 +39,7 @@ export class FutebolAPICommunication implements SportAPICommunication{
             }else console.error("Unable to fetch the cached file for "+ futLeagueDic[league] +" futebol league")
         }
     }
-
+    // TODO - FALta fazer o async
     updateEvents(events:string[]):void{
         let fixturesLst = []
         let fixtureStr = ""

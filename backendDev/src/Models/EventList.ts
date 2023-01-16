@@ -395,7 +395,8 @@ export class EventList implements IControlEvents,IUpdateEvents{
              }
          }
          for (let id of lst){
-             if (except.indexOf(id) == -1) delete this.eventList[sport][id];
+           
+             if (except.indexOf(id.toString()) == -1) delete this.eventList[sport][id];
          }
          
      }

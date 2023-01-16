@@ -31,9 +31,9 @@ export class FutPTAPICommunication implements SportAPICommunication{
         }else console.error("Unable to fetch the cached file for FUTPT")
     }
 
-    updateEvents(events:string[]):void{
+    async updateEvents(events:string[]):Promise<void>{
         let req = this.generateUpdateRequest();
-        makeRequest(req,(response:any)=>{
+        await makeRequest(req,(response:any)=>{
             this.parseUpdateResponse(response,events);
 
         }).catch((error)=>{console.log("Error in FutPT events update")});

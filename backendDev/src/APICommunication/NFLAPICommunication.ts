@@ -30,10 +30,10 @@ export class NFLAPICommunication implements SportAPICommunication{
         }else console.error("Error: Can't find cached file for NFL events")
     }
 
-    updateEvents(events:string[]):void{
+    async updateEvents(events:string[]):Promise<void>{
         for (let game of events){
-            let req = this.generateUpdateRequest(API_AUTH_KEY,2022);
-            makeRequest(req,(response:any)=>{
+            let req = this.generateUpdateRequest(API_AUTH_KEY,game);
+            await makeRequest(req,(response:any)=>{
                 this.parseUpdateResponse(response);
 
             }
@@ -60,11 +60,11 @@ export class NFLAPICommunication implements SportAPICommunication{
           };
     }
 
-    generateUpdateRequest(api_key:string,season:number){
+    generateUpdateRequest(api_key:string,id:string){
         return {
             method: 'GET',
             url: 'https://v1.american-football.api-sports.io/games',
-            qs: {season: season},
+            qs: {id: id},
             headers: {
               'x-rapidapi-host': 'v1.american-football.api-sports.io',
               'x-rapidapi-key': api_key
