@@ -3,6 +3,8 @@ const fs = require('fs');
 const EventList = require('../Models/EventList');
 import {Apostador,Transacao,Promocao,Aposta,Evento} from './DBclasses';
 import { IDBCommunication } from './IDBCommunication';
+import { MessageGenerator } from '../MessageGenerator';
+const MsgGen = new MessageGenerator()
 const bcrypt = require('bcrypt')
 
 export class DBCommunication implements IDBCommunication{
@@ -343,7 +345,7 @@ export class DBCommunication implements IDBCommunication{
                                     return this.mysqlQuery('Select Montante,ApostadorID FROM Aposta WHERE ID=?',message[i].ApostaID)
                                 }).then((result:any)=>{
                                     
-                                    toNotify.push([result[0].ApostadorID,`A aposta com ID ${message[i].ApostaID} foi fechada`])
+                                    toNotify.push([result[0].ApostadorID,[eventID,desporto,message[i].ApostaID],MsgGen.CLOSED_GAME_MESSAGE])
                                     
                                     return this.transactionOnDb({"ApostadorID":result[0].ApostadorID,"Valor":(result[0].Montante),"Tipo":"Refund","DataTr":this.getToday()})
                                 }).catch((e)=>{return Promise.reject(e)})
@@ -390,7 +392,7 @@ export class DBCommunication implements IDBCommunication{
                                                     return this.mysqlQuery('Select Montante,ApostadorID,Odd FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                                 }).then((m:any)=>{
                                                    
-                                                    toNotify.push([m[0].ApostadorID,`Parabéns ganhou a aposta com ID ${mes[i].ApostaID}!!`])
+                                                    toNotify.push([m[0].ApostadorID,mes[i].ApostaID,MsgGen.WON_GAME_MESSAGE])
                                                  
                                                     return this.transactionOnDb({"ApostadorID":m[0].ApostadorID,"Valor":(m[0].Montante)*(m[0].Odd),"Tipo":"Aposta_Ganha","DataTr":this.getToday()})
                                                 }).catch((e)=>{
@@ -408,7 +410,7 @@ export class DBCommunication implements IDBCommunication{
                                             
                                             return this.mysqlQuery('SELECT ApostadorID FROM Aposta WHERE ID=?',mes[i].ApostaID)
                                         }).then((message:any)=>{
-                                            toNotify.push([message[0].ApostadorID,`Perdeu a aposta com ID ${mes[i].ApostaID}`])
+                                            toNotify.push([message[0].ApostadorID, mes[i].ApostaID,MsgGen.LOST_GAME_MESSAGE])
                                         }).catch((e)=>{
                                             return Promise.reject(e)
                                         })

@@ -2,6 +2,8 @@ import {EventList} from "./Models/EventList";
 import {DBCommunication} from "./DBCommunication/DBCommunication";
 import {NotificationHandler} from "./SessionControl/NotificationHandler";
 import { AuthenticationHandler } from "./SessionControl/Security";
+import { MessageGenerator } from './MessageGenerator';
+const MsgGen = new MessageGenerator()
 const evLst:IControlEvents = EventList.getInstance()
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication();
@@ -159,10 +161,10 @@ export class RequestHandler implements IRequestHandler{
                 evLst.updateOddBet(Eventos[i].Desporto,Eventos[i].EventoID,aposta.Montante,Eventos[i].Escolha);
 
                 let odds = evLst.getOdds(Eventos[i].Desporto,Eventos[i].EventoID)
-                let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`
-
+                const notification = MsgGen.generateMessage([Eventos[i].Desporto,Eventos[i].EventoID,odds],MsgGen.ODDS_CHANGED_MESSAGE)
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto,Eventos[i].EventoID)
-                if( followers.length > 0)notificationHandler.addBetNotification(followers,message)
+                console.log(notification)
+                if( followers.length > 0)notificationHandler.addBetNotification(followers,notification)
 
                 
             }
@@ -222,15 +224,18 @@ export class RequestHandler implements IRequestHandler{
         
             evLst.closeEvent(Desporto,EventoID);
             
-            for(let tuple of message.toNotify){
-                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
+            for(let triple of message.toNotify){
+
+                const notification= MsgGen.generateMessage(triple[1],triple[2])
+
+                console.log(`Email ${triple[0]} e mensagem ${triple[1]}`)
                 //Send email and notification
-                notificationHandler.addBetNotification([tuple[0]],tuple[1]);
+                notificationHandler.addBetNotification([triple[0]],notification);
                 
                 // Notify wallet
-                await dbComms.walletOnDb(tuple[0]).then((info:number)=>{
+                await dbComms.walletOnDb(triple[0]).then((info:number)=>{
                 
-                    notificationHandler.addWalletNotification(tuple[0],info);
+                    notificationHandler.addWalletNotification(triple[0],info);
                 }).catch((e)=>{
                     
                     return Promise.reject(e)
@@ -422,11 +427,13 @@ export class RequestHandler implements IRequestHandler{
                     let event = evLst.getEventDB("FUT",fixture);
                     if (event["Estado"] == "FIN"){
                         await dbComms.finEventOnDb(fixture,"FUT",event["Resultado"],event["Descricao"]).then((message:any)=>{
-                            for(let tuple of message.toNotify){
-                                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notificationHandler.addBetNotification([tuple[0]],tuple[1]);
+                            for(let triple of message.toNotify){
                                
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
+
+                                const notification = MsgGen.generateMessage(triple[1],triple[2])
+                                notificationHandler.addBetNotification([triple[0]],notification);
+                               
+                                dbComms.walletOnDb(triple[0]).then((info:any)=>{notificationHandler.addWalletNotification(triple[0],info);});
                     
                             }
                         });
@@ -451,11 +458,12 @@ export class RequestHandler implements IRequestHandler{
                     let event = evLst.getEventDB("F1",race);
                     if (event["Estado"]  == "FIN")
                         await dbComms.finEventOnDb(race,"F1",event["Resultado"],event["Descricao"]).then((message:any)=>{
-                            for(let tuple of message.toNotify){
-                                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notificationHandler.addBetNotification([tuple[0]],tuple[1]);
+                            for(let triple of message.toNotify){
                                
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
+                                let notification = MsgGen.generateMessage(triple[1],triple[2])
+                                notificationHandler.addBetNotification([triple[0]],notification);
+                               
+                                dbComms.walletOnDb(triple[0]).then((info:any)=>{notificationHandler.addWalletNotification(triple[0],info);});
                             }
                         });
                         
@@ -480,14 +488,14 @@ export class RequestHandler implements IRequestHandler{
                     let event = evLst.getEventDB("BSK",game);
                     if (event["Estado"] == "FIN"){
                         await dbComms.finEventOnDb(game,"BSK",event["Resultado"],event["Descricao"]).then((message:any)=>{
-                            for(let tuple of message.toNotify){
-                                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notificationHandler.addBetNotification([tuple[0]],tuple[1]);
+                            for(let triple of message.toNotify){
                               
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
+                                const notification = MsgGen.generateMessage(triple[1],triple[2])
+                                notificationHandler.addBetNotification([triple[0]],notification);
+                                
+                                dbComms.walletOnDb(triple[0]).then((info:any)=>{notificationHandler.addWalletNotification(triple[0],info);});
                             }
-                        });
-                        
+                        }); 
                     }
                 }
                 resolve();
@@ -508,11 +516,12 @@ export class RequestHandler implements IRequestHandler{
                     let event= evLst.getEventDB("FUTPT",game);
                     if (event["Estado"] == "FIN"){
                         await dbComms.finEventOnDb(game,"FUTPT",event["Resultado"],event["Descricao"]).then((message:any)=>{
-                            for(let tuple of message.toNotify){
-                                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`)
-                                notificationHandler.addBetNotification([tuple[0]],tuple[1]);
+                            for(let triple of message.toNotify){
+                             
+                                const notification = MsgGen.generateMessage(triple[1],triple[2])
+                                notificationHandler.addBetNotification([triple[0]],notification);
                                 
-                                dbComms.walletOnDb(tuple[0]).then((info:any)=>{notificationHandler.addWalletNotification(tuple[0],info);});
+                                dbComms.walletOnDb(triple[0]).then((info:any)=>{notificationHandler.addWalletNotification(triple[0],info);});
                             }
                         });
                         
@@ -570,8 +579,9 @@ export class RequestHandler implements IRequestHandler{
         if (flag) {
 
             let followers = evLst.getGameFollowers(request.body.sport,request.body.EventoID)
-            let message = `A promocao SuperOdds foi aplicada ao evento de ${request.body.sport} com id ${request.body.EventoID}`
-            notificationHandler.addBetNotification(followers,message)
+            const notification = MsgGen.generateMessage([request.body.sport,request.body.EventoID],MsgGen.SUPPER_ODDS_MESSAGE)
+        
+            notificationHandler.addBetNotification(followers,notification)
             
             response.status(200).send("Super odds for event "+request.body.EventoID+ " added");
         }

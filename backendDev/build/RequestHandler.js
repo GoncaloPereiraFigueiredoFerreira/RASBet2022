@@ -14,6 +14,8 @@ const EventList_1 = require("./Models/EventList");
 const DBCommunication_1 = require("./DBCommunication/DBCommunication");
 const NotificationHandler_1 = require("./SessionControl/NotificationHandler");
 const Security_1 = require("./SessionControl/Security");
+const MessageGenerator_1 = require("./MessageGenerator");
+const MsgGen = new MessageGenerator_1.MessageGenerator();
 const evLst = EventList_1.EventList.getInstance();
 const apiComms = require("./APICommunication/APICommunication");
 const dbComms = new DBCommunication_1.DBCommunication();
@@ -137,10 +139,11 @@ class RequestHandler {
             for (let i = 0; i < Eventos.length; i++) {
                 evLst.updateOddBet(Eventos[i].Desporto, Eventos[i].EventoID, aposta.Montante, Eventos[i].Escolha);
                 let odds = evLst.getOdds(Eventos[i].Desporto, Eventos[i].EventoID);
-                let message = `O evento de ${Eventos[i].Desporto} com id ${Eventos[i].EventoID} mudou as suas odds para ${odds}`;
+                const notification = MsgGen.generateMessage([Eventos[i].Desporto, Eventos[i].EventoID, odds], MsgGen.ODDS_CHANGED_MESSAGE);
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto, Eventos[i].EventoID);
+                console.log(notification);
                 if (followers.length > 0)
-                    notificationHandler.addBetNotification(followers, message);
+                    notificationHandler.addBetNotification(followers, notification);
             }
             notificationHandler.addWalletNotification(userEmail, balanco);
             response.sendStatus(200);
@@ -187,13 +190,14 @@ class RequestHandler {
         let Desporto = request.body.Evento.Desporto;
         dbComms.closeEventOnDb(EventoID, Desporto).then((message) => __awaiter(this, void 0, void 0, function* () {
             evLst.closeEvent(Desporto, EventoID);
-            for (let tuple of message.toNotify) {
-                console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
+            for (let triple of message.toNotify) {
+                const notification = MsgGen.generateMessage(triple[1], triple[2]);
+                console.log(`Email ${triple[0]} e mensagem ${triple[1]}`);
                 //Send email and notification
-                notificationHandler.addBetNotification([tuple[0]], tuple[1]);
+                notificationHandler.addBetNotification([triple[0]], notification);
                 // Notify wallet
-                yield dbComms.walletOnDb(tuple[0]).then((info) => {
-                    notificationHandler.addWalletNotification(tuple[0], info);
+                yield dbComms.walletOnDb(triple[0]).then((info) => {
+                    notificationHandler.addWalletNotification(triple[0], info);
                 }).catch((e) => {
                     return Promise.reject(e);
                 });
@@ -341,10 +345,10 @@ class RequestHandler {
                         let event = evLst.getEventDB("FUT", fixture);
                         if (event["Estado"] == "FIN") {
                             yield dbComms.finEventOnDb(fixture, "FUT", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let tuple of message.toNotify) {
-                                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
+                                for (let triple of message.toNotify) {
+                                    const notification = MsgGen.generateMessage(triple[1], triple[2]);
+                                    notificationHandler.addBetNotification([triple[0]], notification);
+                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
                                 }
                             });
                         }
@@ -365,10 +369,10 @@ class RequestHandler {
                         let event = evLst.getEventDB("F1", race);
                         if (event["Estado"] == "FIN")
                             yield dbComms.finEventOnDb(race, "F1", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let tuple of message.toNotify) {
-                                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
+                                for (let triple of message.toNotify) {
+                                    let notification = MsgGen.generateMessage(triple[1], triple[2]);
+                                    notificationHandler.addBetNotification([triple[0]], notification);
+                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
                                 }
                             });
                     }
@@ -388,10 +392,10 @@ class RequestHandler {
                         let event = evLst.getEventDB("BSK", game);
                         if (event["Estado"] == "FIN") {
                             yield dbComms.finEventOnDb(game, "BSK", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let tuple of message.toNotify) {
-                                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
+                                for (let triple of message.toNotify) {
+                                    const notification = MsgGen.generateMessage(triple[1], triple[2]);
+                                    notificationHandler.addBetNotification([triple[0]], notification);
+                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
                                 }
                             });
                         }
@@ -412,10 +416,10 @@ class RequestHandler {
                         let event = evLst.getEventDB("FUTPT", game);
                         if (event["Estado"] == "FIN") {
                             yield dbComms.finEventOnDb(game, "FUTPT", event["Resultado"], event["Descricao"]).then((message) => {
-                                for (let tuple of message.toNotify) {
-                                    console.log(`Email ${tuple[0]} e mensagem ${tuple[1]}`);
-                                    notificationHandler.addBetNotification([tuple[0]], tuple[1]);
-                                    dbComms.walletOnDb(tuple[0]).then((info) => { notificationHandler.addWalletNotification(tuple[0], info); });
+                                for (let triple of message.toNotify) {
+                                    const notification = MsgGen.generateMessage(triple[1], triple[2]);
+                                    notificationHandler.addBetNotification([triple[0]], notification);
+                                    dbComms.walletOnDb(triple[0]).then((info) => { notificationHandler.addWalletNotification(triple[0], info); });
                                 }
                             });
                         }
@@ -465,8 +469,8 @@ class RequestHandler {
         let flag = evLst.superOdds(request.body.sport, request.body.EventoID, request.body.multiplier);
         if (flag) {
             let followers = evLst.getGameFollowers(request.body.sport, request.body.EventoID);
-            let message = `A promocao SuperOdds foi aplicada ao evento de ${request.body.sport} com id ${request.body.EventoID}`;
-            notificationHandler.addBetNotification(followers, message);
+            const notification = MsgGen.generateMessage([request.body.sport, request.body.EventoID], MsgGen.SUPPER_ODDS_MESSAGE);
+            notificationHandler.addBetNotification(followers, notification);
             response.status(200).send("Super odds for event " + request.body.EventoID + " added");
         }
         else
