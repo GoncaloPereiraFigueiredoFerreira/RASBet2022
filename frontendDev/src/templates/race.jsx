@@ -66,7 +66,7 @@ export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
               <button style={{"height":"fitContent",'backgroundColor':'orange','marginTop':'0','marginRight':'10px','marginBottom':'auto','marginLeft':'auto'}} onClick={()=>(off())} type="button">Sair</button>
           </div>
 
-          <button type="button" style={{"marginBottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>
+          <button type="button" style={{"margin":"auto"}} onClick={()=>(on())}>Escolher Aposta</button>
           <div style={{"display":"flex","flexDirection":"column","justifyContent":"space-between"}}>
 			      <img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
             {evento.SuperOdds? badge():null}
