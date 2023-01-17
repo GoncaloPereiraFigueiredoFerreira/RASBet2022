@@ -24,7 +24,7 @@ export default function NPags({paginas,func,atual}){
 
 	return(
 		<>
-			<p>{m.map((e,ind)=>(<button style={{"backgroundColor":((e==atual)?"Red":"Grey")}} onClick={()=>(func(e))} key={e}>{e+1}</button>))}</p>
+			<p>{m.map((e,ind)=>(<button style={{"backgroundColor":((e==atual)?"Red":"Grey"),"padding":"2px"}} onClick={()=>(func(e))} key={e}>{e+1}</button>))}</p>
 		</>
 		);
 }

@@ -31,10 +31,18 @@ export default function SemEmpate({evento,addAposta,escolhas,follow,clickFollow}
 					<p className="betinfo">{parseDate(evento.Data)}</p>
 		        </div>
 	            <div className="drawmatchodds">
-				  <button className="odd-button" style={{"backgroundColor":(escolhas.includes(0))?"orange":"beige","color":(escolhas.includes(0))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
-	              <button className="odd-button" style={{"backgroundColor":(escolhas.includes(1))?"orange":"beige","color":(escolhas.includes(1))?"white":"black"}} onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
-				  	<div style={{"display":"flex","flexDirection":"column","justifyContent":"space-between"}}>
-			        	<img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
+					<button className="odd-button" 
+						style={(!evento.SuperOdds)?
+							{"backgroundColor":(escolhas.includes(0))?"orange":"beige","color":(escolhas.includes(0))?"white":"black"}:
+							{"backgroundColor":(escolhas.includes(0))?"purple":"plum","color":(escolhas.includes(0))?"white":"black"}} 
+							onClick={()=>(addAposta(parseBet(evento,0)))}>home {evento.Odds[0].toFixed(2)}</button>
+					<button className="odd-button" 
+						style={(!evento.SuperOdds)?
+							{"backgroundColor":(escolhas.includes(1))?"orange":"beige","color":(escolhas.includes(1))?"white":"black"}:
+							{"backgroundColor":(escolhas.includes(1))?"purple":"plum","color":(escolhas.includes(1))?"white":"black"}} 
+							onClick={()=>(addAposta(parseBet(evento,1)))}>away {evento.Odds[1].toFixed(2)}</button>
+					<div style={{"display":"flex","flexDirection":"column","justifyContent":"space-between"}}>
+						<img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
 						{evento.SuperOdds? badge():null}
 					</div>
 				</div>

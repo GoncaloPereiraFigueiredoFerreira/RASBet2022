@@ -56,7 +56,7 @@ function Aux({evento,sport,update,ind}){
 			setError("")
 		}
 		else{
-			setError("Intruduza um valor")
+			setError("Introduza um valor")
 		}
 	}
 
@@ -105,7 +105,7 @@ function Aux({evento,sport,update,ind}){
 					</div>
 
 		            <div className="drawmatchodds" style={(width>1000)? {'width':'30%'}:{}}>
-		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between'}}>
+		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between','color':'red'}}>
 						{(width>1000)? computerCancelButton():null}
 						<input type="number" step="0.01" style={{"marginBottom":"10px","width":"100%"}} name="multiplier" placeholder="Super Odds" min="0.01" onChange={handleChange} pattern="\d+(\.\d+|)"/>
 						{(error != "")?<p>{error}</p>:null}
