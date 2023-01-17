@@ -57,10 +57,10 @@ export default function HistA() {
                   ))}</th>
               <th className='tablefont'>{evento.Montante}</th>
               <th className='tablefont'>{parseDate(evento.DateAp)}</th>
-              <th className='tablefont'>   
+              <th className='tablefont' style={{"height":"","display":"flex","flexDirection":"column","justifyContent":"space-around","gap":"calc(5px + 0.75vw)"}}>   
                 {evento.Jogos.map((jogo,ind)=>(
                   <div style={{"margin":"2px"}} key={ind.toString()}>
-                      <p style={{'fontWeight':'bold'}}>{jogo.Escolha}</p>          
+                      <p style={{'fontWeight':'bold'}}>{jogo.Escolha}</p>   
                   </div>
                   ))}</th>
               <th className='tablefont'>{evento.Estado}</th>
