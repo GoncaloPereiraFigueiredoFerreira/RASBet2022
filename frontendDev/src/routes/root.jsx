@@ -83,7 +83,7 @@ export default function Root() {
             <li>
               <Link to='/sport/FUTPT'>
               <img alt="" src='/football.png' className="sporticon"/>
-              FutebolPT
+              1ª Liga
               </Link>
             </li>
             <li>
