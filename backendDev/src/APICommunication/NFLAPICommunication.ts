@@ -19,7 +19,7 @@ export class NFLAPICommunication implements SportAPICommunication{
         makeRequest(req, (response:any)=>{
             this.parseFetchResponse(response);
             if (STORE_RES) fs.writeFile(this.filePath, JSON.stringify(response), { flag: 'w+' }, () =>{});
-        }).catch((error)=>{console.warn("Error in nfl events fetch. Trying to read cached files!"); this.fetchCachedEvents()});
+        }).catch((error)=>{console.warn("Error in nfl events fetch: "+error+"\n\nTrying to read cached files!"); this.fetchCachedEvents()});
     }
 
     fetchCachedEvents(): void {
@@ -52,7 +52,7 @@ export class NFLAPICommunication implements SportAPICommunication{
 
             method: 'GET',
             url: 'https://v1.american-football.api-sports.io/games',
-            qs: {season: season},
+            params: { "league": 1, "season":season},
             headers: {
               'x-rapidapi-host': 'v1.american-football.api-sports.io',
               'x-rapidapi-key': api_key
@@ -64,7 +64,7 @@ export class NFLAPICommunication implements SportAPICommunication{
         return {
             method: 'GET',
             url: 'https://v1.american-football.api-sports.io/games',
-            qs: {id: id},
+            params: {id: id},
             headers: {
               'x-rapidapi-host': 'v1.american-football.api-sports.io',
               'x-rapidapi-key': api_key
@@ -80,12 +80,14 @@ export class NFLAPICommunication implements SportAPICommunication{
         }
         else{
             for (let game of response.response){
-                if (game.status.short == "NS"){
-                   let id = game.id;
-                   let date = game.date;
+                if (game.game.status.short == "NS"){
+                   let id = game.game.id;
+                   let date = game.game.date.date;
                    let league = "NFL";
                    let team1 = game.teams.home.name;
+                   if (team1== null) team1= "TBD";
                    let team2 = game.teams.away.name;
+                   if (team2== null) team2= "TBD";
                    let logo1 = game.teams.home.logo;
                    let logo2 = game.teams.away.logo;
                    this.eventList.addTieEventFromAPI("NFL",league,id,date,team1,team2,logo1,logo2,1,1,1)
