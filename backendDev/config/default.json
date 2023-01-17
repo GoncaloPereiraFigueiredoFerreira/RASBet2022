@@ -7,7 +7,7 @@
 
     "store_responses":false,
 
-    "time_between_updates_in_sec": 30, 
+    "time_between_updates_in_sec": -1, 
 
     "futebol_league_id": 
     {

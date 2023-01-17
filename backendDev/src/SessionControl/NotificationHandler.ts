@@ -17,8 +17,10 @@ export class NotificationHandler implements INotificationHandler{
      */
     addGate(email:string,gate:any){
         this.sessions[email] = gate;
+      
         if (this.notificationQueue[email]!=undefined)
-        {
+        {   
+           
             while (this.notificationQueue[email].length >0){
                 let notification= this.notificationQueue[email].pop();
                 if (notification!= undefined) this.sendNotification(email,notification);
@@ -41,8 +43,11 @@ export class NotificationHandler implements INotificationHandler{
             if (this.sessions[emails[j]]!=undefined){
                 this.sendNotification(emails[j],obj);
             }else{
-                if (this.notificationQueue[emails[j]]!=undefined) this.notificationQueue[emails[j]]=[];
+              
+                if (this.notificationQueue[emails[j]]==undefined) this.notificationQueue[emails[j]]=[];
+
                 this.notificationQueue[emails[j]].push(obj);
+              
             }
             //emailHandler.sendMail(emails[j],"Atualização do estado da Aposta",msg,null);
         }

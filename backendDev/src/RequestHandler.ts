@@ -124,10 +124,10 @@ export class RequestHandler implements IRequestHandler{
     logoutFunction(request:any,response:any){
 
         const refreshToken= request.body.refreshToken;
-        console.log('QUERO DAR LOGOUT')
+      
         
         dbComms.logoutOnDb(refreshToken).then((email:string)=>{
-            console.log(`DEI LOGFOUT ${email}`)
+           
             notificationHandler.closeConnection(email)
         }).catch((e)=>{
         

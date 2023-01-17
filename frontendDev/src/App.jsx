@@ -27,33 +27,6 @@ function App(){
 	const [notify,setNotify] = useState([]);
 	const defaultPage = ((getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>);
 
-	
-	function getWindowDimensions() {
-		const { innerWidth: width, innerHeight: height } = window;
-		return {
-		  width,
-		  height
-		};
-	}
-	  
-	function useWindowDimensions() {
-		const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-	 
-		useEffect(() => {
-		  function handleResize() {
-			setWindowDimensions(getWindowDimensions());
-		}
-	  
-		  window.addEventListener('resize', handleResize);
-		  return () => window.removeEventListener('resize', handleResize);
-		}, []);
-	  
-		return windowDimensions;
-	}
-
-
-	useWindowDimensions();
-
 
 	const router = createBrowserRouter([
 	  {

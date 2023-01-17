@@ -35,7 +35,7 @@ class NotificationHandler {
                 this.sendNotification(emails[j], obj);
             }
             else {
-                if (this.notificationQueue[emails[j]] != undefined)
+                if (this.notificationQueue[emails[j]] == undefined)
                     this.notificationQueue[emails[j]] = [];
                 this.notificationQueue[emails[j]].push(obj);
             }

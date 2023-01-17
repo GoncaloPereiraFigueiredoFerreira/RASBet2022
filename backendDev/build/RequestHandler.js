@@ -104,9 +104,7 @@ class RequestHandler {
      */
     logoutFunction(request, response) {
         const refreshToken = request.body.refreshToken;
-        console.log('QUERO DAR LOGOUT');
         dbComms.logoutOnDb(refreshToken).then((email) => {
-            console.log(`DEI LOGFOUT ${email}`);
             notificationHandler.closeConnection(email);
         }).catch((e) => {
             response.status(400).send(e);
