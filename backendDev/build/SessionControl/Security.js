@@ -40,7 +40,7 @@ class AuthenticationHandler {
     }
     generateRefreshToken(userInfo, dbComms) {
         const refreshToken = jwt.sign(userInfo, process.env.REFRESH_TOKEN_SECRET);
-        return dbComms.pushTokenOnDb(refreshToken, userInfo.userInfo.email).then(() => {
+        return dbComms.pushTokenOnDb(refreshToken, userInfo.userInfo.email, userInfo.userInfo.role).then(() => {
             return Promise.resolve(refreshToken);
         }).catch((e) => {
             return Promise.reject(e);
@@ -48,23 +48,19 @@ class AuthenticationHandler {
     }
     refreshAccessToken(refreshToken, dbComms) {
         return dbComms.getTokenOnDb(refreshToken).then((result) => {
-            if (!result) {
+            if (result.length == 0) {
                 return Promise.resolve(null);
             }
-            return (jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, Info) => {
-                if (err)
-                    return Promise.resolve(null);
-                return Promise.resolve(this.generateAccessToken({ userInfo: { email: Info.userInfo.email, role: Info.userInfo.role } }));
-            }));
+            return (Promise.resolve(this.generateAccessToken({ userInfo: { email: result.Email, role: result.URole } })));
         }).catch((e) => {
             return Promise.reject(e);
         });
     }
-    delete(email, dbComms) {
-        dbComms.deleteTokensOnDb(email).catch((e) => { console.log(e); });
-    }
+    // delete(email:string,dbComms:DBCommunication){
+    //     dbComms.deleteTokensOnDb(email).catch((e:any)=>{console.log(e)})
+    // }
     generateAccessToken(userInfo) {
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' });
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
     }
 }
 exports.AuthenticationHandler = AuthenticationHandler;
