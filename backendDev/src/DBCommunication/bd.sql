@@ -5,7 +5,7 @@ USE RASBET;
 
 CREATE TABLE IF NOT EXISTS Funcionario (
     Email VARCHAR(75) NOT NULL UNIQUE,
-    PlvPasse VARCHAR(200) NOT NULL,
+    PlvPasse VARCHAR(300) NOT NULL,
     FRole ENUM("Admin","Special"),
     PRIMARY KEY(Email)
 );
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Apostador (
     Morada VARCHAR(120) NOT NULL,
     DataNascimento DATE NOT NULL,
     Balance decimal(15,2) NOT NULL,
-    PlvPasse VARCHAR(200) NOT NULL,
+    PlvPasse VARCHAR(300) NOT NULL,
     CC VARCHAR(8) NOT NULL UNIQUE,
     PRIMARY KEY(Email)   
 );
@@ -88,9 +88,9 @@ CREATE TABLE IF NOT EXISTS Aposta_Evento(
 );
 
 CREATE TABLE IF NOT EXISTS RefreshTokens(
-    Email VARCHAR(75) NOT NULL,
-    URole VARCHAR(15) NOT NULL,
-    Token VARCHAR(200) NOT NULL,
+    Email VARCHAR(150) NOT NULL,
+    URole VARCHAR(20) NOT NULL,
+    Token VARCHAR(300) NOT NULL,
     PRIMARY KEY(Token)
 );
 

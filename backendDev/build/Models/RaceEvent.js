@@ -45,7 +45,7 @@ class RaceEvent extends SportEvent {
      * @param {number} multiplier
      */
     superOdds(multiplier) {
-        this.PlayerOdds.map((x) => x * multiplier);
+        this.PlayerOdds = this.PlayerOdds.map((x) => x * multiplier);
         this.SuperOdds = true;
     }
     /**

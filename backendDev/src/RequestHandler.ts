@@ -34,23 +34,33 @@ export class RequestHandler implements IRequestHandler{
      * 
      */
     async registerFunction(request:any,response:any){
-
+       
         let apostador = new Apostador(request.body)
+       
         apostador.PlvPasse = await bcrypt.hash(apostador.PlvPasse,10)
-        apostador.Balance=0
         
+        apostador.Balance=0
+       
         const userInfo = {
             userInfo:{
                 email:apostador.Email,
                 role:'apostador'
             }
         }
+       
         dbComms.registerOnDb(apostador).then(()=>{
+           
             const token = authHandler.generateAccessToken(userInfo)
-            const refreshToken = authHandler.generateRefreshToken(userInfo,dbComms)
-            //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
-            response.status(200).send({"Token":token,"RefreshToken":refreshToken})
+            
+            return  authHandler.generateRefreshToken(userInfo,dbComms).then((refreshToken)=>{
+               
+                //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
+                response.status(200).send({"Token":token,"RefreshToken":refreshToken})
+
+            })
+            
         }).catch((message:any)=>{
+            
             response.status(400).send(message)
         })
     }
@@ -114,8 +124,13 @@ export class RequestHandler implements IRequestHandler{
     logoutFunction(request:any,response:any){
 
         const refreshToken= request.body.refreshToken;
+        console.log('QUERO DAR LOGOUT')
         
-        dbComms.logoutOnDb(refreshToken).catch((e)=>{
+        dbComms.logoutOnDb(refreshToken).then((email:string)=>{
+            console.log(`DEI LOGFOUT ${email}`)
+            notificationHandler.closeConnection(email)
+        }).catch((e)=>{
+        
             response.status(400).send(e)
         })
         
@@ -126,9 +141,7 @@ export class RequestHandler implements IRequestHandler{
      * Function that deals with a http request to refresh the ACCESS_TOKEN 
      */
     refreshTokenFunction(request:any,response:any){
-        //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        console.log('refreshTokenFunction')
-        console.log(request.body.refreshtoken)
+        
         authHandler.refreshAccessToken(request.body.refreshtoken,dbComms).then((accessToken:any)=>{
             if(accessToken==null) response.sendStatus(400)
             else response.status(200).send({'AccessToken':accessToken})
@@ -172,7 +185,7 @@ export class RequestHandler implements IRequestHandler{
                 let odds = evLst.getOdds(Eventos[i].Desporto,Eventos[i].EventoID)
                 const notification = MsgGen.generateMessage([Eventos[i].Desporto,Eventos[i].EventoID,odds],MsgGen.ODDS_CHANGED_MESSAGE)
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto,Eventos[i].EventoID)
-                console.log(notification)
+             
                 if( followers.length > 0)notificationHandler.addBetNotification(followers,notification)
 
                 
@@ -237,7 +250,6 @@ export class RequestHandler implements IRequestHandler{
 
                 const notification= MsgGen.generateMessage(triple[1],triple[2])
 
-                console.log(`Email ${triple[0]} e mensagem ${triple[1]}`)
                 //Send email and notification
                 notificationHandler.addBetNotification([triple[0]],notification);
                 
@@ -523,11 +535,6 @@ export class RequestHandler implements IRequestHandler{
         
         notificationHandler.addGate(userEmail,response);
         dbComms.walletOnDb(userEmail).then((info:any)=>{notificationHandler.addWalletNotification(userEmail,info);});
-        request.on('close', () => {
-            console.log('DEU close')
-            //authHandler.delete(userEmail,dbComms);
-            notificationHandler.closeConnection(userEmail);
-        });
         
     }
 

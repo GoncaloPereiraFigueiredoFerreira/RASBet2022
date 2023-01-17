@@ -159,7 +159,13 @@ class DBCommunication {
     }
     logoutOnDb(refreshToken) {
         return new Promise((resolve, reject) => {
-            this.mysqlQuery('DELETE FROM RefreshTokens WHERE Token=?', [refreshToken]).catch((e) => {
+            let email = "";
+            this.mysqlQuery('SELECT Email FROM RefreshTokens WHERE Token=?', [refreshToken]).then((result) => {
+                email = result[0].Email;
+                return this.mysqlQuery('DELETE FROM RefreshTokens WHERE Token=?', [refreshToken]);
+            }).then(() => {
+                resolve(email);
+            }).catch((e) => {
                 reject(e);
             });
         });

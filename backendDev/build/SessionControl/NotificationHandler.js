@@ -48,7 +48,7 @@ class NotificationHandler {
      */
     closeConnection(email) {
         //removes from token from sessions
-        //delete this.sessions[token]
+        delete this.sessions[email];
     }
     /**
      * Send a SSE to a user

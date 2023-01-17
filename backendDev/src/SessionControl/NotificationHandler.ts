@@ -56,7 +56,7 @@ export class NotificationHandler implements INotificationHandler{
     closeConnection(email:string){
         
         //removes from token from sessions
-        //delete this.sessions[token]
+        delete this.sessions[email]
     }
 
     /**

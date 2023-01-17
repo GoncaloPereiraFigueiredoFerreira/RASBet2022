@@ -159,10 +159,18 @@ export class DBCommunication implements IDBCommunication{
         })
     }
 
-    logoutOnDb(refreshToken:string){
+    logoutOnDb(refreshToken:string):Promise<string>{
         return new Promise((resolve,reject)=>{
-            
-            this.mysqlQuery('DELETE FROM RefreshTokens WHERE Token=?',[refreshToken]).catch((e)=>{
+            let email=""
+            this.mysqlQuery('SELECT Email FROM RefreshTokens WHERE Token=?',[refreshToken]).then((result:any)=>{
+                email=result[0].Email
+                
+                return this.mysqlQuery('DELETE FROM RefreshTokens WHERE Token=?',[refreshToken])
+
+            }).then(()=>{
+                resolve(email)
+            }).catch((e)=>{
+                
                 reject(e)
             })
         })

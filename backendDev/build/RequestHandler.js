@@ -49,9 +49,10 @@ class RequestHandler {
             };
             dbComms.registerOnDb(apostador).then(() => {
                 const token = authHandler.generateAccessToken(userInfo);
-                const refreshToken = authHandler.generateRefreshToken(userInfo, dbComms);
-                //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
-                response.status(200).send({ "Token": token, "RefreshToken": refreshToken });
+                return authHandler.generateRefreshToken(userInfo, dbComms).then((refreshToken) => {
+                    //response.status(200).send({"AccessToken":token,"RefreshToken":refreshToken})
+                    response.status(200).send({ "Token": token, "RefreshToken": refreshToken });
+                });
             }).catch((message) => {
                 response.status(400).send(message);
             });
@@ -103,7 +104,11 @@ class RequestHandler {
      */
     logoutFunction(request, response) {
         const refreshToken = request.body.refreshToken;
-        dbComms.logoutOnDb(refreshToken).catch((e) => {
+        console.log('QUERO DAR LOGOUT');
+        dbComms.logoutOnDb(refreshToken).then((email) => {
+            console.log(`DEI LOGFOUT ${email}`);
+            notificationHandler.closeConnection(email);
+        }).catch((e) => {
             response.status(400).send(e);
         });
     }
@@ -111,9 +116,6 @@ class RequestHandler {
      * Function that deals with a http request to refresh the ACCESS_TOKEN
      */
     refreshTokenFunction(request, response) {
-        //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
-        console.log('refreshTokenFunction');
-        console.log(request.body.refreshtoken);
         authHandler.refreshAccessToken(request.body.refreshtoken, dbComms).then((accessToken) => {
             if (accessToken == null)
                 response.sendStatus(400);
@@ -149,7 +151,6 @@ class RequestHandler {
                 let odds = evLst.getOdds(Eventos[i].Desporto, Eventos[i].EventoID);
                 const notification = MsgGen.generateMessage([Eventos[i].Desporto, Eventos[i].EventoID, odds], MsgGen.ODDS_CHANGED_MESSAGE);
                 let followers = evLst.getGameFollowers(Eventos[i].Desporto, Eventos[i].EventoID);
-                console.log(notification);
                 if (followers.length > 0)
                     notificationHandler.addBetNotification(followers, notification);
             }
@@ -200,7 +201,6 @@ class RequestHandler {
             evLst.closeEvent(Desporto, EventoID);
             for (let triple of message.toNotify) {
                 const notification = MsgGen.generateMessage(triple[1], triple[2]);
-                console.log(`Email ${triple[0]} e mensagem ${triple[1]}`);
                 //Send email and notification
                 notificationHandler.addBetNotification([triple[0]], notification);
                 // Notify wallet
@@ -438,11 +438,6 @@ class RequestHandler {
         response.setHeader('Access-Control-Allow-Origin', "*");
         notificationHandler.addGate(userEmail, response);
         dbComms.walletOnDb(userEmail).then((info) => { notificationHandler.addWalletNotification(userEmail, info); });
-        request.on('close', () => {
-            console.log('DEU close');
-            //authHandler.delete(userEmail,dbComms);
-            notificationHandler.closeConnection(userEmail);
-        });
     }
 }
 exports.RequestHandler = RequestHandler;
