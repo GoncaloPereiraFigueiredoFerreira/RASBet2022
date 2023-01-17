@@ -110,11 +110,24 @@ interface IRequestHandler{
        */
       refreshTokenFunction(request:any,response:any):void;
 
+
+      /**
+       * Method that add a follower to an event
+       */
       addGameFollower(request:any,response:any):void;
 
+      /**
+       * Method that removes a follower from an event
+       */
       removeGameFollower(request:any,response:any):void;
 
+      /**
+       * Method that updates the state of the events periodically
+       */
       periodicUpdate(time:number):void;
 
+      /**
+       * Function that logouts a user
+       */
       logoutFunction(request:any,response:any):void;
     }

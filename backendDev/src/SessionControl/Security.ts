@@ -4,21 +4,13 @@ import {DBCommunication} from "../DBCommunication/DBCommunication";
 
 export class AuthenticationHandler{
     
-
+    /**
+     * MiddleWare Method that verifies the given ACCESS_TOKEN
+     */
     authenticateToken(req:any,res:any,next:any){
         
         const token = req.headers.accesstoken?req.headers.accesstoken:(req.query.token?req.query.token:null)
         
-
-        /*const token = req.query.ApostadorID? req.query.ApostadorID:
-                     (req.query.token? req.query.token: 
-                     (req.query.Token? req.query.Token: 
-                     (req.body.Token? req.body.Token:
-                     (req.body.token? req.body.token: 
-                     (req.body.ApostadorID? req.body.ApostadorID:
-                     (req.body.Aposta.ApostadorID? req.body.Aposta.ApostadorID: null))))))*/
-                     
-        //console.log(`Authentication: ${token}`)
         if(token == null) return res.sendStatus(401)
     
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err:any,Info:any)=>{
@@ -31,6 +23,9 @@ export class AuthenticationHandler{
         })
     }
 
+    /**
+     * MiddleWare Method that verifies if who made the request is allowed to do so
+     */
     verifyRoles(...allowedRoles:any){
         return(req:any,res:any,next:any)=>{
             if(!req?.role) return res.sendStatus(401)
@@ -43,42 +38,43 @@ export class AuthenticationHandler{
         }
     }
 
-
+    /**
+     * Method to generate a REFRESH_TOKEN and push it to the DB
+     */
     generateRefreshToken(userInfo:any,dbComms:DBCommunication){
         const refreshToken = jwt.sign(userInfo,process.env.REFRESH_TOKEN_SECRET)
        
-        return dbComms.pushTokenOnDb(refreshToken,userInfo.userInfo.email).then(()=>{
+        return dbComms.pushTokenOnDb(refreshToken,userInfo.userInfo.email,userInfo.userInfo.role).then(()=>{
             return Promise.resolve(refreshToken)
         }).catch((e:any)=>{
             return Promise.reject(e)
         })
-        
-       
     }
 
+    /**
+     * Method that gives a new ACCESS_TOKEN if given REFRESH_TOKEN is in DB
+     */
     refreshAccessToken(refreshToken:string,dbComms:DBCommunication){
         return dbComms.getTokenOnDb(refreshToken).then((result:any)=>{
-            if(!result){
+            if(result.length==0){
                 return Promise.resolve(null)
             }
-            return (jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err:any,Info:any)=>{
-                if(err) return Promise.resolve(null)
-                return Promise.resolve(this.generateAccessToken({userInfo:{email:Info.userInfo.email,role:Info.userInfo.role}}))
-            }))
+            return ( Promise.resolve(this.generateAccessToken({userInfo:{email:result.Email,role:result.URole}})))
         }).catch((e:any)=>{
             return Promise.reject(e)
         })
-        
-       
     }
 
-    delete(email:string,dbComms:DBCommunication){
+    // delete(email:string,dbComms:DBCommunication){
 
-        dbComms.deleteTokensOnDb(email).catch((e:any)=>{console.log(e)})
-    }
+    //     dbComms.deleteTokensOnDb(email).catch((e:any)=>{console.log(e)})
+    // }
     
+    /**
+     * Method that generates an ACCESS_TOKEN
+     */
     generateAccessToken(userInfo:any){
-        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'600s'})
+        return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET,{expiresIn:'10s'})
     }
 
 }

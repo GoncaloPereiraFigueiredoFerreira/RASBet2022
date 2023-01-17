@@ -108,6 +108,9 @@ export class RequestHandler implements IRequestHandler{
         })
     }
 
+    /**
+     * Function that deals with a http request to logout 
+     */
     logoutFunction(request:any,response:any){
 
         const refreshToken= request.body.refreshToken;
@@ -119,9 +122,13 @@ export class RequestHandler implements IRequestHandler{
     }
 
   
-
+    /**
+     * Function that deals with a http request to refresh the ACCESS_TOKEN 
+     */
     refreshTokenFunction(request:any,response:any){
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
+        console.log('refreshTokenFunction')
+        console.log(request.body.refreshtoken)
         authHandler.refreshAccessToken(request.body.refreshtoken,dbComms).then((accessToken:any)=>{
             if(accessToken==null) response.sendStatus(400)
             else response.status(200).send({'AccessToken':accessToken})
@@ -313,7 +320,7 @@ export class RequestHandler implements IRequestHandler{
     profileInfoFunction(request:any,response:any){
       
         let userEmail = request.email
-        console.log(`ProfileInfoFunction: ${userEmail}`)
+       
         
         dbComms.profileInfoOnDb(userEmail).then((message:any)=>{
             
@@ -416,7 +423,9 @@ export class RequestHandler implements IRequestHandler{
     }
 
 
-
+    /**
+     * Function that deals with a http request to updateEvents
+     */
     updateEvents(){
         let availableSports = evLst.getAvailableSports();
         for (let sport of availableSports){
@@ -436,7 +445,9 @@ export class RequestHandler implements IRequestHandler{
 
 
 
-
+    /**
+     * Method that updates events periodically
+     */
     async periodicUpdate(time:number){
         if (time > 0){
             setTimeout(() => {
@@ -473,7 +484,9 @@ export class RequestHandler implements IRequestHandler{
         response.status(200).send(evLst.getOdds(request.body.sport,request.body.EventoID))
     }
 
-
+    /**
+     * Function that deals with a http request to add a follower to a game
+     */
     addGameFollower(request:any,response:any){
         let userEmail = request.email
         let sport = request.body.sport;
@@ -482,6 +495,10 @@ export class RequestHandler implements IRequestHandler{
         if (flag) response.status(200).send("Follow adicionado");
         else response.status(200).send("Follow Não adicionado");
     }
+
+    /**
+     * Function that deals with a http request to remove a follower from a game
+     */
     removeGameFollower(request:any,response:any):void{
         let userEmail = request.email
         let sport = request.body.sport;
@@ -508,7 +525,7 @@ export class RequestHandler implements IRequestHandler{
         dbComms.walletOnDb(userEmail).then((info:any)=>{notificationHandler.addWalletNotification(userEmail,info);});
         request.on('close', () => {
             console.log('DEU close')
-            authHandler.delete(userEmail,dbComms);
+            //authHandler.delete(userEmail,dbComms);
             notificationHandler.closeConnection(userEmail);
         });
         

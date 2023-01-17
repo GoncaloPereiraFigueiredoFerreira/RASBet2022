@@ -98,14 +98,22 @@ class RequestHandler {
             response.status(400).send(message);
         });
     }
+    /**
+     * Function that deals with a http request to logout
+     */
     logoutFunction(request, response) {
         const refreshToken = request.body.refreshToken;
         dbComms.logoutOnDb(refreshToken).catch((e) => {
             response.status(400).send(e);
         });
     }
+    /**
+     * Function that deals with a http request to refresh the ACCESS_TOKEN
+     */
     refreshTokenFunction(request, response) {
         //const accessToken = authHandler.refreshAccessToken(request.headers.refreshtoken)
+        console.log('refreshTokenFunction');
+        console.log(request.body.refreshtoken);
         authHandler.refreshAccessToken(request.body.refreshtoken, dbComms).then((accessToken) => {
             if (accessToken == null)
                 response.sendStatus(400);
@@ -254,7 +262,6 @@ class RequestHandler {
      */
     profileInfoFunction(request, response) {
         let userEmail = request.email;
-        console.log(`ProfileInfoFunction: ${userEmail}`);
         dbComms.profileInfoOnDb(userEmail).then((message) => {
             response.status(200).send(message);
         }).catch((message) => {
@@ -334,6 +341,9 @@ class RequestHandler {
             console.log(e);
         });
     }
+    /**
+     * Function that deals with a http request to updateEvents
+     */
     updateEvents() {
         let availableSports = evLst.getAvailableSports();
         for (let sport of availableSports) {
@@ -356,6 +366,9 @@ class RequestHandler {
             });
         }
     }
+    /**
+     * Method that updates events periodically
+     */
     periodicUpdate(time) {
         return __awaiter(this, void 0, void 0, function* () {
             if (time > 0) {
@@ -387,6 +400,9 @@ class RequestHandler {
     getOdds(request, response) {
         response.status(200).send(evLst.getOdds(request.body.sport, request.body.EventoID));
     }
+    /**
+     * Function that deals with a http request to add a follower to a game
+     */
     addGameFollower(request, response) {
         let userEmail = request.email;
         let sport = request.body.sport;
@@ -397,6 +413,9 @@ class RequestHandler {
         else
             response.status(200).send("Follow Não adicionado");
     }
+    /**
+     * Function that deals with a http request to remove a follower from a game
+     */
     removeGameFollower(request, response) {
         let userEmail = request.email;
         let sport = request.body.sport;
@@ -421,7 +440,7 @@ class RequestHandler {
         dbComms.walletOnDb(userEmail).then((info) => { notificationHandler.addWalletNotification(userEmail, info); });
         request.on('close', () => {
             console.log('DEU close');
-            authHandler.delete(userEmail, dbComms);
+            //authHandler.delete(userEmail,dbComms);
             notificationHandler.closeConnection(userEmail);
         });
     }
