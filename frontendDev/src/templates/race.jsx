@@ -27,8 +27,19 @@ export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
     document.getElementById("overlay").style.display = "none";
   }
 
+	function badge(){
+		return(
+		<span className="badge">
+			<div style={{"display":"flex",'flexDirection':'row'}}>
+				SuperOdd
+				<img alt="" src="/medal.png" className="badgeimg" style={{"height":"50px"}}></img>
+			</div>
+		</span>
+		)
+	}
+
   return(<>
-  		<div className="bet-element" key={evento.EventoId.toString()} style={{"backgroundColor":(evento.SuperOdds)?"lightyellow":"white"}}>
+  		<div className="bet-element" key={evento.EventoId.toString()} style={{"backgroundColor":"white"}}>
           <div className="racematch">
             <img alt="" src={evento.Logos[evento.Participantes.length]} style={{"padding":"10px",'height':'110px'}}/>
             <div>
@@ -58,7 +69,7 @@ export default function Race({evento,addAposta,escolhas,follow,clickFollow}){
           <button type="button" style={{"marginBottom":"5px"}} onClick={()=>(on())}>Escolher Aposta</button>
           <div style={{"display":"flex","flexDirection":"column","justifyContent":"space-between"}}>
 			      <img src={(follow)?'/follow_on.png':'/follow_off.png'} style={{"height":"30px","cursor":"pointer"}} onClick={()=>(clickFollow(follow,evento.EventoId))}/>
-            <span class="badge">{evento.SuperOdds? "SuperOdd":null}</span>
+            {evento.SuperOdds? badge():null}
           </div>
       </div></>
   );

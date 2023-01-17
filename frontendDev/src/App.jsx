@@ -1,5 +1,5 @@
 import {createBrowserRouter,RouterProvider,Navigate} from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 import ErrorPage from './error-page.jsx'
 
@@ -26,6 +26,35 @@ function App(){
 	const [flag,setFlag] = useState(false);
 	const [notify,setNotify] = useState([]);
 	const defaultPage = ((getRole())?<Navigate to="sport/FUTPT"/>:<Navigate to="login"/>);
+
+	
+	function getWindowDimensions() {
+		const { innerWidth: width, innerHeight: height } = window;
+		return {
+		  width,
+		  height
+		};
+	}
+	  
+	function useWindowDimensions() {
+		const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+	 
+		useEffect(() => {
+		  function handleResize() {
+			setWindowDimensions(getWindowDimensions());
+		}
+	  
+		  window.addEventListener('resize', handleResize);
+		  return () => window.removeEventListener('resize', handleResize);
+		}, []);
+	  
+		return windowDimensions;
+	}
+
+
+	useWindowDimensions();
+
+
 	const router = createBrowserRouter([
 	  {
 	    path: "/",

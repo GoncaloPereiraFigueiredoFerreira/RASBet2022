@@ -48,13 +48,13 @@ export default function SemEmpate({evento,sportid,update,ind}){
 	return(
 		  <div className="bet-element">
 		    <div className="drawmatch">
-					<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
+					<p className="betinfo">{evento.Liga}</p>
 		      <div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 						<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 		        <p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 						<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 		      </div>
-					<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
+					<p className="betinfo">{parseDate(evento.Data)}</p>
 		    </div>
         <div className="drawmatchodds">
 	        <Form onSubmit={handleSubmit} style={{'display':'flex','flexDirection':'row'}}>

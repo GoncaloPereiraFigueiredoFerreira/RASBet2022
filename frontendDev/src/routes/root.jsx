@@ -116,6 +116,7 @@ export default function Root() {
                 <Link to={`perfil/${token}`}>Perfil</Link>
                 <Link to={`histT/${token}`}>Histórico Transações</Link>
                 <Link to={`histA/${token}`}>Histórico Apostas</Link>
+                {(width>1100)? null:<Link to={`wallet/${token}`}>Carteira: {myWallet.Valor}€</Link>}
                 <Link to={`login`} onClick={()=>{logout_request();clear_storage();events.close()}}>Ir para login</Link>
               </div>
             </div>:null}
@@ -132,7 +133,7 @@ export default function Root() {
                 </div>
               :null}
 
-            {(getRole() == "apostador")?<>
+            {(getRole() == "apostador" & width>1100)?<>
               <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€
@@ -144,7 +145,7 @@ export default function Root() {
             <>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
                 <button onClick={()=>{logout_request();clear_storage();navigation(`login`);}}>
-                  Ir para Login
+                  {(width>1100)? "Ir para Login":"Sair"}
                 </button>
               </li>
               <li style={{"float":"right","padding":"8px","paddingTop":"12px"}}>
