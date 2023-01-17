@@ -270,7 +270,7 @@ li a:hover{
 }
 
 
-@media only screen and (min-width: 1000px) {
+@media only screen and (min-width: 501px) {
   .bet-element{
     display: flex;
     margin:20px;
@@ -321,7 +321,7 @@ li a:hover{
   }
 
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 500px) {
   .bet-element{
     display: flex;
     flex-direction: column;
@@ -351,7 +351,7 @@ li a:hover{
   .badgeimg{
     position: relative;
     width:50px;
-    top: -40px;
+    top: -20px;
     left: 60px;
   }
   
