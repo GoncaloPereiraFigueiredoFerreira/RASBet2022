@@ -587,6 +587,9 @@ class DBCommunication {
             });
         });
     }
+    /**
+     * Method that inserts a REFRESH_TOKEN in the DB
+     */
     pushTokenOnDb(token, email, role) {
         return new Promise((resolve, reject) => {
             this.mysqlQuery("INSERT INTO RefreshTokens(Email,URole,Token) VALUES (?,?,?)", [email, role, token]).then((result) => {
@@ -596,6 +599,9 @@ class DBCommunication {
             });
         });
     }
+    /**
+     * Method that returns the role and email associated to a RefreshToken
+     */
     getTokenOnDb(token) {
         return new Promise((resolve, reject) => {
             this.mysqlQuery("SELECT URole,Email FROM RefreshTokens WHERE Token=?", [token]).then((result) => {
@@ -605,6 +611,9 @@ class DBCommunication {
             });
         });
     }
+    /**
+     * Method that deletes a RFRESH_TOKEN from the DB
+     */
     deleteTokensOnDb(email) {
         return new Promise((resolve, reject) => {
             this.mysqlQuery("DELETE FROM RefreshTokens WHERE Email = ?", [email]).then((result) => {

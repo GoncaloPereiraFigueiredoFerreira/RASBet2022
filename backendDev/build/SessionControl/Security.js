@@ -4,16 +4,11 @@ exports.AuthenticationHandler = void 0;
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 class AuthenticationHandler {
+    /**
+     * MiddleWare Method that verifies the given ACCESS_TOKEN
+     */
     authenticateToken(req, res, next) {
         const token = req.headers.accesstoken ? req.headers.accesstoken : (req.query.token ? req.query.token : null);
-        /*const token = req.query.ApostadorID? req.query.ApostadorID:
-                     (req.query.token? req.query.token:
-                     (req.query.Token? req.query.Token:
-                     (req.body.Token? req.body.Token:
-                     (req.body.token? req.body.token:
-                     (req.body.ApostadorID? req.body.ApostadorID:
-                     (req.body.Aposta.ApostadorID? req.body.Aposta.ApostadorID: null))))))*/
-        //console.log(`Authentication: ${token}`)
         if (token == null)
             return res.sendStatus(401);
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, Info) => {
@@ -25,6 +20,9 @@ class AuthenticationHandler {
             next();
         });
     }
+    /**
+     * MiddleWare Method that verifies if who made the request is allowed to do so
+     */
     verifyRoles(...allowedRoles) {
         return (req, res, next) => {
             if (!(req === null || req === void 0 ? void 0 : req.role))
@@ -38,6 +36,9 @@ class AuthenticationHandler {
             next();
         };
     }
+    /**
+     * Method to generate a REFRESH_TOKEN and push it to the DB
+     */
     generateRefreshToken(userInfo, dbComms) {
         const refreshToken = jwt.sign(userInfo, process.env.REFRESH_TOKEN_SECRET);
         return dbComms.pushTokenOnDb(refreshToken, userInfo.userInfo.email, userInfo.userInfo.role).then(() => {
@@ -46,6 +47,9 @@ class AuthenticationHandler {
             return Promise.reject(e);
         });
     }
+    /**
+     * Method that gives a new ACCESS_TOKEN if given REFRESH_TOKEN is in DB
+     */
     refreshAccessToken(refreshToken, dbComms) {
         return dbComms.getTokenOnDb(refreshToken).then((result) => {
             if (result.length == 0) {
@@ -59,6 +63,9 @@ class AuthenticationHandler {
     // delete(email:string,dbComms:DBCommunication){
     //     dbComms.deleteTokensOnDb(email).catch((e:any)=>{console.log(e)})
     // }
+    /**
+     * Method that generates an ACCESS_TOKEN
+     */
     generateAccessToken(userInfo) {
         return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
     }
