@@ -56,7 +56,7 @@ export class FutebolAPICommunication implements SportAPICommunication{
           fixtureStr = fixtureStr.slice(0,-1);
           fixturesLst.push(fixtureStr);
         }
-        /*for (let request of fixturesLst){
+        for (let request of fixturesLst){
           let req = this.generateUpdateRequest(API_AUTH_KEY,request);
             makeRequest(req,(response:any)=>{
                 this.parseUpdateResponse(response);
@@ -66,7 +66,6 @@ export class FutebolAPICommunication implements SportAPICommunication{
         }
         this.eventList.removePastEvents("FUT",events);
         this.fetchNewEvents();
-        */
                
     }
 
