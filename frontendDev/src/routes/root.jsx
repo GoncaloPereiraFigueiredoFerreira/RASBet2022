@@ -122,13 +122,13 @@ export default function Root() {
             </div>:null}
 
             {(getRole() == "apostador")?
-            <div className="dropdown" style={{'marginBottom':'0'}} onClick={()=>{let n = []; setNotification([]);setNotify(n)}}>
+            <div className="dropdown" style={{'marginBottom':'0'}}>
                   <a href="#" className="notification">
                     <span><img alt="" src='/bell.png' className="bell"/></span>
                     <span className="badge">{notify.length==0? null:notify.length}</span>
                   </a>
                   <div className="dropdown-content" style={{'top':'60px'}} >
-                    {notify.map((e,ind)=>(<p style={{'cursor': 'pointer'}} key={ind}>{e}</p>))}
+                    {notify.map((e,ind)=>(<button style={{'cursor': 'pointer'}} onClick={()=>{let n = [... notify];n.splice(ind,1);setNotification(n);;setNotify(n)}} key={ind}>{e}</button>))}
                   </div>
                 </div>
               :null}
