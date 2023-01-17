@@ -90,13 +90,13 @@ function Aux({evento,sport,update,ind}){
            			 	</div>
 						</>:null}
 		              	{(evento.Tipo!="RaceEvent")?<>
-							<p style={{"margin":"0px",'fontWeight':'bold'}}>{evento.Liga}</p>
+							<p className="betinfo">{evento.Liga}</p>
 							<div style={{"display":"flex",'flexDirection':'row','float':'left'}}>
 								<img alt="" src={evento.Logos[0]} style={{"padding":"10px"}}></img>
 								<p style={{}}>{evento.Participantes[0]} - {evento.Participantes[1]}</p>
 								<img alt="" src={evento.Logos[1]} style={{"padding":"10px"}}></img>
 							</div>
-							<p style={{"margin":"0px",'fontWeight':'bold'}}>{parseDate(evento.Data)}</p>
+							<p className="betinfo">{parseDate(evento.Data)}</p>
 					  	</>:null}
 		            </div>
 					<div>
@@ -104,7 +104,7 @@ function Aux({evento,sport,update,ind}){
 						<p>SuperOdds: {(evento.SuperOdds)? "Aplied":"Not aplied"}</p>
 					</div>
 
-		            <div className="drawmatchodds" style={(width>1000)? {'width':'30%'}:{}}>
+		            <div className="drawmatchodds" style={(width>1000)? (evento.Estado=="NODD")?{'justifyContent':'flex-end','width':'30%'}:{'width':'30%'}:{}}>
 
 		              <Form onSubmit={handleSubmit} style={{'dispaly':'flex','flexDirection':'column','justifyContent':'space-between','color':'red'}}>
 						{(width>1000)? computerCancelButton():null}
