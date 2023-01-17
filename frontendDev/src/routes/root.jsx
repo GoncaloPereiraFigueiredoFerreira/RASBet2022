@@ -133,7 +133,7 @@ export default function Root() {
                 </div>
               :null}
 
-            {(getRole() == "apostador" & width>1100)?<>
+            {(getRole() == "apostador" && width>1100)?<>
               <li style={{"float":"right","padding":"12px"}}>
                 <button onClick={()=>{navigation(`wallet/${token}`)}}>
                   Carteira: {myWallet.Valor}€

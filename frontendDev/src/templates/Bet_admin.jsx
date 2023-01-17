@@ -51,7 +51,7 @@ function Aux({evento,sport,update,ind}){
 	}
 
 	function handleSubmit(){
-		if(input.multiplier){
+		if(input.multiplier && evento.Estado!="NODD"){
 			add_Super_Odds(input);
 			setError("")
 		}
